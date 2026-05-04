@@ -64,3 +64,56 @@ Source: https://www.bitre.gov.au/publications/ongoing/hospitalised-injury
 │       └── first_nations_trend.csv
 └── knime/
 └──  KNIME workflow files]
+---
+
+## How to Run Locally
+
+1. Clone the repository:
+```bash
+   git clone https://github.com/akshitaraina2/data-visualisationproject.git
+```
+2. Open the project folder in VS Code
+3. Install the Live Server extension if you haven't already
+4. Right-click `index.html` → **Open with Live Server**
+
+> D3 loads data via CSV fetch requests, so the file must be served 
+> through a local server — opening index.html directly in a browser 
+> will not work.
+
+---
+
+## Tech Stack
+
+- D3.js v7
+- HTML5 / CSS3 / Vanilla JavaScript
+- KNIME Analytics Platform (data processing)
+- Fonts: Bebas Neue, DM Sans, DM Mono (Google Fonts)
+
+---
+
+## Team Contributions
+
+| Task | Owner |
+|------|-------|
+| Website structure & layout | Akshita Raina |
+| D3 visualisations & interactivity | Akshita Raina |
+| Mercury deployment | Akshita Raina |
+| Data cleaning & KNIME workflow | [Partner Name] |
+| Narrative text & data story | [Partner Name] |
+| Usability testing | [Partner Name] |
+| Design Book (joint) | Both |
+| Visualisation design decisions (joint) | Both |
+
+---
+
+## AI Use Acknowledgement
+using AI to brainstorm and planning things.
+
+---
+
+## Data Limitations
+
+All figures represent **absolute hospitalisation counts**. Direct 
+comparisons across states or population groups without population 
+adjustment may be misleading. This limitation is acknowledged throughout 
+the visualisation narrative.
