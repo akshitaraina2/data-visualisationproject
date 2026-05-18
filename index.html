@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Australia's Road Crash Burden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-label">Australia · 2011–2021</p>
+      <h1 class="hero-title">WHO BEARS THE BURDEN?</h1>
+      <p class="hero-sub">A decade of road crash hospitalisations — the trends, the disparities, and the people behind the numbers.</p>
+      <div class="hero-stat-row">
+        <div class="hero-stat"><span class="stat-num" id="hero-total">—</span><span class="stat-label">total hospitalisations</span></div>
+        <div class="hero-stat"><span class="stat-num">10</span><span class="stat-label">years of data</span></div>
+        <div class="hero-stat"><span class="stat-num">8</span><span class="stat-label">states & territories</span></div>
+      </div>
+      <a href="#chapter1" class="scroll-cue">↓ explore the data</a>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="sticky-nav" id="stickyNav">
+    <a href="#chapter1" class="nav-link active">01 National Trend</a>
+    <a href="#chapter2" class="nav-link">02 Who Gets Hurt</a>
+    <a href="#chapter3" class="nav-link">03 Age Profile</a>
+    <a href="#chapter4" class="nav-link">04 States</a>
+    <a href="#chapter5" class="nav-link">05 First Nations</a>
+  </nav>
+
+  <main>
+
+    <!-- CHAPTER 1: National Trend -->
+    <section class="chapter" id="chapter1">
+      <div class="chapter-header">
+        <span class="chapter-num">01</span>
+        <h2>A Decade of Rising Numbers</h2>
+        <p class="chapter-desc">National traffic hospitalisations climbed steadily from 2011 to 2019, before a brief COVID-related dip in 2020. By 2021, numbers had nearly recovered — suggesting structural factors beyond pandemic effects.</p>
+      </div>
+      <div class="chart-container" id="chart-trend">
+        <div class="chart-tooltip" id="tooltip-trend"></div>
+      </div>
+      <p class="data-note">⚠ Data note: These are absolute counts. Population growth over this period means per-capita rates may tell a different story.</p>
+    </section>
+
+    <!-- CHAPTER 2: Road User -->
+    <section class="chapter" id="chapter2">
+      <div class="chapter-header">
+        <span class="chapter-num">02</span>
+        <h2>Who Gets Hurt Most?</h2>
+        <p class="chapter-desc">Car drivers account for the largest share of hospitalisations — but motorcyclists and pedal cyclists carry a disproportionate burden relative to their share of road users. Select a road user type to highlight their trend.</p>
+      </div>
+      <div class="filter-row" id="road-user-filters"></div>
+      <div class="chart-container" id="chart-roaduser">
+        <div class="chart-tooltip" id="tooltip-roaduser"></div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 3: Age -->
+    <section class="chapter" id="chapter3">
+      <div class="chapter-header">
+        <span class="chapter-num">03</span>
+        <h2>Age &amp; the Road</h2>
+        <p class="chapter-desc">The 40–64 age group consistently records the highest hospitalisations — challenging the assumption that road injuries are predominantly a young person's problem. Hover over bars to explore each age group across years.</p>
+      </div>
+      <div class="year-slider-row">
+        <label for="yearSlider">Year: <strong id="yearLabel">2021</strong></label>
+        <input type="range" id="yearSlider" min="2011" max="2021" value="2021" step="1"/>
+      </div>
+      <div class="chart-container" id="chart-age">
+        <div class="chart-tooltip" id="tooltip-age"></div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 4: States -->
+    <section class="chapter" id="chapter4">
+      <div class="chapter-header">
+        <span class="chapter-num">04</span>
+        <h2>State by State</h2>
+        <p class="chapter-desc">NSW and Victoria dominate in raw counts — reflecting their larger populations. The Northern Territory's smaller numbers mask a significantly higher per-capita risk given its population of under 300,000.</p>
+      </div>
+      <div class="chart-container" id="chart-state">
+        <div class="chart-tooltip" id="tooltip-state"></div>
+      </div>
+      <p class="data-note">⚠ Data note: Direct state comparisons using raw counts are misleading. NSW has ~8× the population of the NT. Per-capita rates would significantly alter this picture.</p>
+    </section>
+
+    <!-- CHAPTER 5: First Nations -->
+    <section class="chapter chapter-highlight" id="chapter5">
+      <div class="chapter-header">
+        <span class="chapter-num">05</span>
+        <h2>A Growing Disparity</h2>
+        <p class="chapter-desc">First Nations hospitalisations nearly <strong>doubled</strong> between 2011 and 2021 — growing at a rate far exceeding the non-Indigenous population. Given that First Nations peoples make up approximately 3.2% of the Australian population, this disparity is stark.</p>
+      </div>
+      <div class="chart-container" id="chart-fn">
+        <div class="chart-tooltip" id="tooltip-fn"></div>
+      </div>
+      <div class="fn-callout">
+        <div class="fn-stat"><span>+90%</span><p>growth in First Nations hospitalisations 2011→2021</p></div>
+        <div class="fn-stat"><span>+15%</span><p>growth in Non-Indigenous hospitalisations over the same period</p></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Data source: Bureau of Infrastructure and Transport Research Economics (BITRE), Hospitalised Injury Data 2023. Visualisation built with D3.js.</p>
+    <p>Note: All figures represent absolute hospitalisation counts and should not be used to make per-capita comparisons without population adjustment.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
