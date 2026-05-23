@@ -1,5 +1,22 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Australia's Road Crash Burden — D3 v7
+// Data: KNIME exports in /data/state_territory/ and /data/first_nations/
+// All aggregation (6-monthly halves → annual, states → national, n.p. → 0)
+// is done in-browser so charts trace directly back to the KNIME outputs.
+// ─────────────────────────────────────────────────────────────────────────────
+
 // ── UTILITIES ────────────────────────────────────────────────────────────────
 const fmt = d3.format(",");
+
+// Parse a count cell. KNIME suppresses small cells as "n.p." (not published);
+// blank and "Missing" can also appear. All are treated as 0 so sums don't break.
+function num(v) {
+  if (v === undefined || v === null) return 0;
+  const s = String(v).trim();
+  if (s === "" || s === "n.p." || s === "np" || s === "NP" || s === "Missing") return 0;
+  const n = +s;
+  return Number.isFinite(n) ? n : 0;
+}
 
 function getContainerWidth(id) {
   return document.getElementById(id).getBoundingClientRect().width;
@@ -25,23 +42,45 @@ function hideTooltip(tooltipId) {
   document.getElementById(tooltipId).style.opacity = 0;
 }
 
-// ── COLOUR SCALES ─────────────────────────────────────────────────────────────
-const roadUserColors = {
-  'Car driver':                       '#4fc3f7',
-  'Motorcyclist':                     '#f5a623',
-  'Pedal cyclist':                    '#81c784',
-  'Car passenger':                    '#7986cb',
-  'Pedestrian':                       '#e8453c',
-  'Bus occupant':                     '#a1887f',
-  'Pick-up truck or van occupant':    '#4db6ac',
-  'Heavy transport driver':           '#ff8a65',
-  'Heavy transport passenger':        '#ce93d8',
-  'Heavy transport unknown position': '#b0bec5',
-  'Car unknown position':             '#fff176',
+// ── DATA PATHS ────────────────────────────────────────────────────────────────
+const DATA = {
+  state:        'data/state_territory/state_territory_1_by_state_and_territory.csv',
+  roadUser:     'data/state_territory/state_territory_2_territory_and_road_user.csv',
+  age:          'data/state_territory/state_territory_4_territory_and_age_group.csv',
+  firstNations: 'data/first_nations/first_nations_1_injuries_from_road_crashes.csv',
 };
 
+// Column name shared by all state_territory files for the case count.
+const ST_COUNT = 'count of cases excluding died in hospitals within 30 days';
+
+// ── COLOUR SCALES ─────────────────────────────────────────────────────────────
+// Keys now match the FULL ABS road-user labels used in the KNIME exports.
+const roadUserColors = {
+  'Car driver, passenger or unknown position':            '#4fc3f7',
+  'Motorcyclist':                                         '#f5a623',
+  'Pedal cyclist':                                        '#81c784',
+  'Pedestrian':                                           '#e8453c',
+  'Bus occupant':                                         '#a1887f',
+  'Pick-up truck or van occupant':                        '#4db6ac',
+  'Heavy transport driver, passenger or unknown position':'#ff8a65',
+  'Other or unknown':                                     '#b0bec5',
+};
+
+// Shorter labels for the legend / filter buttons (full names are very long).
+const roadUserShort = {
+  'Car driver, passenger or unknown position':            'Car occupant',
+  'Motorcyclist':                                         'Motorcyclist',
+  'Pedal cyclist':                                        'Pedal cyclist',
+  'Pedestrian':                                           'Pedestrian',
+  'Bus occupant':                                         'Bus occupant',
+  'Pick-up truck or van occupant':                        'Pick-up / van',
+  'Heavy transport driver, passenger or unknown position':'Heavy transport',
+  'Other or unknown':                                     'Other / unknown',
+};
+
+const AGE_ORDER = ['0-7','8-16','17-25','26-39','40-64','65-74','75+'];
 const ageColors = d3.scaleOrdinal()
-  .domain(['0-7','8-16','17-25','26-39','40-64','65-74','75+'])
+  .domain(AGE_ORDER)
   .range(['#b3e5fc','#4fc3f7','#f5a623','#e8453c','#81c784','#7986cb','#ce93d8']);
 
 // ── SHARED MARGIN ─────────────────────────────────────────────────────────────
@@ -49,16 +88,24 @@ const M = { top: 30, right: 30, bottom: 45, left: 65 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CHART 1 — National Trend (area + line)
+// Source: state_territory_1, summed across all states & both 6-monthly halves.
 // ─────────────────────────────────────────────────────────────────────────────
 async function drawTrend() {
-  const data = await d3.csv('assets/data/national_trend.csv', d => ({
-    year: +d.year,
-    hospitalisations: +d.hospitalisations
-  }));
+  const raw = await d3.csv(DATA.state);
 
-  // update hero stat
+  // Aggregate: sum every state and both halves into one total per year.
+  const byYear = d3.rollup(
+    raw,
+    v => d3.sum(v, d => num(d[ST_COUNT])),
+    d => +d['calendar year']
+  );
+  const data = Array.from(byYear, ([year, hospitalisations]) => ({ year, hospitalisations }))
+    .sort((a, b) => a.year - b.year);
+
+  // hero stat = decade total
   const total = d3.sum(data, d => d.hospitalisations);
-  document.getElementById('hero-total').textContent = fmt(total);
+  const heroEl = document.getElementById('hero-total');
+  if (heroEl) heroEl.textContent = fmt(total);
 
   const id = 'chart-trend';
   const W = getContainerWidth(id);
@@ -152,13 +199,25 @@ async function drawTrend() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CHART 2 — Road User Multi-line
+// Source: state_territory_2, summed across all states & both halves per year.
 // ─────────────────────────────────────────────────────────────────────────────
 async function drawRoadUser() {
-  const raw = await d3.csv('assets/data/road_user_trend.csv', d => ({
-    year: +d.year,
-    road_user: d.road_user,
-    hospitalisations: +d.hospitalisations
-  }));
+  const rawCsv = await d3.csv(DATA.roadUser);
+
+  // Aggregate to {road_user, year, hospitalisations}
+  const rolled = d3.rollup(
+    rawCsv,
+    v => d3.sum(v, d => num(d[ST_COUNT])),
+    d => d['road user'],
+    d => +d['calendar year']
+  );
+
+  const raw = [];
+  rolled.forEach((years, road_user) => {
+    years.forEach((hospitalisations, year) => {
+      raw.push({ year, road_user, hospitalisations });
+    });
+  });
 
   // group by road user
   const grouped = d3.group(raw, d => d.road_user);
@@ -175,7 +234,7 @@ async function drawRoadUser() {
   users.forEach(u => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn';
-    btn.textContent = u;
+    btn.textContent = roadUserShort[u] || u;
     btn.dataset.user = u;
     filterRow.appendChild(btn);
   });
@@ -211,7 +270,7 @@ async function drawRoadUser() {
     .attr('opacity', 0.85)
     .attr('d', ([, vals]) => lineGen(vals.sort((a,b) => a.year - b.year)));
 
-  // invisible hover overlay per line
+  // invisible hover dots per line
   grouped.forEach((vals, u) => {
     vals.sort((a,b) => a.year - b.year).forEach(d => {
       svg.append('circle')
@@ -221,8 +280,7 @@ async function drawRoadUser() {
         .attr('data-user', u)
         .style('cursor','pointer')
         .on('mousemove', event => showTooltip('tooltip-roaduser',
-          `<strong>${u}</strong><br/>${d.year}: ${fmt(d.hospitalisations)}`, event))
-        .on('mouseleave', () => hideTooltip('tooltip-roaduser'))
+          `<strong>${roadUserShort[u] || u}</strong><br/>${d.year}: ${fmt(d.hospitalisations)}`, event))
         .on('mouseenter', function() { d3.select(this).attr('opacity',1); })
         .on('mouseleave', function() { d3.select(this).attr('opacity',0); hideTooltip('tooltip-roaduser'); });
     });
@@ -237,15 +295,15 @@ async function drawRoadUser() {
     .attr('font-family',"'DM Mono', monospace").attr('font-size','11px')
     .text('Hospitalisations');
 
-  // legend
-  const legendData = users.slice(0, 6);
-  const leg = svg.append('g').attr('transform', `translate(${w - 220}, 0)`);
+  // legend (use short labels)
+  const legendData = users;
+  const leg = svg.append('g').attr('transform', `translate(${w - 150}, 0)`);
   legendData.forEach((u, i) => {
     leg.append('rect').attr('x',0).attr('y', i*18).attr('width',10).attr('height',3)
       .attr('fill', roadUserColors[u] || '#888').attr('rx',1);
     leg.append('text').attr('x',16).attr('y', i*18+4)
       .attr('fill','var(--muted)').attr('font-family',"'DM Mono', monospace")
-      .attr('font-size','9px').text(u);
+      .attr('font-size','9px').text(roadUserShort[u] || u);
   });
 
   // filter interaction
@@ -264,16 +322,27 @@ async function drawRoadUser() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CHART 3 — Age Group Bar Chart with slider
+// CHART 3 — Age Group Bar Chart with year slider
+// Source: state_territory_4, summed across all states & both halves.
 // ─────────────────────────────────────────────────────────────────────────────
 async function drawAge() {
-  const raw = await d3.csv('assets/data/age_trend.csv', d => ({
-    year: +d.year,
-    age_group: d.age_group,
-    hospitalisations: +d.hospitalisations
-  }));
+  const rawCsv = await d3.csv(DATA.age);
 
-  const ageOrder = ['0-7','8-16','17-25','26-39','40-64','65-74','75+'];
+  const rolled = d3.rollup(
+    rawCsv,
+    v => d3.sum(v, d => num(d[ST_COUNT])),
+    d => d['age group'],
+    d => +d['calendar year']
+  );
+
+  const raw = [];
+  rolled.forEach((years, age_group) => {
+    years.forEach((hospitalisations, year) => {
+      raw.push({ year, age_group, hospitalisations });
+    });
+  });
+
+  const ageOrder = AGE_ORDER;
   const id = 'chart-age';
   const W = getContainerWidth(id);
   const H = 380;
@@ -326,14 +395,25 @@ async function drawAge() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CHART 4 — State Stacked/Grouped Lines
+// CHART 4 — State Lines
+// Source: state_territory_1, one line per state, both halves summed per year.
 // ─────────────────────────────────────────────────────────────────────────────
 async function drawState() {
-  const raw = await d3.csv('assets/data/state_trend.csv', d => ({
-    year: +d.year,
-    state: d.state,
-    hospitalisations: +d.hospitalisations
-  }));
+  const rawCsv = await d3.csv(DATA.state);
+
+  const rolled = d3.rollup(
+    rawCsv,
+    v => d3.sum(v, d => num(d[ST_COUNT])),
+    d => d['state or territory'].trim(),   // header has a trailing space in one file; trim defensively
+    d => +d['calendar year']
+  );
+
+  const raw = [];
+  rolled.forEach((years, state) => {
+    years.forEach((hospitalisations, year) => {
+      raw.push({ year, state, hospitalisations });
+    });
+  });
 
   const states = [...new Set(raw.map(d => d.state))].sort();
   const stateColor = d3.scaleOrdinal()
@@ -402,13 +482,25 @@ async function drawState() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CHART 5 — First Nations vs Non-Indigenous
+// Source: first_nations_1, summed across age groups & both halves per year.
+// Note: count column here is "Hospitalisations" (not the state files' name).
 // ─────────────────────────────────────────────────────────────────────────────
 async function drawFirstNations() {
-  const raw = await d3.csv('assets/data/first_nations_trend.csv', d => ({
-    year: +d.year,
-    fn_status: d.fn_status,
-    hospitalisations: +d.hospitalisations
-  }));
+  const rawCsv = await d3.csv(DATA.firstNations);
+
+  const rolled = d3.rollup(
+    rawCsv,
+    v => d3.sum(v, d => num(d['Hospitalisations'])),
+    d => d['First Nations status'],
+    d => +d['Calendar year']
+  );
+
+  const raw = [];
+  rolled.forEach((years, fn_status) => {
+    years.forEach((hospitalisations, year) => {
+      raw.push({ year, fn_status, hospitalisations });
+    });
+  });
 
   const fn   = raw.filter(d => d.fn_status === 'First Nations people').sort((a,b)=>a.year-b.year);
   const noni = raw.filter(d => d.fn_status === 'Non-Indigenous').sort((a,b)=>a.year-b.year);
@@ -425,7 +517,7 @@ async function drawFirstNations() {
 
   const x = d3.scaleLinear().domain([2011,2021]).range([0,w]);
 
-  // dual y axes
+  // dual y axes — FN counts are ~15x smaller, so a shared axis would flatten them.
   const yL = d3.scaleLinear().domain([0, d3.max(noni, d=>d.hospitalisations)*1.2]).range([h,0]);
   const yR = d3.scaleLinear().domain([0, d3.max(fn, d=>d.hospitalisations)*1.2]).range([h,0]);
 
@@ -434,7 +526,7 @@ async function drawFirstNations() {
 
   const lineGen = scale => d3.line().x(d=>x(d.year)).y(d=>scale(d.hospitalisations)).curve(d3.curveCatmullRom);
 
-  // Non-Indigenous
+  // Non-Indigenous (left axis)
   svg.append('path').datum(noni)
     .attr('fill','none').attr('stroke','var(--nonindig)').attr('stroke-width',2.5)
     .attr('d', lineGen(yL));
@@ -511,12 +603,16 @@ function initNav() {
 // INIT
 // ─────────────────────────────────────────────────────────────────────────────
 (async function init() {
-  await Promise.all([
-    drawTrend(),
-    drawRoadUser(),
-    drawAge(),
-    drawState(),
-    drawFirstNations()
-  ]);
+  try {
+    await Promise.all([
+      drawTrend(),
+      drawRoadUser(),
+      drawAge(),
+      drawState(),
+      drawFirstNations()
+    ]);
+  } catch (err) {
+    console.error('Chart init failed:', err);
+  }
   initNav();
 })();
