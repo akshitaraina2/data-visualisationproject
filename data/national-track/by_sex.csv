@@ -1,0 +1,29 @@
+"year","sex","Sum(hospitalisations)"
+2011,"Female",11712
+2011,"Male",22321
+2012,"Female",11593
+2012,"Male",22431
+2013,"Female",12042
+2013,"Male",22957
+2013,"intersex or indeterminate or missing",2
+2014,"Female",12294
+2014,"Male",23221
+2015,"Female",13161
+2015,"Male",23920
+2015,"intersex or indeterminate or missing",1
+2016,"Female",13952
+2016,"Male",25011
+2017,"Female",14083
+2017,"Male",25256
+2018,"Female",14273
+2018,"Male",25315
+2018,"intersex or indeterminate or missing",2
+2019,"Female",14499
+2019,"Male",25365
+2019,"intersex or indeterminate or missing",2
+2020,"Female",12781
+2020,"Male",25178
+2020,"intersex or indeterminate or missing",7
+2021,"Female",13716
+2021,"Male",25788
+2021,"intersex or indeterminate or missing",1

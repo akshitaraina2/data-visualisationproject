@@ -1,0 +1,353 @@
+"year","state","counterparty","Sum(hospitalisations)","Sum(bed_days)"
+2011,"ACT","Car, pick-up truck or van",177,1216
+2011,"ACT","Fixed or stationary object",75,479
+2011,"ACT","Non-collision transport accident",177,486
+2011,"ACT","Other",108,395
+2011,"NSW","Car, pick-up truck or van",4679,23189
+2011,"NSW","Fixed or stationary object",1543,9230
+2011,"NSW","Non-collision transport accident",2349,8805
+2011,"NSW","Other",2047,9120
+2011,"NT","Car, pick-up truck or van",107,823
+2011,"NT","Fixed or stationary object",59,417
+2011,"NT","Non-collision transport accident",198,1128
+2011,"NT","Other",92,642
+2011,"QLD","Car, pick-up truck or van",2113,10750
+2011,"QLD","Fixed or stationary object",801,5532
+2011,"QLD","Non-collision transport accident",1969,6813
+2011,"QLD","Other",1439,5438
+2011,"SA","Car, pick-up truck or van",961,5418
+2011,"SA","Fixed or stationary object",402,2301
+2011,"SA","Non-collision transport accident",650,2522
+2011,"SA","Other",346,1791
+2011,"TAS","Car, pick-up truck or van",172,1293
+2011,"TAS","Fixed or stationary object",85,643
+2011,"TAS","Non-collision transport accident",138,579
+2011,"TAS","Other",98,591
+2011,"VIC","Car, pick-up truck or van",4308,16385
+2011,"VIC","Fixed or stationary object",1407,5781
+2011,"VIC","Non-collision transport accident",1975,5629
+2011,"VIC","Other",1636,6129
+2011,"WA","Car, pick-up truck or van",1309,7880
+2011,"WA","Fixed or stationary object",493,2969
+2011,"WA","Non-collision transport accident",1012,4531
+2011,"WA","Other",628,3105
+2012,"ACT","Car, pick-up truck or van",223,993
+2012,"ACT","Fixed or stationary object",77,396
+2012,"ACT","Non-collision transport accident",207,518
+2012,"ACT","Other",94,359
+2012,"NSW","Car, pick-up truck or van",4832,23149
+2012,"NSW","Fixed or stationary object",1624,8205
+2012,"NSW","Non-collision transport accident",2506,9077
+2012,"NSW","Other",2159,9527
+2012,"NT","Car, pick-up truck or van",119,932
+2012,"NT","Fixed or stationary object",52,375
+2012,"NT","Non-collision transport accident",216,1092
+2012,"NT","Other",109,556
+2012,"QLD","Car, pick-up truck or van",2332,12023
+2012,"QLD","Fixed or stationary object",976,5498
+2012,"QLD","Non-collision transport accident",2026,7186
+2012,"QLD","Other",1479,5707
+2012,"SA","Car, pick-up truck or van",911,5449
+2012,"SA","Fixed or stationary object",356,2213
+2012,"SA","Non-collision transport accident",673,2771
+2012,"SA","Other",371,2000
+2012,"TAS","Car, pick-up truck or van",168,1206
+2012,"TAS","Fixed or stationary object",72,369
+2012,"TAS","Non-collision transport accident",193,805
+2012,"TAS","Other",103,468
+2012,"VIC","Car, pick-up truck or van",3730,13949
+2012,"VIC","Fixed or stationary object",1218,5352
+2012,"VIC","Non-collision transport accident",1695,5518
+2012,"VIC","Other",1455,5426
+2012,"WA","Car, pick-up truck or van",1252,6722
+2012,"WA","Fixed or stationary object",444,3125
+2012,"WA","Non-collision transport accident",1124,5432
+2012,"WA","Other",673,2620
+2013,"ACT","Car, pick-up truck or van",186,1086
+2013,"ACT","Fixed or stationary object",78,401
+2013,"ACT","Non-collision transport accident",190,561
+2013,"ACT","Other",119,469
+2013,"NSW","Car, pick-up truck or van",5048,21011
+2013,"NSW","Fixed or stationary object",1630,8363
+2013,"NSW","Non-collision transport accident",2690,9359
+2013,"NSW","Other",2053,8306
+2013,"NT","Car, pick-up truck or van",124,815
+2013,"NT","Fixed or stationary object",87,578
+2013,"NT","Non-collision transport accident",271,1796
+2013,"NT","Other",79,472
+2013,"QLD","Car, pick-up truck or van",2733,11130
+2013,"QLD","Fixed or stationary object",1012,4069
+2013,"QLD","Non-collision transport accident",2414,7769
+2013,"QLD","Other",1662,6051
+2013,"SA","Car, pick-up truck or van",842,4777
+2013,"SA","Fixed or stationary object",350,2194
+2013,"SA","Non-collision transport accident",672,2524
+2013,"SA","Other",357,2076
+2013,"TAS","Car, pick-up truck or van",179,1298
+2013,"TAS","Fixed or stationary object",96,458
+2013,"TAS","Non-collision transport accident",196,648
+2013,"TAS","Other",99,487
+2013,"VIC","Car, pick-up truck or van",3438,12939
+2013,"VIC","Fixed or stationary object",1177,5555
+2013,"VIC","Non-collision transport accident",1751,5286
+2013,"VIC","Other",1418,5286
+2013,"WA","Car, pick-up truck or van",1241,6819
+2013,"WA","Fixed or stationary object",460,3328
+2013,"WA","Non-collision transport accident",1048,4447
+2013,"WA","Other",726,2632
+2014,"ACT","Car, pick-up truck or van",191,701
+2014,"ACT","Fixed or stationary object",72,419
+2014,"ACT","Non-collision transport accident",185,595
+2014,"ACT","Other",94,311
+2014,"NSW","Car, pick-up truck or van",5005,20708
+2014,"NSW","Fixed or stationary object",1589,8398
+2014,"NSW","Non-collision transport accident",2683,9197
+2014,"NSW","Other",2036,7737
+2014,"NT","Car, pick-up truck or van",145,894
+2014,"NT","Fixed or stationary object",80,417
+2014,"NT","Non-collision transport accident",272,1290
+2014,"NT","Other",78,366
+2014,"QLD","Car, pick-up truck or van",2737,11360
+2014,"QLD","Fixed or stationary object",1074,4251
+2014,"QLD","Non-collision transport accident",2345,7966
+2014,"QLD","Other",1569,5439
+2014,"SA","Car, pick-up truck or van",914,5131
+2014,"SA","Fixed or stationary object",351,1651
+2014,"SA","Non-collision transport accident",741,2754
+2014,"SA","Other",375,1660
+2014,"TAS","Car, pick-up truck or van",203,1098
+2014,"TAS","Fixed or stationary object",96,471
+2014,"TAS","Non-collision transport accident",217,877
+2014,"TAS","Other",130,423
+2014,"VIC","Car, pick-up truck or van",3757,12428
+2014,"VIC","Fixed or stationary object",1268,5489
+2014,"VIC","Non-collision transport accident",1980,6071
+2014,"VIC","Other",1518,5037
+2014,"WA","Car, pick-up truck or van",1040,5924
+2014,"WA","Fixed or stationary object",439,3089
+2014,"WA","Non-collision transport accident",1015,4825
+2014,"WA","Other",660,2751
+2015,"ACT","Car, pick-up truck or van",244,1028
+2015,"ACT","Fixed or stationary object",76,675
+2015,"ACT","Non-collision transport accident",233,598
+2015,"ACT","Other",147,595
+2015,"NSW","Car, pick-up truck or van",5005,24157
+2015,"NSW","Fixed or stationary object",1669,10776
+2015,"NSW","Non-collision transport accident",2657,9928
+2015,"NSW","Other",1753,9470
+2015,"NT","Car, pick-up truck or van",182,1187
+2015,"NT","Fixed or stationary object",83,302
+2015,"NT","Non-collision transport accident",339,1654
+2015,"NT","Other",87,318
+2015,"QLD","Car, pick-up truck or van",3119,12543
+2015,"QLD","Fixed or stationary object",1135,6417
+2015,"QLD","Non-collision transport accident",2451,8425
+2015,"QLD","Other",1601,6885
+2015,"SA","Car, pick-up truck or van",917,4467
+2015,"SA","Fixed or stationary object",394,2356
+2015,"SA","Non-collision transport accident",746,2537
+2015,"SA","Other",410,1807
+2015,"TAS","Car, pick-up truck or van",199,1138
+2015,"TAS","Fixed or stationary object",131,687
+2015,"TAS","Non-collision transport accident",220,798
+2015,"TAS","Other",127,820
+2015,"VIC","Car, pick-up truck or van",4250,23839
+2015,"VIC","Fixed or stationary object",1250,9548
+2015,"VIC","Non-collision transport accident",1999,7441
+2015,"VIC","Other",1699,9244
+2015,"WA","Car, pick-up truck or van",1100,6576
+2015,"WA","Fixed or stationary object",459,4002
+2015,"WA","Non-collision transport accident",973,4811
+2015,"WA","Other",651,3056
+2016,"ACT","Car, pick-up truck or van",235,1068
+2016,"ACT","Fixed or stationary object",78,344
+2016,"ACT","Non-collision transport accident",211,519
+2016,"ACT","Other",130,741
+2016,"NSW","Car, pick-up truck or van",5217,26496
+2016,"NSW","Fixed or stationary object",1710,11237
+2016,"NSW","Non-collision transport accident",2734,11955
+2016,"NSW","Other",1813,10661
+2016,"NT","Car, pick-up truck or van",168,1183
+2016,"NT","Fixed or stationary object",121,661
+2016,"NT","Non-collision transport accident",304,1270
+2016,"NT","Other",116,679
+2016,"QLD","Car, pick-up truck or van",3380,15217
+2016,"QLD","Fixed or stationary object",1302,7802
+2016,"QLD","Non-collision transport accident",2376,8968
+2016,"QLD","Other",1644,7830
+2016,"SA","Car, pick-up truck or van",1064,6019
+2016,"SA","Fixed or stationary object",387,2501
+2016,"SA","Non-collision transport accident",765,2636
+2016,"SA","Other",438,2039
+2016,"TAS","Car, pick-up truck or van",197,1416
+2016,"TAS","Fixed or stationary object",98,854
+2016,"TAS","Non-collision transport accident",227,871
+2016,"TAS","Other",135,823
+2016,"VIC","Car, pick-up truck or van",4918,34403
+2016,"VIC","Fixed or stationary object",1415,12892
+2016,"VIC","Non-collision transport accident",2174,8572
+2016,"VIC","Other",1853,11911
+2016,"WA","Car, pick-up truck or van",1086,9522
+2016,"WA","Fixed or stationary object",410,4154
+2016,"WA","Non-collision transport accident",892,4988
+2016,"WA","Other",643,3238
+2017,"ACT","Car, pick-up truck or van",221,1046
+2017,"ACT","Fixed or stationary object",74,513
+2017,"ACT","Non-collision transport accident",219,640
+2017,"ACT","Other",118,410
+2017,"NSW","Car, pick-up truck or van",5012,28593
+2017,"NSW","Fixed or stationary object",1540,9923
+2017,"NSW","Non-collision transport accident",2638,11137
+2017,"NSW","Other",1826,9861
+2017,"NT","Car, pick-up truck or van",212,1377
+2017,"NT","Fixed or stationary object",93,480
+2017,"NT","Non-collision transport accident",292,1448
+2017,"NT","Other",106,692
+2017,"QLD","Car, pick-up truck or van",3674,16381
+2017,"QLD","Fixed or stationary object",1224,6740
+2017,"QLD","Non-collision transport accident",2546,9476
+2017,"QLD","Other",1690,7267
+2017,"SA","Car, pick-up truck or van",890,5708
+2017,"SA","Fixed or stationary object",372,2521
+2017,"SA","Non-collision transport accident",688,2772
+2017,"SA","Other",444,2778
+2017,"TAS","Car, pick-up truck or van",212,1852
+2017,"TAS","Fixed or stationary object",110,680
+2017,"TAS","Non-collision transport accident",234,850
+2017,"TAS","Other",103,928
+2017,"VIC","Car, pick-up truck or van",5279,32540
+2017,"VIC","Fixed or stationary object",1509,12274
+2017,"VIC","Non-collision transport accident",2266,8797
+2017,"VIC","Other",1740,10443
+2017,"WA","Car, pick-up truck or van",1091,7813
+2017,"WA","Fixed or stationary object",436,4376
+2017,"WA","Non-collision transport accident",969,4357
+2017,"WA","Other",699,2614
+2018,"ACT","Car, pick-up truck or van",283,1522
+2018,"ACT","Fixed or stationary object",79,356
+2018,"ACT","Non-collision transport accident",213,734
+2018,"ACT","Other",137,372
+2018,"NSW","Car, pick-up truck or van",4134,26179
+2018,"NSW","Fixed or stationary object",1410,10890
+2018,"NSW","Non-collision transport accident",2511,11728
+2018,"NSW","Other",1739,10727
+2018,"NT","Car, pick-up truck or van",240,1489
+2018,"NT","Fixed or stationary object",129,544
+2018,"NT","Non-collision transport accident",362,2185
+2018,"NT","Other",101,1060
+2018,"QLD","Car, pick-up truck or van",3749,14446
+2018,"QLD","Fixed or stationary object",1271,7336
+2018,"QLD","Non-collision transport accident",2707,10510
+2018,"QLD","Other",1654,6547
+2018,"SA","Car, pick-up truck or van",926,4889
+2018,"SA","Fixed or stationary object",384,2422
+2018,"SA","Non-collision transport accident",729,2489
+2018,"SA","Other",450,2858
+2018,"TAS","Car, pick-up truck or van",254,1966
+2018,"TAS","Fixed or stationary object",115,722
+2018,"TAS","Non-collision transport accident",294,1047
+2018,"TAS","Other",118,941
+2018,"VIC","Car, pick-up truck or van",5675,28739
+2018,"VIC","Fixed or stationary object",1607,13155
+2018,"VIC","Non-collision transport accident",2309,9650
+2018,"VIC","Other",1862,12300
+2018,"WA","Car, pick-up truck or van",1179,6258
+2018,"WA","Fixed or stationary object",458,2606
+2018,"WA","Non-collision transport accident",958,3605
+2018,"WA","Other",679,2611
+2019,"ACT","Car, pick-up truck or van",243,1076
+2019,"ACT","Fixed or stationary object",82,622
+2019,"ACT","Non-collision transport accident",213,719
+2019,"ACT","Other",127,387
+2019,"NSW","Car, pick-up truck or van",4303,27854
+2019,"NSW","Fixed or stationary object",1374,12965
+2019,"NSW","Non-collision transport accident",2501,10182
+2019,"NSW","Other",1764,11997
+2019,"NT","Car, pick-up truck or van",155,1027
+2019,"NT","Fixed or stationary object",114,451
+2019,"NT","Non-collision transport accident",277,1587
+2019,"NT","Other",110,744
+2019,"QLD","Car, pick-up truck or van",3885,16829
+2019,"QLD","Fixed or stationary object",1322,6316
+2019,"QLD","Non-collision transport accident",2611,9355
+2019,"QLD","Other",1697,7689
+2019,"SA","Car, pick-up truck or van",924,4234
+2019,"SA","Fixed or stationary object",354,2045
+2019,"SA","Non-collision transport accident",688,2259
+2019,"SA","Other",491,2265
+2019,"TAS","Car, pick-up truck or van",223,1546
+2019,"TAS","Fixed or stationary object",115,540
+2019,"TAS","Non-collision transport accident",213,832
+2019,"TAS","Other",157,1162
+2019,"VIC","Car, pick-up truck or van",5630,29373
+2019,"VIC","Fixed or stationary object",1524,12254
+2019,"VIC","Non-collision transport accident",2214,8096
+2019,"VIC","Other",2024,11286
+2019,"WA","Car, pick-up truck or van",1270,7101
+2019,"WA","Fixed or stationary object",512,3260
+2019,"WA","Non-collision transport accident",1068,3959
+2019,"WA","Other",684,3502
+2020,"ACT","Car, pick-up truck or van",184,868
+2020,"ACT","Fixed or stationary object",86,544
+2020,"ACT","Non-collision transport accident",217,677
+2020,"ACT","Other",142,448
+2020,"NSW","Car, pick-up truck or van",3730,25346
+2020,"NSW","Fixed or stationary object",1405,11456
+2020,"NSW","Non-collision transport accident",2545,10373
+2020,"NSW","Other",1594,11196
+2020,"NT","Car, pick-up truck or van",206,1271
+2020,"NT","Fixed or stationary object",128,549
+2020,"NT","Non-collision transport accident",338,1224
+2020,"NT","Other",115,423
+2020,"QLD","Car, pick-up truck or van",3742,13535
+2020,"QLD","Fixed or stationary object",1516,7462
+2020,"QLD","Non-collision transport accident",2896,9394
+2020,"QLD","Other",1647,7459
+2020,"SA","Car, pick-up truck or van",916,4900
+2020,"SA","Fixed or stationary object",381,2691
+2020,"SA","Non-collision transport accident",783,2914
+2020,"SA","Other",423,1675
+2020,"TAS","Car, pick-up truck or van",233,1020
+2020,"TAS","Fixed or stationary object",110,688
+2020,"TAS","Non-collision transport accident",290,916
+2020,"TAS","Other",145,858
+2020,"VIC","Car, pick-up truck or van",4190,21267
+2020,"VIC","Fixed or stationary object",1348,10460
+2020,"VIC","Non-collision transport accident",2477,8259
+2020,"VIC","Other",1869,7951
+2020,"WA","Car, pick-up truck or van",1163,7496
+2020,"WA","Fixed or stationary object",585,3125
+2020,"WA","Non-collision transport accident",1171,5042
+2020,"WA","Other",717,3125
+2021,"ACT","Car, pick-up truck or van",232,949
+2021,"ACT","Fixed or stationary object",82,435
+2021,"ACT","Non-collision transport accident",248,931
+2021,"ACT","Other",178,424
+2021,"NSW","Car, pick-up truck or van",3454,23580
+2021,"NSW","Fixed or stationary object",1314,10274
+2021,"NSW","Non-collision transport accident",2563,10504
+2021,"NSW","Other",1672,10740
+2021,"NT","Car, pick-up truck or van",205,724
+2021,"NT","Fixed or stationary object",84,300
+2021,"NT","Non-collision transport accident",315,2426
+2021,"NT","Other",106,623
+2021,"QLD","Car, pick-up truck or van",4396,16735
+2021,"QLD","Fixed or stationary object",1510,6842
+2021,"QLD","Non-collision transport accident",2831,9912
+2021,"QLD","Other",1710,7400
+2021,"SA","Car, pick-up truck or van",1093,4977
+2021,"SA","Fixed or stationary object",418,2245
+2021,"SA","Non-collision transport accident",670,2473
+2021,"SA","Other",451,2157
+2021,"TAS","Car, pick-up truck or van",294,2498
+2021,"TAS","Fixed or stationary object",134,843
+2021,"TAS","Non-collision transport accident",241,838
+2021,"TAS","Other",136,681
+2021,"VIC","Car, pick-up truck or van",4984,24317
+2021,"VIC","Fixed or stationary object",1474,10500
+2021,"VIC","Non-collision transport accident",2674,9243
+2021,"VIC","Other",1998,10639
+2021,"WA","Car, pick-up truck or van",1314,9276
+2021,"WA","Fixed or stationary object",517,4258
+2021,"WA","Non-collision transport accident",1054,4976
+2021,"WA","Other",683,3778
