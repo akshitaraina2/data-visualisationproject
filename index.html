@@ -115,7 +115,16 @@
     <p>Note: All figures represent absolute hospitalisation counts and should not be used to make per-capita comparisons without population adjustment.</p>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"
+          integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ=="
+          crossorigin="anonymous"></script>
+  <!-- Load shared constants before any chart module -->
+  <script src="assets/js/constants.js"></script>
+  <!-- Chart modules: AQ1 national trend, AQ2 age profile, AQ3 geography/disparity -->
+  <script src="assets/js/charts/aq1.js"></script>
+  <script src="assets/js/charts/aq2.js"></script>
+  <script src="assets/js/charts/aq3.js"></script>
+  <!-- Entry point: launches all charts in parallel, then initialises sticky nav -->
   <script src="assets/js/main.js"></script>
 </body>
 </html>
