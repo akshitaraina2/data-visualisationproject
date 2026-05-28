@@ -1,47 +1,59 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// main.js — Entry point for Australia's Road Crash Burden visualisation.
-//
-// Responsibilities:
-//   1. Launch all chart draw functions in parallel via Promise.all.
-//   2. Initialise the sticky nav IntersectionObserver after charts resolve.
-//
-// Load order in index.html must be:
-//   constants.js → aq1.js → aq2.js → aq3.js → main.js
-// ─────────────────────────────────────────────────────────────────────────────
-
-
-/**
- * Highlights the active nav link as the user scrolls between chapter sections.
- * Uses IntersectionObserver rather than scroll events to avoid layout thrashing.
- */
 function initNav() {
   const sections = document.querySelectorAll('.chapter');
   const navLinks = document.querySelectorAll('.nav-link');
-
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        navLinks.forEach(l => l.classList.remove('active'));
-        const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
-        if (active) active.classList.add('active');
-      }
+      if (!e.isIntersecting) return;
+      navLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
     });
-  }, { threshold: 0.4 });
-
+  }, { threshold: 0.35 });
   sections.forEach(s => obs.observe(s));
 }
 
-
-// All draw functions run in parallel. initNav runs after all charts are ready
-// so the observer does not fire before chart containers have their full height.
 (async function init() {
   try {
+    const [
+      stateRoadUser,
+      stateAnnualTotals,
+      stateCounterparty,
+      fnByAge,
+      fnByRoadUser,
+      fnByRemoteness,
+      nationalAq2,
+      nationalAq4,
+      geojson,
+      population,
+    ] = await Promise.all([
+      d3.csv(DATA.stateRoadUser),
+      d3.csv(DATA.stateAnnualTotals),
+      d3.csv(DATA.stateCounterparty),
+      d3.csv(DATA.fnByAge),
+      d3.csv(DATA.fnByRoadUser),
+      d3.csv(DATA.fnByRemoteness),
+      d3.csv(DATA.nationalAq2),
+      d3.csv(DATA.nationalAq4),
+      d3.json(DATA.geojson),
+      d3.csv(DATA.population),
+    ]);
+
+    // Hero stat: sum all states across all years (state-attributable total)
+    const heroTotal = d3.sum(stateAnnualTotals, d => num(d[HOSPS]));
+    const heroEl = document.getElementById('hero-total');
+    if (heroEl) heroEl.textContent = fmt(heroTotal);
+
     await Promise.all([
-      drawTrend(),
-      drawRoadUser(),
-      drawAge(),
-      drawState(),
-      drawFirstNations(),
+      drawTrend(stateRoadUser, '#chart-trend'),
+      drawStackedArea(stateRoadUser, '#chart-stacked'),
+      drawHeatmap(nationalAq2, '#chart-heatmap'),
+      drawSexRoadUser(nationalAq2, '#chart-sex-road-user'),
+      drawPyramid(nationalAq2, '#chart-pyramid'),
+      drawChoropleth(stateAnnualTotals, population, geojson, '#chart-choropleth'),
+      drawFirstNationsSlope(fnByAge, fnByRoadUser, '#chart-fn-slope'),
+      drawRemoteness(fnByRemoteness, '#chart-remoteness'),
+      drawCounterpartyBar(stateCounterparty, '#chart-counterparty'),
+      drawSankey(nationalAq4, '#chart-sankey'),
     ]);
   } catch (err) {
     console.error('Chart init failed:', err);

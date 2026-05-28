@@ -1,91 +1,221 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// aq2.js — AQ2: Who Is Affected
-// Visualises hospitalisation distribution by age group 2011–2021.
+// ── AQ2: WHO IS AFFECTED ─────────────────────────────────────────────────────
+// drawHeatmap      → age_group × road_user heatmap; colour = total count
+// drawSexRoadUser  → grouped bar, Male vs Female per road user
+// drawPyramid      → population pyramid by age group
 //
-// drawAge → animated bar chart with a year slider for temporal exploration
-//
-// Depends on: constants.js (fmt, num, M, DATA, ST_COUNT, AGE_ORDER, ageColors,
-//             getContainerWidth, showTooltip, hideTooltip)
-// ─────────────────────────────────────────────────────────────────────────────
+// All three charts use national_crossed_aq2.csv.
+// Depends on: constants.js
 
+function drawHeatmap(raw, sel) {
+  const ages  = AGE_ORDER.filter(a => raw.some(d => d.age_group === a));
+  const users = [...new Set(raw.map(d => d.road_user))].sort();
 
-/**
- * Draws a bar chart showing hospitalisations per age group for a selected year.
- * Data is aggregated from state_territory_4: all states + both half-year periods
- * are summed per age group per calendar year.
- * A year slider lets users scrub through 2011–2021; bars animate on each change.
- */
-async function drawAge() {
-  const rawCsv = await d3.csv(DATA.age);
-
-  // Aggregate to { age_group, year, hospitalisations }.
-  const rolled = d3.rollup(
-    rawCsv,
-    v => d3.sum(v, d => num(d[ST_COUNT])),
-    d => d['age group'],
-    d => +d['calendar year']
+  // Sum over all years and sexes
+  const matrix = d3.rollup(
+    raw,
+    v => d3.sum(v, d => num(d[HOSPS])),
+    d => d.age_group,
+    d => d.road_user
   );
 
-  const raw = [];
-  rolled.forEach((years, age_group) => {
-    years.forEach((hospitalisations, year) => {
-      raw.push({ year, age_group, hospitalisations });
-    });
-  });
-
-  const id = 'chart-age';
+  const id = sel.replace('#', '');
   const W  = getContainerWidth(id);
-  const H  = 380;
-  const w  = W - M.left  - M.right;
-  const h  = H - M.top   - M.bottom;
+  const rightPad = 20;
+  const bottomPad = 90;
+  const w  = W - M.left - rightPad;
+  const H  = 280 + bottomPad;
+  const h  = H - M.top - bottomPad;
 
-  const svg = d3.select(`#${id}`)
+  const svg = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
     .append('g').attr('transform', `translate(${M.left},${M.top})`);
 
-  // Band scale uses AGE_ORDER to enforce demographic ordering, not alphabetical.
-  const x      = d3.scaleBand().domain(AGE_ORDER).range([0, w]).padding(0.25);
-  const maxVal = d3.max(raw, d => d.hospitalisations);
-  const y      = d3.scaleLinear().domain([0, maxVal * 1.15]).range([h, 0]);
+  const xScale = d3.scaleBand().domain(users).range([0, w]).padding(0.04);
+  const yScale = d3.scaleBand().domain(ages).range([0, h]).padding(0.04);
+  const maxVal = d3.max(ages.flatMap(a => users.map(u => matrix.get(a)?.get(u) || 0)));
+  const colorScale = d3.scaleSequential(d3.interpolateBlues).domain([0, maxVal]);
+
+  ages.forEach(age => {
+    users.forEach(user => {
+      const val = matrix.get(age)?.get(user) || 0;
+      svg.append('rect')
+        .attr('x', xScale(user)).attr('y', yScale(age))
+        .attr('width', xScale.bandwidth()).attr('height', yScale.bandwidth())
+        .attr('fill', colorScale(val)).attr('rx', 2)
+        .on('mousemove', evt => showTooltip('tooltip-heatmap',
+          `<strong>${age} × ${user}</strong><br/>${fmt(val)} hospitalisations`, evt))
+        .on('mouseleave', () => hideTooltip('tooltip-heatmap'));
+    });
+  });
+
+  // x axis with rotated labels
+  svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
+    .call(d3.axisBottom(xScale))
+    .selectAll('text')
+      .attr('transform', 'rotate(-35)').style('text-anchor', 'end')
+      .attr('dx', '-0.5em').attr('dy', '0.2em');
+
+  svg.append('g').attr('class', 'axis').call(d3.axisLeft(yScale));
+
+  svg.append('text').attr('x', w / 2).attr('y', -10).attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .text('Age group × road user (total 2011–2021 hospitalisations)');
+
+  // Colour legend
+  const legW = 140, legH = 8;
+  const defs = svg.append('defs');
+  const grad = defs.append('linearGradient').attr('id', 'heat-grad').attr('x1', '0%').attr('x2', '100%');
+  [0, 0.5, 1].forEach(t => {
+    grad.append('stop').attr('offset', `${t * 100}%`).attr('stop-color', colorScale(t * maxVal));
+  });
+  const legG = svg.append('g').attr('transform', `translate(${w - legW}, -22)`);
+  legG.append('rect').attr('width', legW).attr('height', legH).attr('fill', 'url(#heat-grad)').attr('rx', 2);
+  legG.append('text').attr('x', 0).attr('y', -3)
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px').text('0');
+  legG.append('text').attr('x', legW).attr('y', -3).attr('text-anchor', 'end')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px').text(fmt(maxVal));
+}
+
+function drawSexRoadUser(raw, sel) {
+  const SEXES = ['Male', 'Female'];
+  const users = [...new Set(raw.map(d => d.road_user))].sort();
+  const sexColors = { Male: '#4fc3f7', Female: '#f5a623' };
+
+  const rolled = d3.rollup(
+    raw.filter(d => SEXES.includes(d.sex)),
+    v => d3.sum(v, d => num(d[HOSPS])),
+    d => d.road_user,
+    d => d.sex
+  );
+
+  const id = sel.replace('#', '');
+  const W  = getContainerWidth(id);
+  const H  = 360;
+  const w  = W - M.left - M.right;
+  const h  = H - M.top - 80;
+
+  const svg = d3.select(sel)
+    .append('svg').attr('width', W).attr('height', H)
+    .append('g').attr('transform', `translate(${M.left},${M.top})`);
+
+  const x0 = d3.scaleBand().domain(users).range([0, w]).padding(0.2);
+  const x1 = d3.scaleBand().domain(SEXES).range([0, x0.bandwidth()]).padding(0.06);
+  const maxVal = d3.max(users.flatMap(u => SEXES.map(s => rolled.get(u)?.get(s) || 0)));
+  const y = d3.scaleLinear().domain([0, maxVal * 1.15]).range([h, 0]);
 
   svg.append('g').attr('class', 'grid')
     .call(d3.axisLeft(y).ticks(5).tickSize(-w).tickFormat(''));
 
-  // All bars start at baseline height 0; the update() function animates them.
-  const bars = svg.selectAll('.age-bar').data(AGE_ORDER).enter()
-    .append('rect').attr('class', 'age-bar')
-    .attr('x', d => x(d)).attr('width', x.bandwidth())
-    .attr('y', h).attr('height', 0)
-    .attr('fill', d => ageColors(d))
-    .attr('rx', 2).style('cursor', 'pointer');
+  users.forEach(u => {
+    SEXES.forEach(s => {
+      const val = rolled.get(u)?.get(s) || 0;
+      svg.append('rect')
+        .attr('x', x0(u) + x1(s)).attr('y', y(val))
+        .attr('width', x1.bandwidth()).attr('height', h - y(val))
+        .attr('fill', sexColors[s]).attr('rx', 1)
+        .on('mousemove', evt => showTooltip('tooltip-sex',
+          `<strong>${u} — ${s}</strong><br/>${fmt(val)}`, evt))
+        .on('mouseleave', () => hideTooltip('tooltip-sex'));
+    });
+  });
 
-  // Axes.
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(x0))
+    .selectAll('text')
+      .attr('transform', 'rotate(-35)').style('text-anchor', 'end')
+      .attr('dx', '-0.5em').attr('dy', '0.2em');
   svg.append('g').attr('class', 'axis')
-    .call(d3.axisLeft(y).ticks(5).tickFormat(d => d3.format(',')(d)));
+    .call(d3.axisLeft(y).ticks(5).tickFormat(d => fmt(d)));
   svg.append('text').attr('transform', 'rotate(-90)')
-    .attr('x', -h / 2).attr('y', -52)
-    .attr('text-anchor', 'middle').attr('fill', 'var(--muted)')
-    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
-    .text('Hospitalisations');
+    .attr('x', -h / 2).attr('y', -55).attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .text('Hospitalisations (total 2011–2021)');
 
-  /** Filters data to the selected year and transitions bars to their new heights. */
-  function update(year) {
-    document.getElementById('yearLabel').textContent = year;
-    const yearData = raw.filter(d => d.year === year);
-    const byAge    = Object.fromEntries(yearData.map(d => [d.age_group, d.hospitalisations]));
+  const leg = svg.append('g').attr('transform', `translate(${w - 130}, 0)`);
+  SEXES.forEach((s, i) => {
+    leg.append('rect').attr('x', 0).attr('y', i * 18).attr('width', 12).attr('height', 12)
+      .attr('fill', sexColors[s]).attr('rx', 1);
+    leg.append('text').attr('x', 18).attr('y', i * 18 + 9).attr('dominant-baseline', 'middle')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+      .text(s);
+  });
+}
 
-    bars.data(AGE_ORDER)
-      .on('mousemove', (event, d) => showTooltip('tooltip-age',
-        `<strong>${d}</strong><br/>${year}: ${fmt(byAge[d] || 0)}`, event))
-      .on('mouseleave', () => hideTooltip('tooltip-age'))
-      .transition().duration(500).ease(d3.easeCubicOut)
-      .attr('y',      d => y(byAge[d] || 0))
-      .attr('height', d => h - y(byAge[d] || 0));
-  }
+function drawPyramid(raw, sel) {
+  const SEXES = ['Male', 'Female'];
+  const ages = AGE_ORDER.filter(a => raw.some(d => d.age_group === a));
 
-  // Initialise to the most recent year, then wire the slider.
-  update(2021);
-  document.getElementById('yearSlider').addEventListener('input', e => update(+e.target.value));
+  const rolled = d3.rollup(
+    raw.filter(d => SEXES.includes(d.sex)),
+    v => d3.sum(v, d => num(d[HOSPS])),
+    d => d.age_group,
+    d => d.sex
+  );
+
+  const id = sel.replace('#', '');
+  const W  = getContainerWidth(id);
+  const H  = 300;
+  const w  = W - M.left - M.right;
+  const h  = H - M.top - M.bottom;
+  const midX = w / 2;
+
+  const svg = d3.select(sel)
+    .append('svg').attr('width', W).attr('height', H)
+    .append('g').attr('transform', `translate(${M.left},${M.top})`);
+
+  const y = d3.scaleBand().domain(ages).range([0, h]).padding(0.15);
+  const maxVal = d3.max(ages.flatMap(a => SEXES.map(s => rolled.get(a)?.get(s) || 0)));
+  const xLeft  = d3.scaleLinear().domain([0, maxVal]).range([midX, 0]);
+  const xRight = d3.scaleLinear().domain([0, maxVal]).range([midX, w]);
+
+  // Male bars (left)
+  ages.forEach(a => {
+    const val = rolled.get(a)?.get('Male') || 0;
+    svg.append('rect')
+      .attr('x', xLeft(val)).attr('y', y(a))
+      .attr('width', midX - xLeft(val)).attr('height', y.bandwidth())
+      .attr('fill', '#4fc3f7').attr('rx', 1)
+      .on('mousemove', evt => showTooltip('tooltip-pyramid',
+        `<strong>${a} — Male</strong><br/>${fmt(val)}`, evt))
+      .on('mouseleave', () => hideTooltip('tooltip-pyramid'));
+  });
+
+  // Female bars (right)
+  ages.forEach(a => {
+    const val = rolled.get(a)?.get('Female') || 0;
+    svg.append('rect')
+      .attr('x', midX).attr('y', y(a))
+      .attr('width', xRight(val) - midX).attr('height', y.bandwidth())
+      .attr('fill', '#f5a623').attr('rx', 1)
+      .on('mousemove', evt => showTooltip('tooltip-pyramid',
+        `<strong>${a} — Female</strong><br/>${fmt(val)}`, evt))
+      .on('mouseleave', () => hideTooltip('tooltip-pyramid'));
+  });
+
+  // Centre divider
+  svg.append('line')
+    .attr('x1', midX).attr('x2', midX).attr('y1', 0).attr('y2', h)
+    .attr('stroke', 'var(--border)').attr('stroke-width', 1);
+
+  // Age labels at centre
+  svg.append('g').attr('class', 'axis')
+    .attr('transform', `translate(${midX},0)`)
+    .call(d3.axisLeft(y).tickSize(0))
+    .selectAll('.domain').remove();
+
+  // x axes
+  svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
+    .call(d3.axisBottom(xLeft.copy().range([midX, 0])).ticks(4).tickFormat(d => fmt(d)));
+  svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
+    .call(d3.axisBottom(xRight.copy().range([midX, w])).ticks(4).tickFormat(d => fmt(d)));
+
+  svg.append('text').attr('x', midX - 10).attr('y', -8).attr('text-anchor', 'end')
+    .attr('fill', '#4fc3f7').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .text('Male');
+  svg.append('text').attr('x', midX + 10).attr('y', -8)
+    .attr('fill', '#f5a623').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .text('Female');
+  svg.append('text').attr('x', w / 2).attr('y', h + 40).attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .text('Hospitalisations (total 2011–2021)');
 }

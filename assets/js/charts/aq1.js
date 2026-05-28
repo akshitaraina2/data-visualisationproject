@@ -1,255 +1,274 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// aq1.js — AQ1: The Big Picture
-// Visualises national road crash hospitalisation trends 2011–2021.
+// ── AQ1: THE BIG PICTURE ─────────────────────────────────────────────────────
+// drawTrend      → multi-series line (road user + national total bold)
+// drawStackedArea → stacked area by road user
 //
-// drawTrend     → animated area + line chart of national annual totals
-// drawRoadUser  → multi-line chart per road user category with filter buttons
-//
-// Depends on: constants.js (fmt, num, M, DATA, ST_COUNT, roadUserColors,
-//             roadUserShort, getContainerWidth, showTooltip, hideTooltip)
-// ─────────────────────────────────────────────────────────────────────────────
+// Both charts share #aq1-filters buttons, added once by drawTrend.
+// Vertical lines at 2012 (VIC break) and 2017 (NSW break), COVID label at 2020.
+// Depends on: constants.js
 
+function _addPolicyLines(svg, x, h, tooltipId) {
+  const breaks = [
+    { yr: 2012, tip: 'Victoria 2012: revised hospitalisation coding — est. −5.6% step-change.' },
+    { yr: 2017, tip: 'NSW 2017: change in hospitalisation reporting methodology.' },
+  ];
+  breaks.forEach(({ yr, tip }) => {
+    const g = svg.append('g').style('cursor', 'pointer');
+    g.append('line')
+      .attr('x1', x(yr)).attr('x2', x(yr)).attr('y1', 0).attr('y2', h)
+      .attr('stroke', 'var(--muted)').attr('stroke-width', 1).attr('stroke-dasharray', '4,3');
+    g.append('text')
+      .attr('x', x(yr) + 4).attr('y', 12)
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
+      .text(yr === 2012 ? 'VIC break' : 'NSW break');
+    g.on('mousemove', evt => showTooltip(tooltipId, tip, evt))
+     .on('mouseleave', () => hideTooltip(tooltipId));
+  });
+}
 
-/**
- * Draws an animated area + line chart of national annual hospitalisations.
- * Data is aggregated from state_territory_1: all states + both 6-monthly halves
- * are summed into a single national total per year.
- * Also populates the hero stat counter in the page header.
- */
-async function drawTrend() {
-  const raw = await d3.csv(DATA.state);
-
-  // Sum every state and both half-year periods into one total per calendar year.
-  const byYear = d3.rollup(
+function drawTrend(raw, sel) {
+  // National totals per road user per year (sum all states)
+  const natRU = d3.rollup(
     raw,
-    v => d3.sum(v, d => num(d[ST_COUNT])),
-    d => +d['calendar year']
+    v => d3.sum(v, d => num(d[HOSPS])),
+    d => d.road_user,
+    d => +d.year
   );
-  const data = Array.from(byYear, ([year, hospitalisations]) => ({ year, hospitalisations }))
-    .sort((a, b) => a.year - b.year);
+  // National total per year across all road users
+  const natTotal = d3.rollup(
+    raw,
+    v => d3.sum(v, d => num(d[HOSPS])),
+    d => +d.year
+  );
 
-  // Populate the decade-total hero stat displayed above the fold.
-  const total  = d3.sum(data, d => d.hospitalisations);
-  const heroEl = document.getElementById('hero-total');
-  if (heroEl) heroEl.textContent = fmt(total);
+  const users = Array.from(natRU.keys()).sort();
+  const years = Array.from(natTotal.keys()).sort((a, b) => a - b);
 
-  const id = 'chart-trend';
+  // Build filter buttons once (shared with drawStackedArea)
+  const filterRow = document.getElementById('aq1-filters');
+  if (filterRow && !filterRow.hasChildNodes()) {
+    const allBtn = document.createElement('button');
+    allBtn.className = 'filter-btn active';
+    allBtn.textContent = 'All';
+    allBtn.dataset.user = 'all';
+    filterRow.appendChild(allBtn);
+    users.forEach(u => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.textContent = roadUserShort[u] || u;
+      btn.dataset.user = u;
+      filterRow.appendChild(btn);
+    });
+  }
+
+  const id = sel.replace('#', '');
   const W  = getContainerWidth(id);
-  const H  = 380;
-  const w  = W - M.left - M.right;
-  const h  = H - M.top  - M.bottom;
+  const H  = 420;
+  const w  = W - M.left - M.right - 100; // extra right margin for "National total" label
+  const h  = H - M.top - M.bottom;
 
-  const svg = d3.select(`#${id}`)
+  const svg = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
     .append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const x = d3.scaleLinear().domain([2011, 2021]).range([0, w]);
-  const y = d3.scaleLinear().domain([0, d3.max(data, d => d.hospitalisations) * 1.15]).range([h, 0]);
+  const yMax = Math.max(
+    d3.max(Array.from(natTotal.values())),
+    d3.max(Array.from(natRU.values()).flatMap(m => Array.from(m.values())))
+  );
+  const y = d3.scaleLinear().domain([0, yMax * 1.15]).range([h, 0]);
 
-  // Horizontal grid lines for readability.
   svg.append('g').attr('class', 'grid')
     .call(d3.axisLeft(y).ticks(5).tickSize(-w).tickFormat(''));
 
-  // Filled area under the trend line.
-  const area = d3.area()
-    .x(d => x(d.year))
-    .y0(h).y1(d => y(d.hospitalisations))
-    .curve(d3.curveCatmullRom);
+  const lineGen = d3.line().x(d => x(d.yr)).y(d => y(d.v)).curve(d3.curveCatmullRom);
 
-  svg.append('path').datum(data)
-    .attr('fill', 'rgba(245,166,35,0.12)')
-    .attr('d', area);
+  // Per-road-user lines
+  svg.selectAll('.ru-line')
+    .data(users)
+    .enter().append('path')
+      .attr('class', 'ru-line')
+      .attr('fill', 'none')
+      .attr('stroke', u => roadUserColors[u] || '#888')
+      .attr('stroke-width', 1.8)
+      .attr('opacity', 0.75)
+      .attr('d', u => lineGen(years.map(yr => ({ yr, v: natRU.get(u)?.get(yr) || 0 }))));
 
-  // Trend line, animated with stroke-dashoffset to draw from left to right.
-  const line = d3.line()
-    .x(d => x(d.year))
-    .y(d => y(d.hospitalisations))
-    .curve(d3.curveCatmullRom);
-
-  const path = svg.append('path').datum(data)
+  // National total (bold white line)
+  svg.append('path')
+    .attr('class', 'national-total-line')
+    .datum(years.map(yr => ({ yr, v: natTotal.get(yr) || 0 })))
     .attr('fill', 'none')
-    .attr('stroke', '#f5a623')
-    .attr('stroke-width', 2.5)
-    .attr('d', line);
+    .attr('stroke', '#e8eaf0')
+    .attr('stroke-width', 3)
+    .attr('d', lineGen);
 
-  const len = path.node().getTotalLength();
-  path.attr('stroke-dasharray', len).attr('stroke-dashoffset', len)
-    .transition().duration(1800).ease(d3.easeCubicInOut)
-    .attr('stroke-dashoffset', 0);
-
-  // Data point dots with hover tooltips.
-  svg.selectAll('circle').data(data).enter().append('circle')
-    .attr('cx', d => x(d.year))
-    .attr('cy', d => y(d.hospitalisations))
-    .attr('r', 5)
-    .attr('fill', '#f5a623')
-    .attr('stroke', '#0d0f14')
-    .attr('stroke-width', 2)
-    .style('cursor', 'pointer')
-    .on('mousemove', (event, d) => showTooltip('tooltip-trend',
-      `<strong>${d.year}</strong><br/>${fmt(d.hospitalisations)} hospitalisations`, event))
-    .on('mouseleave', () => hideTooltip('tooltip-trend'));
-
-  // COVID-19 annotation — marks the 2020 mobility-related dip.
-  // The drop reflects reduced travel, not improved road safety.
-  svg.append('line')
-    .attr('x1', x(2020)).attr('x2', x(2020))
-    .attr('y1', 0).attr('y2', h)
-    .attr('stroke', '#e8453c').attr('stroke-width', 1)
-    .attr('stroke-dasharray', '4,3');
-
+  // National total end-label
+  const lastTotal = natTotal.get(2021) || 0;
   svg.append('text')
-    .attr('x', x(2020) + 6).attr('y', 18)
-    .attr('fill', '#e8453c')
-    .attr('font-family', "'DM Mono', monospace")
-    .attr('font-size', '10px')
-    .text('COVID-19 dip');
+    .attr('x', x(2021) + 6).attr('y', y(lastTotal))
+    .attr('dominant-baseline', 'middle')
+    .attr('fill', '#e8eaf0')
+    .attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
+    .text('National total');
 
-  // Axes.
+  // Policy break lines
+  _addPolicyLines(svg, x, h, 'tooltip-trend');
+
+  // COVID-19 dip label
+  svg.append('text')
+    .attr('x', x(2020) + 5).attr('y', y(natTotal.get(2020) || 0) - 10)
+    .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
+    .text('COVID-19 mobility restrictions');
+
+  // Hover dots on national total
+  years.forEach(yr => {
+    svg.append('circle')
+      .attr('cx', x(yr)).attr('cy', y(natTotal.get(yr) || 0))
+      .attr('r', 4).attr('fill', '#e8eaf0').attr('opacity', 0)
+      .style('cursor', 'pointer')
+      .on('mousemove', evt => showTooltip('tooltip-trend',
+        `<strong>National total</strong><br/>${yr}: ${fmt(natTotal.get(yr) || 0)}`, evt))
+      .on('mouseenter', function() { d3.select(this).attr('opacity', 1); })
+      .on('mouseleave', function() { d3.select(this).attr('opacity', 0); hideTooltip('tooltip-trend'); });
+  });
+
+  // Axes
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
     .call(d3.axisBottom(x).ticks(11).tickFormat(d3.format('d')));
-
   svg.append('g').attr('class', 'axis')
-    .call(d3.axisLeft(y).ticks(5).tickFormat(d => d3.format(',')(d)));
-
-  svg.append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('x', -h / 2).attr('y', -52)
-    .attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)')
-    .attr('font-family', "'DM Mono', monospace")
-    .attr('font-size', '11px')
+    .call(d3.axisLeft(y).ticks(5).tickFormat(d => fmt(d)));
+  svg.append('text').attr('transform', 'rotate(-90)')
+    .attr('x', -h / 2).attr('y', -55).attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Hospitalisations');
+
+  // Road user legend (bottom-right)
+  const leg = svg.append('g').attr('transform', `translate(${w - 155}, ${h - users.length * 14 - 4})`);
+  users.forEach((u, i) => {
+    leg.append('rect').attr('x', 0).attr('y', i * 14).attr('width', 10).attr('height', 3)
+      .attr('fill', roadUserColors[u] || '#888').attr('rx', 1);
+    leg.append('text').attr('x', 15).attr('y', i * 14 + 3)
+      .attr('dominant-baseline', 'middle')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
+      .text(roadUserShort[u] || u);
+  });
+
+  // Filter interaction (SVG-local — drawStackedArea adds its own listener)
+  if (filterRow) {
+    filterRow.addEventListener('click', e => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      document.querySelectorAll('#aq1-filters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const sel2 = btn.dataset.user;
+      svg.selectAll('.ru-line')
+        .transition().duration(250)
+        .attr('opacity', function(u) { return sel2 === 'all' || u === sel2 ? 0.85 : 0.05; })
+        .attr('stroke-width', function(u) { return sel2 !== 'all' && u === sel2 ? 3.5 : 1.8; });
+      svg.select('.national-total-line')
+        .transition().duration(250)
+        .attr('opacity', sel2 === 'all' ? 1 : 0.15);
+    });
+  }
 }
 
-
-/**
- * Draws a multi-line chart with one series per road user category.
- * Data is aggregated from state_territory_2: all states + both half-year periods
- * are summed per road user per calendar year.
- * Filter buttons above the chart let users isolate a single road user series.
- */
-async function drawRoadUser() {
-  const rawCsv = await d3.csv(DATA.roadUser);
-
-  // Aggregate to { road_user, year, hospitalisations }.
-  const rolled = d3.rollup(
-    rawCsv,
-    v => d3.sum(v, d => num(d[ST_COUNT])),
-    d => d['road user'],
-    d => +d['calendar year']
+function drawStackedArea(raw, sel) {
+  const natRU = d3.rollup(
+    raw,
+    v => d3.sum(v, d => num(d[HOSPS])),
+    d => d.road_user,
+    d => +d.year
   );
 
-  const raw = [];
-  rolled.forEach((years, road_user) => {
-    years.forEach((hospitalisations, year) => {
-      raw.push({ year, road_user, hospitalisations });
-    });
+  const users = Array.from(natRU.keys()).sort();
+  const years = [...new Set(raw.map(d => +d.year))].sort((a, b) => a - b);
+
+  const stackData = years.map(yr => {
+    const row = { year: yr };
+    users.forEach(u => { row[u] = natRU.get(u)?.get(yr) || 0; });
+    return row;
   });
 
-  const grouped = d3.group(raw, d => d.road_user);
-  const users   = Array.from(grouped.keys()).sort();
+  const series = d3.stack().keys(users)(stackData);
 
-  // Build filter buttons — one per road user category plus an "All" toggle.
-  const filterRow = document.getElementById('road-user-filters');
-  const allBtn    = document.createElement('button');
-  allBtn.className   = 'filter-btn active';
-  allBtn.textContent = 'All';
-  allBtn.dataset.user = 'all';
-  filterRow.appendChild(allBtn);
-
-  users.forEach(u => {
-    const btn = document.createElement('button');
-    btn.className    = 'filter-btn';
-    btn.textContent  = roadUserShort[u] || u;
-    btn.dataset.user = u;
-    filterRow.appendChild(btn);
-  });
-
-  const id = 'chart-roaduser';
+  const id = sel.replace('#', '');
   const W  = getContainerWidth(id);
-  const H  = 400;
+  const H  = 380;
   const w  = W - M.left - M.right;
-  const h  = H - M.top  - M.bottom;
+  const h  = H - M.top - M.bottom;
 
-  const svg = d3.select(`#${id}`)
+  const svg = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
     .append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const x = d3.scaleLinear().domain([2011, 2021]).range([0, w]);
   const y = d3.scaleLinear()
-    .domain([0, d3.max(raw, d => d.hospitalisations) * 1.2])
+    .domain([0, d3.max(series, s => d3.max(s, d => d[1])) * 1.05])
     .range([h, 0]);
 
-  svg.append('g').attr('class', 'grid')
-    .call(d3.axisLeft(y).ticks(5).tickSize(-w).tickFormat(''));
-
-  const lineGen = d3.line()
-    .x(d => x(d.year))
-    .y(d => y(d.hospitalisations))
+  const area = d3.area()
+    .x(d => x(d.data.year))
+    .y0(d => y(d[0])).y1(d => y(d[1]))
     .curve(d3.curveCatmullRom);
 
-  // Draw one path per road user; data-user attribute is used by the filter interaction.
-  const lines = svg.selectAll('.road-line')
-    .data(Array.from(grouped.entries()))
+  svg.selectAll('.stack-area')
+    .data(series)
     .enter().append('path')
-      .attr('class', 'road-line')
-      .attr('data-user', ([u]) => u)
-      .attr('fill', 'none')
-      .attr('stroke', ([u]) => roadUserColors[u] || '#888')
-      .attr('stroke-width', 2)
-      .attr('opacity', 0.85)
-      .attr('d', ([, vals]) => lineGen(vals.sort((a, b) => a.year - b.year)));
+      .attr('class', 'stack-area')
+      .attr('fill', s => roadUserColors[s.key] || '#888')
+      .attr('fill-opacity', 0.75)
+      .attr('d', area)
+      .on('mousemove', (event, s) => {
+        const [mx] = d3.pointer(event, svg.node());
+        const yr = Math.max(2011, Math.min(2021, Math.round(x.invert(mx))));
+        const val = natRU.get(s.key)?.get(yr) || 0;
+        showTooltip('tooltip-stacked',
+          `<strong>${roadUserShort[s.key] || s.key}</strong><br/>${yr}: ${fmt(val)}`, event);
+      })
+      .on('mouseleave', () => hideTooltip('tooltip-stacked'));
 
-  // Invisible hover dots per data point — become visible on mouseenter.
-  grouped.forEach((vals, u) => {
-    vals.sort((a, b) => a.year - b.year).forEach(d => {
-      svg.append('circle')
-        .attr('cx', x(d.year)).attr('cy', y(d.hospitalisations))
-        .attr('r', 5).attr('fill', roadUserColors[u] || '#888')
-        .attr('opacity', 0)
-        .attr('data-user', u)
-        .style('cursor', 'pointer')
-        .on('mousemove', event => showTooltip('tooltip-roaduser',
-          `<strong>${roadUserShort[u] || u}</strong><br/>${d.year}: ${fmt(d.hospitalisations)}`, event))
-        .on('mouseenter', function () { d3.select(this).attr('opacity', 1); })
-        .on('mouseleave', function () { d3.select(this).attr('opacity', 0); hideTooltip('tooltip-roaduser'); });
-    });
-  });
+  // Policy break lines
+  _addPolicyLines(svg, x, h, 'tooltip-stacked');
 
-  // Axes.
+  // COVID label
+  svg.append('text')
+    .attr('x', x(2020) + 4).attr('y', 14)
+    .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
+    .text('COVID-19');
+
+  // Axes
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
     .call(d3.axisBottom(x).ticks(11).tickFormat(d3.format('d')));
   svg.append('g').attr('class', 'axis')
-    .call(d3.axisLeft(y).ticks(5).tickFormat(d => d3.format(',')(d)));
+    .call(d3.axisLeft(y).ticks(5).tickFormat(d => fmt(d)));
   svg.append('text').attr('transform', 'rotate(-90)')
-    .attr('x', -h / 2).attr('y', -52)
-    .attr('text-anchor', 'middle').attr('fill', 'var(--muted)')
-    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('x', -h / 2).attr('y', -55).attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Hospitalisations');
 
-  // Legend using shortened road user labels.
-  const leg = svg.append('g').attr('transform', `translate(${w - 150}, 0)`);
+  // Legend
+  const leg = svg.append('g').attr('transform', `translate(${w - 155}, 4)`);
   users.forEach((u, i) => {
-    leg.append('rect').attr('x', 0).attr('y', i * 18).attr('width', 10).attr('height', 3)
-      .attr('fill', roadUserColors[u] || '#888').attr('rx', 1);
-    leg.append('text').attr('x', 16).attr('y', i * 18 + 4)
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace")
-      .attr('font-size', '9px').text(roadUserShort[u] || u);
+    leg.append('rect').attr('x', 0).attr('y', i * 14).attr('width', 10).attr('height', 10)
+      .attr('fill', roadUserColors[u] || '#888').attr('fill-opacity', 0.75).attr('rx', 1);
+    leg.append('text').attr('x', 15).attr('y', i * 14 + 8)
+      .attr('dominant-baseline', 'middle')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
+      .text(roadUserShort[u] || u);
   });
 
-  // Filter buttons: clicking a road user fades all other lines to near-invisible.
-  filterRow.addEventListener('click', e => {
-    const btn = e.target.closest('.filter-btn');
-    if (!btn) return;
-    document.querySelectorAll('#road-user-filters .filter-btn')
-      .forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const selected = btn.dataset.user;
-
-    svg.selectAll('.road-line')
-      .transition().duration(300)
-      .attr('opacity',      ([u]) => selected === 'all' || u === selected ? 0.85 : 0.08)
-      .attr('stroke-width', ([u]) => selected !== 'all' && u === selected ? 3.5 : 2);
-  });
+  // Filter: hide/show layers when AQ1 filter buttons are clicked
+  const filterRow = document.getElementById('aq1-filters');
+  if (filterRow) {
+    filterRow.addEventListener('click', e => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      const selected = btn.dataset.user;
+      svg.selectAll('.stack-area')
+        .transition().duration(250)
+        .attr('fill-opacity', function(s) {
+          return selected === 'all' || s.key === selected ? 0.75 : 0.04;
+        });
+    });
+  }
 }
