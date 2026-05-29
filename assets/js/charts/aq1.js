@@ -69,7 +69,7 @@ function drawTrend(raw, sel) {
 
   const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Multi-series line chart: annual road crash hospitalisations by road user type, Australia 2011–2021');
   svgEl.append('desc')
@@ -219,7 +219,7 @@ function drawStackedArea(raw, sel) {
 
   const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Stacked area chart: road user composition of hospitalisations, Australia 2011–2021');
   svgEl.append('desc')

@@ -39,7 +39,7 @@ function drawSankey(raw, sel) {
   const H  = 500;
 
   const svg = d3.select(sel).append('svg').attr('width', W).attr('height', H)
-    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svg.append('title').attr('id', `${id}-title`)
     .text('Sankey diagram: flow from road user type to collision counterparty, Australia 2011–2021');
   svg.append('desc')
@@ -151,7 +151,7 @@ function drawCounterpartyBar(raw, sel) {
 
   const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Stacked bar chart: road crash hospitalisations by counterparty type, Australia 2011–2021');
   svgEl.append('desc')

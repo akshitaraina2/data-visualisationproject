@@ -147,7 +147,7 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
 
   const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Dual-axis line chart: First Nations vs Non-Indigenous road crash hospitalisation trends, Australia 2011–2021');
   svgEl.append('desc')
@@ -250,7 +250,7 @@ function drawRemoteness(raw, sel) {
   const remId = sel.replace('#', '');
   const svg = d3.select(sel)
     .append('svg').attr('width', totalW).attr('height', cellH + 55)
-    .attr('role', 'img').attr('aria-labelledby', `${remId}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${remId}-title`);
   svg.append('title').attr('id', `${remId}-title`)
     .text('Small multiples: road crash hospitalisations by remoteness area and indigenous status, Australia 2011–2021');
   svg.append('desc')

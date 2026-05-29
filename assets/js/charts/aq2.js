@@ -28,7 +28,7 @@ function drawHeatmap(raw, sel) {
 
   const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Heatmap: hospitalisations by age group and road user type, Australia 2011–2021');
   svgEl.append('desc')
@@ -63,7 +63,8 @@ function drawHeatmap(raw, sel) {
     .call(d3.axisBottom(xScale).tickFormat(d => roadUserShort[d] || d))
     .selectAll('text')
       .attr('transform', 'rotate(-45)').style('text-anchor', 'end')
-      .attr('dx', '-0.5em').attr('dy', '0.2em');
+      .attr('dx', '-0.5em').attr('dy', '0.2em')
+      .attr('fill', 'var(--text)');
 
   svg.append('g').attr('class', 'axis').call(d3.axisLeft(yScale));
 
@@ -114,7 +115,7 @@ function drawSexRoadUser(raw, sel) {
 
   const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Grouped bar chart: male vs female hospitalisations by road user type, Australia 2011–2021');
   svgEl.append('desc')
@@ -146,7 +147,8 @@ function drawSexRoadUser(raw, sel) {
     .call(d3.axisBottom(x0).tickFormat(d => roadUserShort[d] || d))
     .selectAll('text')
       .attr('transform', 'rotate(-45)').style('text-anchor', 'end')
-      .attr('dx', '-0.5em').attr('dy', '0.2em');
+      .attr('dx', '-0.5em').attr('dy', '0.2em')
+      .attr('fill', 'var(--text)');
   svg.append('g').attr('class', 'axis')
     .call(d3.axisLeft(y).ticks(5).tickFormat(d => fmt(d)));
   svg.append('text').attr('transform', 'rotate(-90)')
@@ -184,7 +186,7 @@ function drawPyramid(raw, sel) {
 
   const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Population pyramid: hospitalisations by age group and sex, Australia 2011–2021');
   svgEl.append('desc')
