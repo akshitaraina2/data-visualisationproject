@@ -21,13 +21,13 @@ function drawHeatmap(raw, sel) {
   const id = sel.replace('#', '');
   const W  = getContainerWidth(id);
   const rightPad = 20;
-  const bottomPad = 90;
+  const bottomPad = 160;
   const w  = W - M.left - rightPad;
   const H  = 280 + bottomPad;
   const h  = H - M.top - bottomPad;
 
   const svgEl = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H).style('overflow', 'visible')
+    .append('svg').attr('width', W).attr('height', H)
     .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Heatmap: hospitalisations by age group and road user type, Australia 2011–2021');
@@ -38,7 +38,7 @@ function drawHeatmap(raw, sel) {
   const xScale = d3.scaleBand().domain(users).range([0, w]).padding(0.04);
   const yScale = d3.scaleBand().domain(ages).range([0, h]).padding(0.04);
   const maxVal = d3.max(ages.flatMap(a => users.map(u => matrix.get(a)?.get(u) || 0)));
-  const colorScale = d3.scaleSequential(d3.interpolateBlues).domain([0, maxVal]);
+  const colorScale = d3.scaleSequentialSqrt(d3.interpolateBlues).domain([0, maxVal]);
 
   ages.forEach(age => {
     users.forEach(user => {
@@ -84,7 +84,7 @@ function drawHeatmap(raw, sel) {
 function drawSexRoadUser(raw, sel) {
   const SEXES = ['Male', 'Female'];
   const users = [...new Set(raw.map(d => d.road_user))].sort();
-  const sexColors = { Male: '#4fc3f7', Female: '#f5a623' };
+  const sexColors = { Male: '#56B4E9', Female: '#E69F00' };
 
   const rolled = d3.rollup(
     raw.filter(d => SEXES.includes(d.sex)),
@@ -95,12 +95,12 @@ function drawSexRoadUser(raw, sel) {
 
   const id = sel.replace('#', '');
   const W  = getContainerWidth(id);
-  const H  = 360;
+  const H  = 440;
   const w  = W - M.left - M.right;
-  const h  = H - M.top - 80;
+  const h  = H - M.top - 160;
 
   const svgEl = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H).style('overflow', 'visible')
+    .append('svg').attr('width', W).attr('height', H)
     .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Grouped bar chart: male vs female hospitalisations by road user type, Australia 2011–2021');
@@ -189,7 +189,7 @@ function drawPyramid(raw, sel) {
     svg.append('rect')
       .attr('x', xLeft(val)).attr('y', y(a))
       .attr('width', midX - xLeft(val)).attr('height', y.bandwidth())
-      .attr('fill', '#4fc3f7').attr('rx', 1)
+      .attr('fill', '#56B4E9').attr('rx', 1)
       .on('mousemove', evt => showTooltip('tooltip-pyramid',
         `<strong>${a} — Male</strong><br/>${fmt(val)}`, evt))
       .on('mouseleave', () => hideTooltip('tooltip-pyramid'));
@@ -201,7 +201,7 @@ function drawPyramid(raw, sel) {
     svg.append('rect')
       .attr('x', midX).attr('y', y(a))
       .attr('width', xRight(val) - midX).attr('height', y.bandwidth())
-      .attr('fill', '#f5a623').attr('rx', 1)
+      .attr('fill', '#E69F00').attr('rx', 1)
       .on('mousemove', evt => showTooltip('tooltip-pyramid',
         `<strong>${a} — Female</strong><br/>${fmt(val)}`, evt))
       .on('mouseleave', () => hideTooltip('tooltip-pyramid'));
@@ -225,10 +225,10 @@ function drawPyramid(raw, sel) {
     .call(d3.axisBottom(xRight.copy().range([midX, w])).ticks(4).tickFormat(d => fmt(d)));
 
   svg.append('text').attr('x', midX - 10).attr('y', -8).attr('text-anchor', 'end')
-    .attr('fill', '#4fc3f7').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('fill', '#56B4E9').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Male');
   svg.append('text').attr('x', midX + 10).attr('y', -8)
-    .attr('fill', '#f5a623').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('fill', '#E69F00').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Female');
   svg.append('text').attr('x', w / 2).attr('y', h + 40).attr('text-anchor', 'middle')
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')

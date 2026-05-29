@@ -120,7 +120,7 @@ function drawChoropleth(stateData, population, geojson, sel) {
   legG.append('text').attr('x', legW).attr('y', -4).attr('text-anchor', 'end')
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
     .text(fmtRate(d3.max(rateValues)) + ' /100k');
-  legG.append('text').attr('x', legW / 2).attr('y', legH + 14).attr('text-anchor', 'middle')
+  legG.append('text').attr('x', 0).attr('y', legH + 14)
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
     .text('Average annual hospitalisations per 100,000 population');
 }
@@ -141,7 +141,8 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
   const id = sel.replace('#', '');
   const W  = getContainerWidth(id);
   const H  = 380;
-  const w  = W - M.left - M.right;
+  const rpad = 80; // extra right margin so the First Nations axis label fits inside the SVG
+  const w  = W - M.left - M.right - rpad;
   const h  = H - M.top - M.bottom;
 
   const svgEl = d3.select(sel)
@@ -200,10 +201,16 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
     .attr('text-anchor', 'middle').attr('fill', 'var(--nonindig)')
     .attr('font-family', "'DM Mono', monospace").attr('font-size', '10px')
     .text('Non-Indigenous hospitalisations');
-  svg.append('text').attr('transform', 'rotate(90)').attr('x', h / 2).attr('y', -(w + 52))
+  // rotate(-90): (x_rot,y_rot)→(y_rot,−x_rot) in original space; places text at (w+60, h/2) reading bottom-to-top
+  svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(h / 2)).attr('y', w + 60)
     .attr('text-anchor', 'middle').attr('fill', 'var(--fn-color)')
     .attr('font-family', "'DM Mono', monospace").attr('font-size', '10px')
     .text('First Nations hospitalisations');
+
+  // Scale-mismatch warning — prevents misreading line crossings as absolute comparisons
+  svg.append('text').attr('x', w / 2).attr('y', -12).attr('text-anchor', 'middle')
+    .attr('fill', 'var(--accent2)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
+    .text('⚠ Left and right y-axes use different scales — lines cannot be compared directly');
 
   const leg = svg.append('g').attr('transform', `translate(${w / 2 - 190}, ${h - 18})`);
   [['First Nations people', 'var(--fn-color)'], ['Non-Indigenous', 'var(--nonindig)']].forEach(([lbl, col], i) => {
@@ -236,12 +243,13 @@ function drawRemoteness(raw, sel) {
   const containerEl = document.querySelector(sel);
   const totalW = containerEl ? containerEl.getBoundingClientRect().width || 800 : 800;
   const cellW  = Math.floor((totalW - 30) / areas.length);
-  const cellH  = 220;
-  const cm     = { top: 28, right: 14, bottom: 36, left: 50 };
+  const cellH  = 240;
+  // cm.left=70 prevents y-axis label overlapping tick numbers; cm.right=55 fits right (FN) axis
+  const cm     = { top: 28, right: 55, bottom: 36, left: 70 };
 
   const remId = sel.replace('#', '');
   const svg = d3.select(sel)
-    .append('svg').attr('width', totalW).attr('height', cellH + 30)
+    .append('svg').attr('width', totalW).attr('height', cellH + 55)
     .attr('role', 'img').attr('aria-labelledby', `${remId}-title`);
   svg.append('title').attr('id', `${remId}-title`)
     .text('Small multiples: road crash hospitalisations by remoteness area and indigenous status, Australia 2011–2021');
@@ -255,24 +263,27 @@ function drawRemoteness(raw, sel) {
     const ch   = cellH - cm.top - cm.bottom;
     const inner = g.append('g').attr('transform', `translate(${cm.left},${cm.top})`);
 
-    const x    = d3.scaleLinear().domain([2011, 2021]).range([0, cw]);
-    const maxY = d3.max(statuses.flatMap(st =>
-      years.map(yr => rolled.get(rem)?.get(st)?.get(yr) || 0)
-    ));
-    const y = d3.scaleLinear().domain([0, (maxY || 1) * 1.2]).range([ch, 0]);
+    const x = d3.scaleLinear().domain([2011, 2021]).range([0, cw]);
+
+    // Independent scales per panel so the FN line is not flattened by the NI magnitude
+    const maxNI = d3.max(years.map(yr => rolled.get(rem)?.get('Non-Indigenous')?.get(yr) || 0));
+    const maxFN = d3.max(years.map(yr => rolled.get(rem)?.get('First Nations people')?.get(yr) || 0));
+    const yNI = d3.scaleLinear().domain([0, (maxNI || 1) * 1.2]).range([ch, 0]);
+    const yFN = d3.scaleLinear().domain([0, (maxFN || 1) * 1.2]).range([ch, 0]);
+    const scaleOf = { 'Non-Indigenous': yNI, 'First Nations people': yFN };
 
     inner.append('g').attr('class', 'grid')
-      .call(d3.axisLeft(y).ticks(4).tickSize(-cw).tickFormat(''));
+      .call(d3.axisLeft(yNI).ticks(4).tickSize(-cw).tickFormat(''));
 
     statuses.forEach(st => {
       const lineData = years.map(yr => ({ yr, v: rolled.get(rem)?.get(st)?.get(yr) || 0 }));
       inner.append('path').datum(lineData)
         .attr('fill', 'none').attr('stroke', statusColors[st]).attr('stroke-width', 1.8)
-        .attr('d', d3.line().x(d => x(d.yr)).y(d => y(d.v)).curve(d3.curveCatmullRom));
+        .attr('d', d3.line().x(d => x(d.yr)).y(d => scaleOf[st](d.v)).curve(d3.curveCatmullRom));
 
       lineData.forEach(d => {
         inner.append('circle')
-          .attr('cx', x(d.yr)).attr('cy', y(d.v)).attr('r', 3)
+          .attr('cx', x(d.yr)).attr('cy', scaleOf[st](d.v)).attr('r', 3)
           .attr('fill', statusColors[st]).attr('opacity', 0)
           .on('mousemove', evt => showTooltip('tooltip-remoteness',
             `<strong>${rem} — ${st}</strong><br/>${d.yr}: ${fmt(d.v)}`, evt))
@@ -288,23 +299,42 @@ function drawRemoteness(raw, sel) {
 
     inner.append('g').attr('class', 'axis').attr('transform', `translate(0,${ch})`)
       .call(d3.axisBottom(x).ticks(3).tickFormat(d3.format('d')));
+
+    // Left y-axis: Non-Indigenous scale (all panels)
+    inner.append('g').attr('class', 'axis')
+      .call(d3.axisLeft(yNI).ticks(4).tickFormat(d => fmt(d)));
+
+    // Right y-axis: First Nations scale (all panels)
+    inner.append('g').attr('class', 'axis').attr('transform', `translate(${cw},0)`)
+      .call(d3.axisRight(yFN).ticks(3).tickFormat(d => fmt(d)));
+
+    // Left axis label — first panel only; y=-62 clears tick number text
     if (idx === 0) {
-      inner.append('g').attr('class', 'axis').call(d3.axisLeft(y).ticks(4).tickFormat(d => fmt(d)));
-      inner.append('text').attr('transform', 'rotate(-90)').attr('x', -ch / 2).attr('y', -42)
-        .attr('text-anchor', 'middle').attr('fill', 'var(--muted)')
+      inner.append('text').attr('transform', 'rotate(-90)').attr('x', -(ch / 2)).attr('y', -62)
+        .attr('text-anchor', 'middle').attr('fill', 'var(--nonindig)')
         .attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
-        .text('Hospitalisations');
+        .text('Non-Indigenous');
+    }
+    // Right axis label — last panel only; (x_rot,y_rot)→(y_rot,−x_rot): places text right of chart
+    if (idx === areas.length - 1) {
+      inner.append('text').attr('transform', 'rotate(-90)').attr('x', -(ch / 2)).attr('y', cw + 48)
+        .attr('text-anchor', 'middle').attr('fill', 'var(--fn-color)')
+        .attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
+        .text('First Nations');
     }
   });
 
-  // Shared legend below panels
-  const legG = svg.append('g').attr('transform', `translate(15, ${cellH + 10})`);
-  [['First Nations people', 'var(--fn-color)'], ['Non-Indigenous', 'var(--nonindig)']].forEach(([lbl, col], i) => {
+  // Shared legend + dual-axis note below panels
+  const legG = svg.append('g').attr('transform', `translate(15, ${cellH + 20})`);
+  [['First Nations people (right axis)', 'var(--fn-color)'], ['Non-Indigenous (left axis)', 'var(--nonindig)']].forEach(([lbl, col], i) => {
     legG.append('line')
-      .attr('x1', i * 190).attr('x2', i * 190 + 20).attr('y1', 0).attr('y2', 0)
+      .attr('x1', i * 240).attr('x2', i * 240 + 20).attr('y1', 0).attr('y2', 0)
       .attr('stroke', col).attr('stroke-width', 2);
-    legG.append('text').attr('x', i * 190 + 26).attr('y', 4).attr('dominant-baseline', 'middle')
+    legG.append('text').attr('x', i * 240 + 26).attr('y', 4).attr('dominant-baseline', 'middle')
       .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '10px')
       .text(lbl);
   });
+  legG.append('text').attr('x', 0).attr('y', 22)
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
+    .text('Each panel uses independent y-axis scales — left (Non-Indigenous) and right (First Nations) are not comparable across panels.');
 }
