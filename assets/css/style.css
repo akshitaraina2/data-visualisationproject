@@ -311,9 +311,8 @@ input[type=range]::-webkit-slider-thumb {
   margin-top: 1rem;
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--muted);
+  color: #9ba3be;
   letter-spacing: 0.03em;
-  opacity: 0.7;
 }
 
 /* ── FIRST NATIONS CALLOUT ─────────────────────────────────────────────── */
@@ -346,10 +345,9 @@ input[type=range]::-webkit-slider-thumb {
   text-align: center;
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--muted);
+  color: #9ba3be;
   line-height: 1.8;
   border-top: 1px solid var(--border);
-  opacity: 0.6;
 }
 
 /* ── D3 ELEMENTS ───────────────────────────────────────────────────────── */

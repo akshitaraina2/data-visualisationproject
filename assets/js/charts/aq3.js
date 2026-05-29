@@ -41,7 +41,7 @@ function drawChoropleth(stateData, population, geojson, sel) {
   const H  = 440;
 
   const svg = d3.select(sel).append('svg').attr('width', W).attr('height', H)
-    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svg.append('title').attr('id', `${id}-title`)
     .text('Choropleth map: average annual road crash hospitalisation rate per 100,000 population by state, Australia 2011–2021');
   svg.append('desc')

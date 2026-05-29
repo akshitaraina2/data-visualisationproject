@@ -61,6 +61,7 @@ function drawSankey(raw, sel) {
     .enter().append('path')
       .attr('class', 's-link')
       .attr('tabindex', '0')
+      .attr('role', 'img')
       .attr('aria-label', d => `${d.source.name} to ${d.target.name}: ${fmt(d.value)} hospitalisations`)
       .attr('d', d3.sankeyLinkHorizontal())
       .attr('fill', 'none')
