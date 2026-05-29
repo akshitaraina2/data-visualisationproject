@@ -37,8 +37,13 @@ function drawHeatmap(raw, sel) {
 
   const xScale = d3.scaleBand().domain(users).range([0, w]).padding(0.04);
   const yScale = d3.scaleBand().domain(ages).range([0, h]).padding(0.04);
-  const maxVal = d3.max(ages.flatMap(a => users.map(u => matrix.get(a)?.get(u) || 0)));
-  const colorScale = d3.scaleSequentialSqrt(d3.interpolateBlues).domain([0, maxVal]);
+  const maxVal   = d3.max(ages.flatMap(a => users.map(u => matrix.get(a)?.get(u) || 0)));
+  const allVals  = ages.flatMap(a => users.map(u => matrix.get(a)?.get(u) || 0));
+  const nzSorted = allVals.filter(v => v > 0).sort(d3.ascending);
+  const qBreaks  = [0.25, 0.5, 0.75, 0.9].map(p => d3.quantile(nzSorted, p));
+  const blues5   = ['#deebf7', '#9ecae1', '#6baed6', '#2171b5', '#084594'];
+  const colorScale = d3.scaleThreshold().domain(qBreaks).range(blues5);
+  const legBreaks  = [0, ...qBreaks, maxVal];
 
   ages.forEach(age => {
     users.forEach(user => {
@@ -66,19 +71,27 @@ function drawHeatmap(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Age group × road user (total 2011–2021 hospitalisations)');
 
-  // Colour legend
-  const legW = 140, legH = 8;
-  const defs = svg.append('defs');
-  const grad = defs.append('linearGradient').attr('id', 'heat-grad').attr('x1', '0%').attr('x2', '100%');
-  [0, 0.5, 1].forEach(t => {
-    grad.append('stop').attr('offset', `${t * 100}%`).attr('stop-color', colorScale(t * maxVal));
+  // Stepped quantile legend — 5 discrete colour blocks, 6 boundary labels
+  const swW = 28, swH = 10;
+  const legTot = blues5.length * swW;
+  const legG = svg.append('g').attr('transform', `translate(${w - legTot}, -30)`);
+  legG.append('text').attr('x', legTot / 2).attr('y', -5)
+    .attr('text-anchor', 'middle').attr('fill', 'var(--muted)')
+    .attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
+    .text('Hospitalisations');
+  blues5.forEach((col, i) => {
+    legG.append('rect')
+      .attr('x', i * swW).attr('y', 0)
+      .attr('width', swW).attr('height', swH)
+      .attr('fill', col);
   });
-  const legG = svg.append('g').attr('transform', `translate(${w - legW}, -22)`);
-  legG.append('rect').attr('width', legW).attr('height', legH).attr('fill', 'url(#heat-grad)').attr('rx', 2);
-  legG.append('text').attr('x', 0).attr('y', -3)
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px').text('0');
-  legG.append('text').attr('x', legW).attr('y', -3).attr('text-anchor', 'end')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px').text(fmt(maxVal));
+  legBreaks.forEach((v, i) => {
+    legG.append('text')
+      .attr('x', i * swW).attr('y', swH + 10)
+      .attr('text-anchor', 'middle')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '7.5px')
+      .text(d3.format('.2s')(Math.round(v)));
+  });
 }
 
 function drawSexRoadUser(raw, sel) {
