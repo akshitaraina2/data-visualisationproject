@@ -35,20 +35,26 @@ function drawSankey(raw, sel) {
   });
 
   const id = sel.replace('#', '');
-  const W  = getContainerWidth(id);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const container = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const H  = 500;
 
-  const svg = d3.select(sel).append('svg').attr('width', W).attr('height', H)
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const svg = d3.select(sel).append('svg').attr('width', totalWidth).attr('height', H)
+    .attr('viewBox', `0 0 ${totalWidth} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svg.append('title').attr('id', `${id}-title`)
     .text('Sankey diagram: flow from road user type to collision counterparty, Australia 2011–2021');
   svg.append('desc')
     .text('Link width encodes the total number of hospitalisations for each road-user to counterparty combination. Hover or focus a link to see the count.');
 
+  // RESPONSIVE FIX — was hardcoded, now container-relative
   const layout = d3.sankey()
     .nodeWidth(14)
     .nodePadding(10)
-    .extent([[160, 10], [W - 160, H - 10]]);
+    .extent([[160, 10], [totalWidth - 160, H - 10]]);
 
   const { nodes: sNodes, links: sLinks } = layout({
     nodes: nodes.map(d => ({ ...d })),
@@ -110,9 +116,11 @@ function drawSankey(raw, sel) {
   svg.selectAll('.s-label')
     .data(sNodes)
     .enter().append('text')
-      .attr('x', d => d.x0 < W / 2 ? d.x0 - 6 : d.x1 + 6)
+      // RESPONSIVE FIX — was hardcoded, now container-relative
+      .attr('x', d => d.x0 < totalWidth / 2 ? d.x0 - 6 : d.x1 + 6)
       .attr('y', d => (d.y0 + d.y1) / 2)
-      .attr('text-anchor', d => d.x0 < W / 2 ? 'end' : 'start')
+      // RESPONSIVE FIX — was hardcoded, now container-relative
+      .attr('text-anchor', d => d.x0 < totalWidth / 2 ? 'end' : 'start')
       .attr('dominant-baseline', 'middle')
       .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
       .attr('pointer-events', 'none')
@@ -143,14 +151,20 @@ function drawCounterpartyBar(raw, sel) {
   const series = d3.stack().keys(cps)(stackData);
 
   const id = sel.replace('#', '');
-  const W  = getContainerWidth(id);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const container = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const legendRows = Math.ceil(cps.length / 2);
   const H  = 380 + legendRows * 16 + 12;
-  const w  = W - M.left - M.right;
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
   const svgEl = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H)
+    // RESPONSIVE FIX — was hardcoded, now container-relative
+    .append('svg').attr('width', totalWidth).attr('height', H)
+    .attr('viewBox', `0 0 ${totalWidth} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Stacked bar chart: road crash hospitalisations by counterparty type, Australia 2011–2021');

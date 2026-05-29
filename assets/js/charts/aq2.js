@@ -19,15 +19,21 @@ function drawHeatmap(raw, sel) {
   );
 
   const id = sel.replace('#', '');
-  const W  = getContainerWidth(id);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const container = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const rightPad = 20;
   const bottomPad = 160;
-  const w  = W - M.left - rightPad;
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const w  = totalWidth - M.left - rightPad;
   const H  = 280 + bottomPad;
   const h  = H - M.top - bottomPad;
 
   const svgEl = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H)
+    // RESPONSIVE FIX — was hardcoded, now container-relative
+    .append('svg').attr('width', totalWidth).attr('height', H)
+    .attr('viewBox', `0 0 ${totalWidth} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Heatmap: hospitalisations by age group and road user type, Australia 2011–2021');
@@ -108,13 +114,19 @@ function drawSexRoadUser(raw, sel) {
   );
 
   const id = sel.replace('#', '');
-  const W  = getContainerWidth(id);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const container = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const H  = 440;
-  const w  = W - M.left - M.right;
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - 160;
 
   const svgEl = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H)
+    // RESPONSIVE FIX — was hardcoded, now container-relative
+    .append('svg').attr('width', totalWidth).attr('height', H)
+    .attr('viewBox', `0 0 ${totalWidth} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Grouped bar chart: male vs female hospitalisations by road user type, Australia 2011–2021');
@@ -178,14 +190,20 @@ function drawPyramid(raw, sel) {
   );
 
   const id = sel.replace('#', '');
-  const W  = getContainerWidth(id);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const container = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const H  = 300;
-  const w  = W - M.left - M.right;
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - M.bottom;
   const midX = w / 2;
 
   const svgEl = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H)
+    // RESPONSIVE FIX — was hardcoded, now container-relative
+    .append('svg').attr('width', totalWidth).attr('height', H)
+    .attr('viewBox', `0 0 ${totalWidth} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Population pyramid: hospitalisations by age group and sex, Australia 2011–2021');

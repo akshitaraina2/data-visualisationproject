@@ -37,17 +37,23 @@ function drawChoropleth(stateData, population, geojson, sel) {
     .domain([0, d3.max(rateValues)]);
 
   const id = sel.replace('#', '');
-  const W  = getContainerWidth(id);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const container = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const H  = 440;
 
-  const svg = d3.select(sel).append('svg').attr('width', W).attr('height', H)
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const svg = d3.select(sel).append('svg').attr('width', totalWidth).attr('height', H)
+    .attr('viewBox', `0 0 ${totalWidth} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svg.append('title').attr('id', `${id}-title`)
     .text('Choropleth map: average annual road crash hospitalisation rate per 100,000 population by state, Australia 2011–2021');
   svg.append('desc')
     .text('Each state and territory is shaded by its average annual hospitalisation rate per 100,000 population. Darker orange indicates a higher rate. The Northern Territory records the highest rate across the period.');
 
-  const projection = d3.geoMercator().fitSize([W - 20, H * 0.88], geojson);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const projection = d3.geoMercator().fitSize([totalWidth - 20, H * 0.88], geojson);
   const pathGen = d3.geoPath().projection(projection);
 
   svg.selectAll('.state-path')
@@ -139,14 +145,20 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
   const years = [...new Set(fnByRoadUser.map(d => +d.year))].sort((a, b) => a - b);
 
   const id = sel.replace('#', '');
-  const W  = getContainerWidth(id);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const container = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const H  = 380;
   const rpad = 80; // extra right margin so the First Nations axis label fits inside the SVG
-  const w  = W - M.left - M.right - rpad;
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const w  = totalWidth - M.left - M.right - rpad;
   const h  = H - M.top - M.bottom;
 
   const svgEl = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H)
+    // RESPONSIVE FIX — was hardcoded, now container-relative
+    .append('svg').attr('width', totalWidth).attr('height', H)
+    .attr('viewBox', `0 0 ${totalWidth} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Dual-axis line chart: First Nations vs Non-Indigenous road crash hospitalisation trends, Australia 2011–2021');
@@ -248,8 +260,11 @@ function drawRemoteness(raw, sel) {
   const cm     = { top: 28, right: 55, bottom: 36, left: 70 };
 
   const remId = sel.replace('#', '');
+  // RESPONSIVE FIX — was hardcoded, now container-relative
   const svg = d3.select(sel)
     .append('svg').attr('width', totalW).attr('height', cellH + 55)
+    .attr('viewBox', `0 0 ${totalW} ${cellH + 55}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${remId}-title`);
   svg.append('title').attr('id', `${remId}-title`)
     .text('Small multiples: road crash hospitalisations by remoteness area and indigenous status, Australia 2011–2021');

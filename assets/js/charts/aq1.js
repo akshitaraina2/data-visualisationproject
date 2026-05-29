@@ -61,14 +61,20 @@ function drawTrend(raw, sel) {
   }
 
   const id = sel.replace('#', '');
-  const W  = getContainerWidth(id);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const container = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const legendRows = Math.ceil(users.length / 2);
   const H  = 420 + legendRows * 16 + 12;
-  const w  = W - M.left - M.right - 100; // extra right margin for "National total" label
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const w  = totalWidth - M.left - M.right - 100; // extra right margin for "National total" label
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
   const svgEl = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H)
+    // RESPONSIVE FIX — was hardcoded, now container-relative
+    .append('svg').attr('width', totalWidth).attr('height', H)
+    .attr('viewBox', `0 0 ${totalWidth} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Multi-series line chart: annual road crash hospitalisations by road user type, Australia 2011–2021');
@@ -211,14 +217,20 @@ function drawStackedArea(raw, sel) {
   const series = d3.stack().keys(users)(stackData);
 
   const id = sel.replace('#', '');
-  const W  = getContainerWidth(id);
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const container = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const legendRows = Math.ceil(users.length / 2);
   const H  = 380 + legendRows * 16 + 12;
-  const w  = W - M.left - M.right;
+  // RESPONSIVE FIX — was hardcoded, now container-relative
+  const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
   const svgEl = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H)
+    // RESPONSIVE FIX — was hardcoded, now container-relative
+    .append('svg').attr('width', totalWidth).attr('height', H)
+    .attr('viewBox', `0 0 ${totalWidth} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Stacked area chart: road user composition of hospitalisations, Australia 2011–2021');
