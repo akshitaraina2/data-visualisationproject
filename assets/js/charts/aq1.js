@@ -62,9 +62,10 @@ function drawTrend(raw, sel) {
 
   const id = sel.replace('#', '');
   const W  = getContainerWidth(id);
-  const H  = 420;
+  const legendRows = Math.ceil(users.length / 2);
+  const H  = 420 + legendRows * 16 + 12;
   const w  = W - M.left - M.right - 100; // extra right margin for "National total" label
-  const h  = H - M.top - M.bottom;
+  const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
   const svg = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
@@ -114,23 +115,33 @@ function drawTrend(raw, sel) {
   // Policy break lines
   _addPolicyLines(svg, x, h, 'tooltip-trend');
 
-  // COVID-19 dip label
+  // COVID-19 dip label — fixed near top so it clears all data lines
+  svg.append('line')
+    .attr('x1', x(2020)).attr('x2', x(2020))
+    .attr('y1', 16).attr('y2', h)
+    .attr('stroke', '#e8453c').attr('stroke-width', 1).attr('stroke-dasharray', '3,3');
   svg.append('text')
-    .attr('x', x(2020) + 5).attr('y', y(natTotal.get(2020) || 0) - 10)
+    .attr('x', x(2020)).attr('y', 12)
+    .attr('text-anchor', 'middle')
     .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
     .text('COVID-19 mobility restrictions');
 
-  // Hover dots on national total
-  years.forEach(yr => {
-    svg.append('circle')
-      .attr('cx', x(yr)).attr('cy', y(natTotal.get(yr) || 0))
-      .attr('r', 4).attr('fill', '#e8eaf0').attr('opacity', 0)
-      .style('cursor', 'pointer')
-      .on('mousemove', evt => showTooltip('tooltip-trend',
-        `<strong>National total</strong><br/>${yr}: ${fmt(natTotal.get(yr) || 0)}`, evt))
-      .on('mouseenter', function() { d3.select(this).attr('opacity', 1); })
-      .on('mouseleave', function() { d3.select(this).attr('opacity', 0); hideTooltip('tooltip-trend'); });
-  });
+  // Hover overlay — filter-aware
+  svg.append('rect')
+    .attr('width', w).attr('height', h)
+    .attr('fill', 'none').attr('pointer-events', 'all')
+    .on('mousemove', function(evt) {
+      const [mx] = d3.pointer(evt);
+      const yr = Math.max(2011, Math.min(2021, Math.round(x.invert(mx))));
+      const active = document.querySelector('#aq1-filters .filter-btn.active')?.dataset.user || 'all';
+      if (active === 'all') {
+        showTooltip('tooltip-trend', `<strong>National total</strong><br/>${yr}: ${fmt(natTotal.get(yr) || 0)}`, evt);
+      } else {
+        const val = natRU.get(active)?.get(yr) || 0;
+        showTooltip('tooltip-trend', `<strong>${roadUserShort[active] || active}</strong><br/>${yr}: ${fmt(val)}`, evt);
+      }
+    })
+    .on('mouseleave', () => hideTooltip('tooltip-trend'));
 
   // Axes
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
@@ -142,12 +153,15 @@ function drawTrend(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Hospitalisations');
 
-  // Road user legend (bottom-right)
-  const leg = svg.append('g').attr('transform', `translate(${w - 155}, ${h - users.length * 14 - 4})`);
+  // Road user legend (2-column, below x-axis)
+  const leg = svg.append('g').attr('transform', `translate(0, ${h + 30})`);
   users.forEach((u, i) => {
-    leg.append('rect').attr('x', 0).attr('y', i * 14).attr('width', 10).attr('height', 3)
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const xOff = col * (w / 2);
+    leg.append('rect').attr('x', xOff).attr('y', row * 16).attr('width', 10).attr('height', 3)
       .attr('fill', roadUserColors[u] || '#888').attr('rx', 1);
-    leg.append('text').attr('x', 15).attr('y', i * 14 + 3)
+    leg.append('text').attr('x', xOff + 15).attr('y', row * 16 + 3)
       .attr('dominant-baseline', 'middle')
       .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
       .text(roadUserShort[u] || u);
@@ -193,9 +207,10 @@ function drawStackedArea(raw, sel) {
 
   const id = sel.replace('#', '');
   const W  = getContainerWidth(id);
-  const H  = 380;
+  const legendRows = Math.ceil(users.length / 2);
+  const H  = 380 + legendRows * 16 + 12;
   const w  = W - M.left - M.right;
-  const h  = H - M.top - M.bottom;
+  const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
   const svg = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
@@ -217,24 +232,39 @@ function drawStackedArea(raw, sel) {
       .attr('class', 'stack-area')
       .attr('fill', s => roadUserColors[s.key] || '#888')
       .attr('fill-opacity', 0.75)
-      .attr('d', area)
-      .on('mousemove', (event, s) => {
-        const [mx] = d3.pointer(event, svg.node());
-        const yr = Math.max(2011, Math.min(2021, Math.round(x.invert(mx))));
-        const val = natRU.get(s.key)?.get(yr) || 0;
-        showTooltip('tooltip-stacked',
-          `<strong>${roadUserShort[s.key] || s.key}</strong><br/>${yr}: ${fmt(val)}`, event);
-      })
-      .on('mouseleave', () => hideTooltip('tooltip-stacked'));
+      .attr('d', area);
 
   // Policy break lines
   _addPolicyLines(svg, x, h, 'tooltip-stacked');
 
-  // COVID label
+  // Hover overlay — filter-aware, sits on top of areas
+  svg.append('rect')
+    .attr('width', w).attr('height', h)
+    .attr('fill', 'none').attr('pointer-events', 'all')
+    .on('mousemove', function(evt) {
+      const [mx] = d3.pointer(evt);
+      const yr = Math.max(2011, Math.min(2021, Math.round(x.invert(mx))));
+      const active = document.querySelector('#aq1-filters .filter-btn.active')?.dataset.user || 'all';
+      if (active === 'all') {
+        const total = d3.sum(users, u => natRU.get(u)?.get(yr) || 0);
+        showTooltip('tooltip-stacked', `<strong>National total</strong><br/>${yr}: ${fmt(total)}`, evt);
+      } else {
+        const val = natRU.get(active)?.get(yr) || 0;
+        showTooltip('tooltip-stacked', `<strong>${roadUserShort[active] || active}</strong><br/>${yr}: ${fmt(val)}`, evt);
+      }
+    })
+    .on('mouseleave', () => hideTooltip('tooltip-stacked'));
+
+  // COVID label + dashed connector
+  svg.append('line')
+    .attr('x1', x(2020)).attr('x2', x(2020))
+    .attr('y1', 16).attr('y2', h)
+    .attr('stroke', '#e8453c').attr('stroke-width', 1).attr('stroke-dasharray', '3,3');
   svg.append('text')
-    .attr('x', x(2020) + 4).attr('y', 14)
+    .attr('x', x(2020)).attr('y', 12)
+    .attr('text-anchor', 'middle')
     .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
-    .text('COVID-19');
+    .text('COVID-19 mobility restrictions');
 
   // Axes
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
@@ -246,12 +276,15 @@ function drawStackedArea(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Hospitalisations');
 
-  // Legend
-  const leg = svg.append('g').attr('transform', `translate(${w - 155}, 4)`);
+  // Legend (2-column, below x-axis)
+  const leg = svg.append('g').attr('transform', `translate(0, ${h + 30})`);
   users.forEach((u, i) => {
-    leg.append('rect').attr('x', 0).attr('y', i * 14).attr('width', 10).attr('height', 10)
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const xOff = col * (w / 2);
+    leg.append('rect').attr('x', xOff).attr('y', row * 16).attr('width', 10).attr('height', 10)
       .attr('fill', roadUserColors[u] || '#888').attr('fill-opacity', 0.75).attr('rx', 1);
-    leg.append('text').attr('x', 15).attr('y', i * 14 + 8)
+    leg.append('text').attr('x', xOff + 15).attr('y', row * 16 + 8)
       .attr('dominant-baseline', 'middle')
       .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
       .text(roadUserShort[u] || u);

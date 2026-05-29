@@ -43,7 +43,7 @@ function drawSankey(raw, sel) {
   const layout = d3.sankey()
     .nodeWidth(14)
     .nodePadding(10)
-    .extent([[20, 10], [W - 160, H - 10]]);
+    .extent([[160, 10], [W - 160, H - 10]]);
 
   const { nodes: sNodes, links: sLinks } = layout({
     nodes: nodes.map(d => ({ ...d })),
@@ -82,9 +82,9 @@ function drawSankey(raw, sel) {
   svg.selectAll('.s-label')
     .data(sNodes)
     .enter().append('text')
-      .attr('x', d => d.x0 < W / 2 ? d.x1 + 6 : d.x0 - 6)
+      .attr('x', d => d.x0 < W / 2 ? d.x0 - 6 : d.x1 + 6)
       .attr('y', d => (d.y0 + d.y1) / 2)
-      .attr('text-anchor', d => d.x0 < W / 2 ? 'start' : 'end')
+      .attr('text-anchor', d => d.x0 < W / 2 ? 'end' : 'start')
       .attr('dominant-baseline', 'middle')
       .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
       .attr('pointer-events', 'none')
@@ -116,9 +116,10 @@ function drawCounterpartyBar(raw, sel) {
 
   const id = sel.replace('#', '');
   const W  = getContainerWidth(id);
-  const H  = 380;
+  const legendRows = Math.ceil(cps.length / 2);
+  const H  = 380 + legendRows * 16 + 12;
   const w  = W - M.left - M.right;
-  const h  = H - M.top - M.bottom;
+  const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
   const svg = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
@@ -161,12 +162,15 @@ function drawCounterpartyBar(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Year');
 
-  // Legend
-  const leg = svg.append('g').attr('transform', `translate(${w - 185}, 0)`);
+  // Legend (2-column, below x-axis)
+  const leg = svg.append('g').attr('transform', `translate(0, ${h + 46})`);
   cps.forEach((cp, i) => {
-    leg.append('rect').attr('x', 0).attr('y', i * 18).attr('width', 12).attr('height', 12)
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const xOff = col * (w / 2);
+    leg.append('rect').attr('x', xOff).attr('y', row * 16).attr('width', 12).attr('height', 12)
       .attr('fill', cpColors(cp)).attr('rx', 1);
-    leg.append('text').attr('x', 18).attr('y', i * 18 + 9).attr('dominant-baseline', 'middle')
+    leg.append('text').attr('x', xOff + 18).attr('y', row * 16 + 9).attr('dominant-baseline', 'middle')
       .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '10px')
       .text(cp);
   });
