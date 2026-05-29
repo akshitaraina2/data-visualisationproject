@@ -224,6 +224,42 @@ function drawStackedArea(raw, sel) {
     .text('Stacked area chart: road user composition of hospitalisations, Australia 2011–2021');
   svgEl.append('desc')
     .text('Stacked coloured areas show how each road user type contributes to the national hospitalisation total each year. Use the filter buttons above to isolate a road user type.');
+
+  // Hatch pattern defs — redundant encoding alongside colour for colorblind accessibility
+  const HATCH_CFGS = [
+    null,                                                    // solid
+    { d: 'M0,4 L8,4',            size: 8, sw: 1.2 },        // horizontal lines
+    { d: 'M4,0 L4,8',            size: 8, sw: 1.2 },        // vertical lines
+    { d: 'M0,0 L8,8',            size: 8, sw: 1.2 },        // diagonal /
+    { d: 'M8,0 L0,8',            size: 8, sw: 1.2 },        // diagonal \
+    { dots: true, r: 1.5, size: 6 },                        // dots
+    { d: 'M0,0 L8,8 M8,0 L0,8', size: 8, sw: 0.8 },        // crosshatch
+    { d: 'M0,0 L5,5',            size: 5, sw: 1 },          // dense diagonal
+  ];
+  const defs = svgEl.append('defs');
+  const patternFill = new Map();
+  users.forEach((u, i) => {
+    const color = roadUserColors[u] || '#888';
+    const cfg = HATCH_CFGS[i % HATCH_CFGS.length];
+    if (!cfg) { patternFill.set(u, null); return; }
+    const pid = `pat-stacked-${id}-${i}`;
+    patternFill.set(u, pid);
+    const pat = defs.append('pattern')
+      .attr('id', pid).attr('patternUnits', 'userSpaceOnUse')
+      .attr('width', cfg.size).attr('height', cfg.size);
+    pat.append('rect')
+      .attr('width', cfg.size).attr('height', cfg.size)
+      .attr('fill', color).attr('fill-opacity', 0.75);
+    if (cfg.dots) {
+      pat.append('circle')
+        .attr('cx', cfg.size / 2).attr('cy', cfg.size / 2).attr('r', cfg.r)
+        .attr('fill', 'rgba(255,255,255,0.35)');
+    } else {
+      pat.append('path').attr('d', cfg.d).attr('fill', 'none')
+        .attr('stroke', 'rgba(255,255,255,0.35)').attr('stroke-width', cfg.sw);
+    }
+  });
+
   const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const x = d3.scaleLinear().domain([2011, 2021]).range([0, w]);
@@ -240,8 +276,10 @@ function drawStackedArea(raw, sel) {
     .data(series)
     .enter().append('path')
       .attr('class', 'stack-area')
-      .attr('fill', s => roadUserColors[s.key] || '#888')
-      .attr('fill-opacity', 0.75)
+      .attr('fill', s => patternFill.get(s.key) ? `url(#${patternFill.get(s.key)})` : (roadUserColors[s.key] || '#888'))
+      .attr('fill-opacity', s => patternFill.get(s.key) ? 1 : 0.75)
+      .attr('stroke', '#fff')
+      .attr('stroke-width', 0.5)
       .attr('d', area);
 
   // Policy break lines
@@ -286,15 +324,34 @@ function drawStackedArea(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Hospitalisations');
 
-  // Legend (2-column, below x-axis)
-  const leg = svg.append('g').attr('transform', `translate(0, ${h + 30})`);
+  // Legend (2-column, below x-axis) — swatches mirror the hatch fill of each band
+  const legG = svg.append('g').attr('transform', `translate(0, ${h + 30})`);
+  // Inline pattern defs for legend swatches (10×10 px, same hatch configs)
+  const legDefs = svgEl.append('defs');
   users.forEach((u, i) => {
+    const color = roadUserColors[u] || '#888';
+    const cfg = HATCH_CFGS[i % HATCH_CFGS.length];
+    const lpid = `leg-pat-${id}-${i}`;
+    const pat = legDefs.append('pattern')
+      .attr('id', lpid).attr('patternUnits', 'userSpaceOnUse')
+      .attr('width', cfg ? cfg.size : 10).attr('height', cfg ? cfg.size : 10);
+    pat.append('rect')
+      .attr('width', cfg ? cfg.size : 10).attr('height', cfg ? cfg.size : 10)
+      .attr('fill', color).attr('fill-opacity', 0.75);
+    if (cfg && cfg.dots) {
+      pat.append('circle')
+        .attr('cx', cfg.size / 2).attr('cy', cfg.size / 2).attr('r', cfg.r)
+        .attr('fill', 'rgba(255,255,255,0.35)');
+    } else if (cfg) {
+      pat.append('path').attr('d', cfg.d).attr('fill', 'none')
+        .attr('stroke', 'rgba(255,255,255,0.35)').attr('stroke-width', cfg.sw);
+    }
     const col = i % 2;
     const row = Math.floor(i / 2);
     const xOff = col * (w / 2);
-    leg.append('rect').attr('x', xOff).attr('y', row * 16).attr('width', 10).attr('height', 10)
-      .attr('fill', roadUserColors[u] || '#888').attr('fill-opacity', 0.75).attr('rx', 1);
-    leg.append('text').attr('x', xOff + 15).attr('y', row * 16 + 8)
+    legG.append('rect').attr('x', xOff).attr('y', row * 16).attr('width', 10).attr('height', 10)
+      .attr('fill', `url(#${lpid})`).attr('rx', 1);
+    legG.append('text').attr('x', xOff + 15).attr('y', row * 16 + 8)
       .attr('dominant-baseline', 'middle')
       .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
       .text(roadUserShort[u] || u);

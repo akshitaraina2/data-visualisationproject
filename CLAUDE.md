@@ -6,165 +6,163 @@ Stack: plain HTML / CSS / JavaScript + D3.js v7 (CDN). No framework, no build st
 ## File Structure
 
 ```
-index.html                  # Hero, 6 chapter sections (4 AQs + conclusion), sticky nav
-css/style.css               # Layout, typography, scroll, responsive
-js/main.js                  # Entry point: load all files, aggregate, call draw functions
-js/charts/aq1.js            # drawTrend, drawStackedArea
-js/charts/aq2.js            # drawHeatmap, drawSexRoadUser, drawPyramid  (BLOCKED)
-js/charts/aq3.js            # drawChoropleth, drawFirstNationsSlope, drawRemoteness
-js/charts/aq4.js            # drawSankey (BLOCKED), drawCounterpartyBar
-js/constants.js             # Shared colours, margins, formatters — single source of truth
-data/*.csv                  # KNIME exports; no intermediate tidy files
-data/australia.geojson      # ABS ASGS state boundaries for choropleth
-data/abs_population_by_state.csv  # ABS population denominators for per-100k rates
+index.html                       # Hero, 5 chapter sections (4 AQs + conclusion), sticky nav
+assets/css/style.css             # Layout, typography, scroll, responsive
+assets/js/main.js                # Entry point: load all files, call draw functions
+assets/js/charts/aq1.js          # drawTrend, drawStackedArea
+assets/js/charts/aq2.js          # drawHeatmap, drawSexRoadUser, drawPyramid
+assets/js/charts/aq3.js          # drawChoropleth, drawFirstNationsSlope, drawRemoteness
+assets/js/charts/aq4.js          # drawSankey, drawCounterpartyBar
+assets/js/constants.js           # Shared colours, margins, formatters, DATA paths — single source of truth
+data/state-track/                # State-level KNIME exports
+data/fn-track/                   # First Nations KNIME exports
+data/national-track/             # National-level KNIME exports (crossed dimensions)
+data/australia.geojson           # ABS ASGS state boundaries for choropleth
+data/abs_population_by_state.csv # ABS population denominators for per-100k rates
 ```
 
 ## Data Files
 
-All files in `data/` are KNIME-processed exports. Do not load the original raw source filenames — they no longer apply.
+All files in `data/` are KNIME-processed exports. Reference via the `DATA` object in `constants.js` — never hardcode paths in draw functions.
 
-| File | Used by |
-| --- | --- |
-| `state_x_road_user.csv` | `drawTrend`, `drawStackedArea` |
-| `state_annual_totals.csv` | `drawChoropleth`, hero statistic |
-| `state_x_counterparty.csv` | `drawCounterpartyBar` |
-| `fn_by_age.csv` | `drawFirstNationsSlope` |
-| `fn_by_road_user.csv` | `drawFirstNationsSlope` |
-| `fn_by_remoteness.csv` | `drawRemoteness` |
-| `fn_by_counterparty.csv` | `drawSankey` (blocked) |
-| `national_crossed_aq2.csv` | `drawHeatmap`, `drawSexRoadUser`, `drawPyramid` (Blocker 1 — not yet available) |
-| `national_crossed_aq4.csv` | `drawSankey` (Blocker 1 — not yet available) |
-| `australia.geojson` | `drawChoropleth` |
-| `abs_population_by_state.csv` | `drawChoropleth` (Blocker 2 — not yet available) |
-
-**Note on `first_nations_3`:** this file is byte-for-byte identical to `first_nations_1` and has been removed. Use `fn_by_age.csv` for all First Nations age breakdowns.
+| File | DATA key | Used by |
+| --- | --- | --- |
+| `data/state-track/state_x_road_user.csv` | `DATA.stateRoadUser` | `drawTrend`, `drawStackedArea` |
+| `data/state-track/state_annual_totals.csv` | `DATA.stateAnnualTotals` | `drawChoropleth`, hero statistic |
+| `data/state-track/state_x_counterparty.csv` | `DATA.stateCounterparty` | `drawCounterpartyBar` |
+| `data/fn-track/fn_by_age.csv` | `DATA.fnByAge` | `drawFirstNationsSlope` |
+| `data/fn-track/fn_by_road_user.csv` | `DATA.fnByRoadUser` | `drawFirstNationsSlope` |
+| `data/fn-track/fn_by_remoteness.csv` | `DATA.fnByRemoteness` | `drawRemoteness` |
+| `data/fn-track/fn_by_counterparty.csv` | `DATA.fnByCounterparty` | (unused currently) |
+| `data/national-track/national_crossed_aq2.csv` | `DATA.nationalAq2` | `drawHeatmap`, `drawSexRoadUser`, `drawPyramid` |
+| `data/national-track/national_crossed_aq4.csv` | `DATA.nationalAq4` | `drawSankey` |
+| `data/australia.geojson` | `DATA.geojson` | `drawChoropleth` |
+| `data/abs_population_by_state.csv` | `DATA.population` | `drawChoropleth` |
 
 ## Standardised Column Names
 
-All KNIME exports use these column names. Reference them exactly in every draw function and aggregation.
+| Column | Type | Notes |
+| --- | --- | --- |
+| `year` | Integer | |
+| `state` | String — **all uppercase** | `NSW`, `VIC`, `QLD`, `SA`, `WA`, `TAS`, `NT`, `ACT` |
+| `road_user` | String | Full ABS label in state-track; short label in national-track |
+| `age_group` | String | Values: `0-7`, `8-16`, `17-25`, `26-39`, `40-64`, `65+` |
+| `sex` | String | |
+| `remoteness` | String | Values: `Major Cities`, `Regional`, `Remote` |
+| `counterparty` | String | |
+| `indigenous_status` | String | `First Nations` / `Non-Indigenous` |
+| `Sum(hospitalisations)` | Integer | **Actual column name in all exports** — use `HOSPS` constant |
+| `Sum(bed_days)` | Integer | State-track files only |
 
-| Column | Type |
-| --- | --- |
-| `year` | Integer |
-| `half_year` | String (`Jan-Jun` / `Jul-Dec`) |
-| `state` | String — **all uppercase** (`NSW`, `VIC`, `QLD`, `SA`, `WA`, `TAS`, `NT`, `ACT`) |
-| `hospitalisations` | Integer (missing where suppressed as `n.p.`) |
-| `bed_days` | Integer |
-| `road_user` | String |
-| `age_group` | String |
-| `sex` | String |
-| `remoteness` | String |
-| `counterparty` | String |
-| `indigenous_status` | String (`First Nations` / `Non-Indigenous`) |
+**Critical:** The hospitalisation count column is named `Sum(hospitalisations)` in all KNIME exports. Always access it via the `HOSPS` constant defined in `constants.js`.
 
-**State casing:** state abbreviations are all uppercase in the KNIME exports. Any hardcoded state name or join key must use uppercase (`QLD` not `Qld`, `TAS` not `Tas`, `VIC` not `Vic`).
+**State casing:** state abbreviations are all uppercase. Any hardcoded state name or join key must use uppercase (`QLD` not `Qld`, `TAS` not `Tas`, `VIC` not `Vic`).
 
 ## Data Pipeline Rules
 
-- Load all files in parallel via `Promise.all()`. Draw functions only run once all files resolve.
+- Load all files in parallel via `Promise.all()` in `main.js`. Draw functions only run once all files resolve.
 - Use the shared `num()` parser: `n.p.`, blank, and `Missing` → `0`. Never let NaN enter an aggregation.
 - `n.p.` (suppressed First Nations cells) must be visually flagged as "data suppressed" (grey hatching + legend item). Do not silently zero them.
-- Use `d3.rollup()` to sum `half_year` halves into annual totals where the source file is 6-monthly.
 - The national total is **derived** by summing all 8 states per year from `state_x_road_user.csv` — there is no national row.
-- State rates = `(annual count / ABS population) × 100,000`. Store denominators in `abs_population_by_state.csv`.
+- State rates = `(annual count / ABS population) × 100,000`. Denominators in `abs_population_by_state.csv`.
+- `drawChoropleth` takes 4 arguments: `(stateData, population, geojson, containerSelector)`.
 
-## Shared Constants (js/constants.js)
+## Shared Constants (assets/js/constants.js)
 
 Never redefine these inside a draw function.
 
 | Constant | Purpose |
 | --- | --- |
-| `roadUserColors` | Fixed colour per road-user label (keyed to full ABS strings). Never changes between charts. |
-| `M` | Shared margin object `{ top, right, bottom, left }`. |
-| `fmt` | `d3.format(",")` — all counts on axes and tooltips. |
-| `fmtRate` | `d3.format(".1f")` — per-100k rates in choropleth tooltips. |
+| `HOSPS` | `'Sum(hospitalisations)'` — the exact column name in all KNIME exports |
+| `DATA` | Object with all file paths keyed by logical name |
+| `roadUserColors` | Fixed colour per road-user label (Wong 2011 colorblind-safe palette). Keys cover both full ABS labels (state-track) and short labels (national-track). |
+| `roadUserShort` | Maps full ABS road-user label → short display label |
+| `AGE_ORDER` | `['0-7', '8-16', '17-25', '26-39', '40-64', '65+']` — canonical sort order |
+| `REMOTENESS_ORDER` | `['Major Cities', 'Regional', 'Remote']` |
+| `ageColors` | `d3.scaleOrdinal` keyed to `AGE_ORDER` |
+| `STATE_ABBR` | Maps GeoJSON `STATE_NAME` → CSV state abbreviation (e.g. `'Victoria'` → `'VIC'`) |
+| `M` | Shared margin object `{ top: 30, right: 30, bottom: 45, left: 65 }` |
+| `fmt` | `d3.format(",")` — all counts on axes and tooltips |
+| `fmtRate` | `d3.format(".1f")` — per-100k rates in choropleth tooltips |
+| `num(v)` | Parser: returns 0 for `n.p.`, blank, `Missing`, non-finite |
+| `getContainerWidth(id)` | Returns element width or 800 fallback |
+| `showTooltip(id, html, event)` | Positions and shows a `.chart-tooltip` element |
+| `hideTooltip(id)` | Hides a `.chart-tooltip` element |
 
 ## Draw Function Contract
 
 ```js
 function drawX(data, containerSelector) { ... }
+// Exception: drawChoropleth(stateData, population, geojson, containerSelector)
 ```
 
 - Receives prepared data slice + CSS selector. Does not fetch or aggregate.
-- Reads from `roadUserColors`, `M`, `fmt` / `fmtRate`. Never redefines locally.
-- Appends one `<svg>` (or `<div>` for Sankey) to container, sized responsively.
+- Reads from constants — never redefines `roadUserColors`, `M`, `fmt`, `fmtRate`, `HOSPS` locally.
+- Appends one `<svg>` to container, sized responsively via `getContainerWidth()`.
 - Every axis must have a title and units. No unlabelled axes.
-- **Renders a visible empty state** if required data is absent (blocked charts must still render a placeholder).
+- SVG includes `role="graphics-document"` and `aria-labelledby` pointing to a `<title>` element.
 
 ## Chart Inventory
 
-### AQ1 — The Big Picture (build now)
+All blockers resolved. All charts are built and active.
+
+### AQ1 — The Big Picture (`assets/js/charts/aq1.js`)
 
 | Function | Type | Data source | Encodes |
 | --- | --- | --- | --- |
-| `drawTrend` | Multi-series line | `state_x_road_user.csv` | Annual hospitalisations per road user 2011–2021; national total as bold line derived by summing all states |
+| `drawTrend` | Multi-series line | `state_x_road_user.csv` | Annual hospitalisations per road user 2011–2021; national total as bold line |
 | `drawStackedArea` | Stacked area | `state_x_road_user.csv` | Road user composition over time |
 
-Both AQ1 charts must show:
-- Dashed vertical line at 2012 (Victoria policy break) with tooltip
+Both AQ1 charts show:
+- Dashed vertical line at 2012 (Victoria policy break) with tooltip — shared helper `_addPolicyLines()`
 - Dashed vertical line at 2017 (NSW policy break) with tooltip
 - Inline label at 2020 dip: "COVID-19 mobility restrictions"
+- Road user filter buttons (`#aq1-filters`), added once by `drawTrend`, shared with `drawStackedArea`
 
-### AQ2 — Who Is Affected (blocked by Blocker 1)
+### AQ2 — Who Is Affected (`assets/js/charts/aq2.js`)
 
 | Function | Type | Data source | Encodes |
 | --- | --- | --- | --- |
-| `drawHeatmap` | Heatmap | `national_crossed_aq2.csv` | Age group × road user; colour = count |
+| `drawHeatmap` | Heatmap | `national_crossed_aq2.csv` | Age group × road user; colour = count (5-step quantile blues) |
 | `drawSexRoadUser` | Grouped bar | `national_crossed_aq2.csv` | Male vs female per road user category |
 | `drawPyramid` | Population pyramid | `national_crossed_aq2.csv` | Age-sex distribution; male left, female right |
 
-### AQ3 — Where It Happens (build now, choropleth blocked by Blocker 2)
+### AQ3 — Where It Happens (`assets/js/charts/aq3.js`)
 
 | Function | Type | Data source | Encodes |
 | --- | --- | --- | --- |
-| `drawChoropleth` | Choropleth map | `state_annual_totals.csv` + `abs_population_by_state.csv` + `australia.geojson` | Hospitalisations per 100,000 by state; sequential colour scale |
-| `drawFirstNationsSlope` | Slope / diverging bar | `fn_by_age.csv` + `fn_by_road_user.csv` | First Nations vs non-Indigenous trend; highlights doubling vs ~15% growth |
+| `drawChoropleth` | Choropleth map | `state_annual_totals.csv` + `abs_population_by_state.csv` + `australia.geojson` | Average annual hospitalisations per 100,000 by state; sequential Oranges scale |
+| `drawFirstNationsSlope` | Dual-axis line | `fn_by_age.csv` + `fn_by_road_user.csv` | First Nations vs non-Indigenous trend |
 | `drawRemoteness` | Small multiples line | `fn_by_remoteness.csv` | Trend by remoteness area for both groups |
 
-Choropleth uses `d3.geoMercator()` or `d3.geoAlbers()` fit to SVG container. Colour encodes **rate**, not raw count.
+Choropleth uses `d3.geoMercator().fitSize()`. Colour encodes **average annual rate**, not raw count.
 
-### AQ4 — How It Happens (drawCounterpartyBar now; drawSankey blocked by Blocker 1)
+### AQ4 — How It Happens (`assets/js/charts/aq4.js`)
 
 | Function | Type | Data source | Encodes |
 | --- | --- | --- | --- |
-| `drawSankey` | Sankey diagram | `national_crossed_aq4.csv` | Road user → counterparty flow; link width = count |
-| `drawCounterpartyBar` | Grouped bar (time) | `state_x_counterparty.csv` | Counterparty type counts over time |
+| `drawSankey` | Sankey diagram | `national_crossed_aq4.csv` | Road user → counterparty flow; link width = count. Requires d3-sankey CDN plugin; renders fallback `<p>` if plugin absent. |
+| `drawCounterpartyBar` | Stacked bar (time) | `state_x_counterparty.csv` | Counterparty type counts over time |
 
 ## Page Order
 
 ```
 Hero (static)
-  → Ch.1 AQ1: drawTrend + drawStackedArea
-  → Ch.2 AQ2: drawHeatmap + drawSexRoadUser + drawPyramid  [BLOCKED]
-  → Ch.3 AQ3: drawChoropleth + drawFirstNationsSlope + drawRemoteness
-  → Ch.4 AQ4: drawSankey [BLOCKED] + drawCounterpartyBar
-  → Ch.5 Conclusion (static): key findings, caveats, attribution
+  → Ch.1 (#chapter1) AQ1: drawTrend + drawStackedArea
+  → Ch.2 (#chapter2) AQ2: drawHeatmap + drawSexRoadUser + drawPyramid
+  → Ch.3 (#chapter3) AQ3: drawChoropleth + drawFirstNationsSlope + drawRemoteness
+  → Ch.4 (#chapter4) AQ4: drawSankey + drawCounterpartyBar
+  → Ch.5 (#chapter5) Conclusion (static): key findings, caveats, attribution
 ```
 
 ## Interaction Rules
 
-- Tooltips on hover: label + `fmt` count or `fmtRate` rate.
+- Tooltips on hover: label + `fmt` count or `fmtRate` rate, via `showTooltip()` / `hideTooltip()`.
 - Hover highlight: focused mark keeps colour; others dim to 20% opacity. Layout must not shift.
 - Scroll-driven reveal: fade + slight upward translate as chapter enters viewport.
-- Road user filter (AQ1): toggle buttons; filters both AQ1 charts in sync.
-- Sex toggle (AQ2): male / female / both.
-- State click (AQ3 choropleth): highlights state; updates detail panel with road user breakdown.
-- Sankey hover: highlights full flow path end-to-end; dims all other flows.
+- Road user filter (AQ1): toggle buttons in `#aq1-filters`; filters both AQ1 charts in sync.
+- Sankey hover: highlights full flow path; dims other flows.
 - **Every interaction must change the marks themselves.** Do not respond with only a text or axis update.
-
-## Open Blockers
-
-> Do not build blocked charts until the relevant blocker is resolved.
-
-**Blocker 1 — Crossed dimensions missing** (gates: drawHeatmap, drawSexRoadUser, drawPyramid, drawSankey)
-AQ2 and AQ4 need dimensions crossed on the same rows. Two separate KNIME exports are required:
-- `national_crossed_aq2.csv`: `national_hospitalisations_raw.csv` filtered to Traffic, grouped by `year`, `age_group`, `sex`, `road_user` → sum `hospitalisations`. Unblocks `drawHeatmap`, `drawSexRoadUser`, `drawPyramid`.
-- `national_crossed_aq4.csv`: `national_hospitalisations_raw.csv` filtered to Traffic, grouped by `year`, `road_user`, `counterparty` → sum `hospitalisations`. Unblocks `drawSankey`.
-- Fallback (Option B): aggregate on-the-fly in `js/main.js` from `national_hospitalisations_raw.csv` via `d3.rollup()` grouped by the required dimensions per chart.
-
-**Blocker 2 — Choropleth needs rates, not counts** (gates: drawChoropleth)
-Raw counts reflect population size, not road safety.
-Fix: add `data/abs_population_by_state.csv` with ABS estimated resident populations; compute rate per 100,000.
 
 ## Data Caveats (must appear in the UI, not just the design book)
 
@@ -177,12 +175,11 @@ Fix: add `data/abs_population_by_state.csv` with ABS estimated resident populati
 | First Nations `n.p.` suppression | Grey hatching + legend item |
 | Counterparty "Other/unspecified" may be large | Footnote on AQ4 charts |
 | Remoteness = residence, not crash location | Footnote on AQ3 remoteness |
-| Hero stat 403,293 is state-attributable only; true national total is 410,884 | Footnote below hero stat |
+| Hero stat is state-attributable only; true national total is 410,884 | Footnote below hero stat |
 
 ## Team
 
 | Owner | Responsibilities |
 | --- | --- |
-| Rusham | All draw functions + front-end. Source `australia.geojson` and `abs_population_by_state.csv`. |
+| Rusham | All draw functions + front-end. |
 | Vinh | Design book, conclusion copy, Week 12 stand-up. |
-| Both | Resolve blockers. Annotate series breaks and COVID dip. |
