@@ -48,6 +48,7 @@ Source: https://www.bitre.gov.au/publications/ongoing/hospitalised-injury
 ---
 
 ## File Structure
+```
 ├── index.html
 ├── README.md
 ├── assets/
@@ -64,6 +65,7 @@ Source: https://www.bitre.gov.au/publications/ongoing/hospitalised-injury
 │       └── first_nations_trend.csv
 └── knime/
 └──  KNIME workflow files]
+```
 ---
 
 ## How to Run Locally
