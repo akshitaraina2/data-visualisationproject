@@ -67,9 +67,14 @@ function drawTrend(raw, sel) {
   const w  = W - M.left - M.right - 100; // extra right margin for "National total" label
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
-  const svg = d3.select(sel)
+  const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .append('g').attr('transform', `translate(${M.left},${M.top})`);
+    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+  svgEl.append('title').attr('id', `${id}-title`)
+    .text('Multi-series line chart: annual road crash hospitalisations by road user type, Australia 2011–2021');
+  svgEl.append('desc')
+    .text('National hospitalisation counts per year for each road user type, with a bold national total line. Dashed markers at 2012 (Victoria) and 2017 (NSW) indicate series breaks; a red dashed line marks the 2020 COVID-19 mobility dip.');
+  const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const x = d3.scaleLinear().domain([2011, 2021]).range([0, w]);
   const yMax = Math.max(
@@ -212,9 +217,14 @@ function drawStackedArea(raw, sel) {
   const w  = W - M.left - M.right;
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
-  const svg = d3.select(sel)
+  const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .append('g').attr('transform', `translate(${M.left},${M.top})`);
+    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+  svgEl.append('title').attr('id', `${id}-title`)
+    .text('Stacked area chart: road user composition of hospitalisations, Australia 2011–2021');
+  svgEl.append('desc')
+    .text('Stacked coloured areas show how each road user type contributes to the national hospitalisation total each year. Use the filter buttons above to isolate a road user type.');
+  const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const x = d3.scaleLinear().domain([2011, 2021]).range([0, w]);
   const y = d3.scaleLinear()

@@ -40,7 +40,12 @@ function drawChoropleth(stateData, population, geojson, sel) {
   const W  = getContainerWidth(id);
   const H  = 440;
 
-  const svg = d3.select(sel).append('svg').attr('width', W).attr('height', H);
+  const svg = d3.select(sel).append('svg').attr('width', W).attr('height', H)
+    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+  svg.append('title').attr('id', `${id}-title`)
+    .text('Choropleth map: average annual road crash hospitalisation rate per 100,000 population by state, Australia 2011–2021');
+  svg.append('desc')
+    .text('Each state and territory is shaded by its average annual hospitalisation rate per 100,000 population. Darker orange indicates a higher rate. The Northern Territory records the highest rate across the period.');
 
   const projection = d3.geoMercator().fitSize([W - 20, H * 0.88], geojson);
   const pathGen = d3.geoPath().projection(projection);
@@ -49,6 +54,13 @@ function drawChoropleth(stateData, population, geojson, sel) {
     .data(geojson.features)
     .enter().append('path')
       .attr('class', 'state-path')
+      .attr('tabindex', '0')
+      .attr('role', 'button')
+      .attr('aria-label', d => {
+        const abbr = STATE_ABBR[d.properties.STATE_NAME];
+        const rate = rateByState[abbr];
+        return `${d.properties.STATE_NAME}: ${rate != null ? fmtRate(rate) + ' hospitalisations per 100,000 per year' : 'no data'}`;
+      })
       .attr('d', pathGen)
       .attr('fill', d => {
         const abbr = STATE_ABBR[d.properties.STATE_NAME];
@@ -62,7 +74,27 @@ function drawChoropleth(stateData, population, geojson, sel) {
           `<strong>${d.properties.STATE_NAME}</strong> (${abbr || '?'})<br/>` +
           (rate != null ? `${fmtRate(rate)} hospitalisations per 100,000 / year` : 'No data'), evt);
       })
-      .on('mouseleave', () => hideTooltip('tooltip-choropleth'));
+      .on('mouseleave', () => hideTooltip('tooltip-choropleth'))
+      .on('focusin', (evt, d) => {
+        const abbr = STATE_ABBR[d.properties.STATE_NAME];
+        const rate = rateByState[abbr];
+        showTooltip('tooltip-choropleth',
+          `<strong>${d.properties.STATE_NAME}</strong> (${abbr || '?'})<br/>` +
+          (rate != null ? `${fmtRate(rate)} hospitalisations per 100,000 / year` : 'No data'), evt);
+      })
+      .on('focusout', () => hideTooltip('tooltip-choropleth'))
+      .on('keydown', (evt, d) => {
+        if (evt.key === 'Enter' || evt.key === ' ') {
+          evt.preventDefault();
+          const abbr = STATE_ABBR[d.properties.STATE_NAME];
+          const rate = rateByState[abbr];
+          showTooltip('tooltip-choropleth',
+            `<strong>${d.properties.STATE_NAME}</strong> (${abbr || '?'})<br/>` +
+            (rate != null ? `${fmtRate(rate)} hospitalisations per 100,000 / year` : 'No data'), evt);
+        } else if (evt.key === 'Escape') {
+          hideTooltip('tooltip-choropleth');
+        }
+      });
 
   // State abbreviation labels at centroids
   svg.selectAll('.state-label')
@@ -112,9 +144,14 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
   const w  = W - M.left - M.right;
   const h  = H - M.top - M.bottom;
 
-  const svg = d3.select(sel)
+  const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .append('g').attr('transform', `translate(${M.left},${M.top})`);
+    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+  svgEl.append('title').attr('id', `${id}-title`)
+    .text('Dual-axis line chart: First Nations vs Non-Indigenous road crash hospitalisation trends, Australia 2011–2021');
+  svgEl.append('desc')
+    .text('Two trend lines on separate y-axes compare annual hospitalisation totals. First Nations people (amber, right axis) nearly doubled over the period while Non-Indigenous Australians (blue, left axis) grew approximately 15%.');
+  const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const x  = d3.scaleLinear().domain([2011, 2021]).range([0, w]);
   // Dual y-axes: Non-Indigenous left, First Nations right
@@ -202,8 +239,14 @@ function drawRemoteness(raw, sel) {
   const cellH  = 220;
   const cm     = { top: 28, right: 14, bottom: 36, left: 50 };
 
+  const remId = sel.replace('#', '');
   const svg = d3.select(sel)
-    .append('svg').attr('width', totalW).attr('height', cellH + 30);
+    .append('svg').attr('width', totalW).attr('height', cellH + 30)
+    .attr('role', 'img').attr('aria-labelledby', `${remId}-title`);
+  svg.append('title').attr('id', `${remId}-title`)
+    .text('Small multiples: road crash hospitalisations by remoteness area and indigenous status, Australia 2011–2021');
+  svg.append('desc')
+    .text('Three panels (Major Cities, Regional, Remote) each show annual hospitalisation trends for First Nations people and Non-Indigenous Australians from 2011 to 2021. Remoteness reflects usual residence, not crash location.');
 
   areas.forEach((rem, idx) => {
     const offX = idx * cellW + 15;

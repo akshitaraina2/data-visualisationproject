@@ -26,9 +26,14 @@ function drawHeatmap(raw, sel) {
   const H  = 280 + bottomPad;
   const h  = H - M.top - bottomPad;
 
-  const svg = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H)
-    .append('g').attr('transform', `translate(${M.left},${M.top})`);
+  const svgEl = d3.select(sel)
+    .append('svg').attr('width', W).attr('height', H).style('overflow', 'visible')
+    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+  svgEl.append('title').attr('id', `${id}-title`)
+    .text('Heatmap: hospitalisations by age group and road user type, Australia 2011–2021');
+  svgEl.append('desc')
+    .text('Colour intensity encodes the total hospitalisation count for each combination of age group (rows) and road user type (columns) across the full decade.');
+  const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const xScale = d3.scaleBand().domain(users).range([0, w]).padding(0.04);
   const yScale = d3.scaleBand().domain(ages).range([0, h]).padding(0.04);
@@ -50,9 +55,9 @@ function drawHeatmap(raw, sel) {
 
   // x axis with rotated labels
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
-    .call(d3.axisBottom(xScale))
+    .call(d3.axisBottom(xScale).tickFormat(d => roadUserShort[d] || d))
     .selectAll('text')
-      .attr('transform', 'rotate(-35)').style('text-anchor', 'end')
+      .attr('transform', 'rotate(-45)').style('text-anchor', 'end')
       .attr('dx', '-0.5em').attr('dy', '0.2em');
 
   svg.append('g').attr('class', 'axis').call(d3.axisLeft(yScale));
@@ -94,9 +99,14 @@ function drawSexRoadUser(raw, sel) {
   const w  = W - M.left - M.right;
   const h  = H - M.top - 80;
 
-  const svg = d3.select(sel)
-    .append('svg').attr('width', W).attr('height', H)
-    .append('g').attr('transform', `translate(${M.left},${M.top})`);
+  const svgEl = d3.select(sel)
+    .append('svg').attr('width', W).attr('height', H).style('overflow', 'visible')
+    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+  svgEl.append('title').attr('id', `${id}-title`)
+    .text('Grouped bar chart: male vs female hospitalisations by road user type, Australia 2011–2021');
+  svgEl.append('desc')
+    .text('Paired bars compare total male and female hospitalisation counts for each road user category across the full 2011–2021 period.');
+  const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const x0 = d3.scaleBand().domain(users).range([0, w]).padding(0.2);
   const x1 = d3.scaleBand().domain(SEXES).range([0, x0.bandwidth()]).padding(0.06);
@@ -120,9 +130,9 @@ function drawSexRoadUser(raw, sel) {
   });
 
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
-    .call(d3.axisBottom(x0))
+    .call(d3.axisBottom(x0).tickFormat(d => roadUserShort[d] || d))
     .selectAll('text')
-      .attr('transform', 'rotate(-35)').style('text-anchor', 'end')
+      .attr('transform', 'rotate(-45)').style('text-anchor', 'end')
       .attr('dx', '-0.5em').attr('dy', '0.2em');
   svg.append('g').attr('class', 'axis')
     .call(d3.axisLeft(y).ticks(5).tickFormat(d => fmt(d)));
@@ -159,9 +169,14 @@ function drawPyramid(raw, sel) {
   const h  = H - M.top - M.bottom;
   const midX = w / 2;
 
-  const svg = d3.select(sel)
+  const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .append('g').attr('transform', `translate(${M.left},${M.top})`);
+    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+  svgEl.append('title').attr('id', `${id}-title`)
+    .text('Population pyramid: hospitalisations by age group and sex, Australia 2011–2021');
+  svgEl.append('desc')
+    .text('Male bars extend left and female bars extend right from the centre axis, showing the age distribution of hospitalisations across the full decade.');
+  const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const y = d3.scaleBand().domain(ages).range([0, h]).padding(0.15);
   const maxVal = d3.max(ages.flatMap(a => SEXES.map(s => rolled.get(a)?.get(s) || 0)));

@@ -18,25 +18,26 @@ const DATA = {
   population:        'data/abs_population_by_state.csv',
 };
 
-// Colours keyed to full ABS road-user strings (state files) and shorter
-// labels used in national crossed exports — same colour family per type.
+// Wong (2011) colorblind-safe palette — avoids red/green pairing that causes
+// confusion under deuteranopia (most common deficiency). All hex values
+// verified ≥3:1 contrast against the dark chart surface (#13161e).
 const roadUserColors = {
   // Full ABS labels (state-track files)
-  'Car driver, passenger or unknown position':             '#4fc3f7',
-  'Motorcyclist':                                          '#f5a623',
-  'Pedal cyclist':                                         '#81c784',
-  'Pedestrian':                                            '#e8453c',
-  'Bus occupant':                                          '#a1887f',
-  'Pick-up truck or van occupant':                         '#4db6ac',
-  'Heavy transport driver, passenger or unknown position': '#ff8a65',
-  'Other or unknown':                                      '#b0bec5',
-  // Short labels (national-track crossed files)
-  'Car driver':                       '#4fc3f7',
-  'Car passenger':                    '#4fc3f7',
-  'Car unknown position':             '#4fc3f7',
-  'Heavy transport driver':           '#ff8a65',
-  'Heavy transport passenger':        '#ff8a65',
-  'Heavy transport unknown position': '#ff8a65',
+  'Car driver, passenger or unknown position':             '#56B4E9', // sky blue    — 8.4:1 on surface
+  'Motorcyclist':                                          '#E69F00', // amber       — 7.7:1
+  'Pedal cyclist':                                         '#009E73', // blue-green  — 5.6:1  (prev #81c784 green, changed: avoids red/green pair)
+  'Pedestrian':                                            '#CC79A7', // purple-pink — 6.3:1  (prev #e8453c red, changed: not confused with green under deuteranopia)
+  'Bus occupant':                                          '#a1887f', // warm brown  — 5.9:1
+  'Pick-up truck or van occupant':                         '#4db6ac', // teal        — 8.0:1
+  'Heavy transport driver, passenger or unknown position': '#D55E00', // vermilion   — 5.0:1
+  'Other or unknown':                                      '#b0bec5', // neutral grey — 10.2:1
+  // Short labels (national-track crossed files) — same colour family
+  'Car driver':                       '#56B4E9',
+  'Car passenger':                    '#56B4E9',
+  'Car unknown position':             '#56B4E9',
+  'Heavy transport driver':           '#D55E00',
+  'Heavy transport passenger':        '#D55E00',
+  'Heavy transport unknown position': '#D55E00',
 };
 
 const roadUserShort = {

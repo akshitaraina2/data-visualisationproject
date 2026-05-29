@@ -38,7 +38,12 @@ function drawSankey(raw, sel) {
   const W  = getContainerWidth(id);
   const H  = 500;
 
-  const svg = d3.select(sel).append('svg').attr('width', W).attr('height', H);
+  const svg = d3.select(sel).append('svg').attr('width', W).attr('height', H)
+    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+  svg.append('title').attr('id', `${id}-title`)
+    .text('Sankey diagram: flow from road user type to collision counterparty, Australia 2011–2021');
+  svg.append('desc')
+    .text('Link width encodes the total number of hospitalisations for each road-user to counterparty combination. Hover or focus a link to see the count.');
 
   const layout = d3.sankey()
     .nodeWidth(14)
@@ -55,9 +60,11 @@ function drawSankey(raw, sel) {
     .data(sLinks)
     .enter().append('path')
       .attr('class', 's-link')
+      .attr('tabindex', '0')
+      .attr('aria-label', d => `${d.source.name} to ${d.target.name}: ${fmt(d.value)} hospitalisations`)
       .attr('d', d3.sankeyLinkHorizontal())
       .attr('fill', 'none')
-      .attr('stroke', d => roadUserColors[sNodes[d.source.index]?.name] || '#4fc3f7')
+      .attr('stroke', d => roadUserColors[sNodes[d.source.index]?.name] || '#56B4E9')
       .attr('stroke-opacity', 0.28)
       .attr('stroke-width', d => Math.max(1, d.width))
       .on('mousemove', (evt, d) => showTooltip('tooltip-sankey',
@@ -66,6 +73,26 @@ function drawSankey(raw, sel) {
       .on('mouseleave', function() {
         d3.select(this).attr('stroke-opacity', 0.28);
         hideTooltip('tooltip-sankey');
+      })
+      .on('focusin', function(evt, d) {
+        d3.select(this).attr('stroke-opacity', 0.6);
+        showTooltip('tooltip-sankey',
+          `<strong>${d.source.name}</strong> → <strong>${d.target.name}</strong><br/>${fmt(d.value)}`, evt);
+      })
+      .on('focusout', function() {
+        d3.select(this).attr('stroke-opacity', 0.28);
+        hideTooltip('tooltip-sankey');
+      })
+      .on('keydown', function(evt, d) {
+        if (evt.key === 'Enter' || evt.key === ' ') {
+          evt.preventDefault();
+          d3.select(this).attr('stroke-opacity', 0.6);
+          showTooltip('tooltip-sankey',
+            `<strong>${d.source.name}</strong> → <strong>${d.target.name}</strong><br/>${fmt(d.value)}`, evt);
+        } else if (evt.key === 'Escape') {
+          d3.select(this).attr('stroke-opacity', 0.28);
+          hideTooltip('tooltip-sankey');
+        }
       });
 
   // Nodes
@@ -121,9 +148,14 @@ function drawCounterpartyBar(raw, sel) {
   const w  = W - M.left - M.right;
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
-  const svg = d3.select(sel)
+  const svgEl = d3.select(sel)
     .append('svg').attr('width', W).attr('height', H)
-    .append('g').attr('transform', `translate(${M.left},${M.top})`);
+    .attr('role', 'img').attr('aria-labelledby', `${id}-title`);
+  svgEl.append('title').attr('id', `${id}-title`)
+    .text('Stacked bar chart: road crash hospitalisations by counterparty type, Australia 2011–2021');
+  svgEl.append('desc')
+    .text('Annual stacked bars show the breakdown of hospitalisations by collision counterparty (e.g. other vehicle, fixed object) from 2011 to 2021.');
+  const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const x = d3.scaleBand().domain(years).range([0, w]).padding(0.1);
   const y = d3.scaleLinear()

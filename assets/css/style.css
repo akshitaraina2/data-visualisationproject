@@ -355,8 +355,13 @@ input[type=range]::-webkit-slider-thumb {
 /* ── D3 ELEMENTS ───────────────────────────────────────────────────────── */
 .axis path, .axis line { stroke: var(--border); }
 .axis text { fill: var(--muted); font-family: var(--font-mono); font-size: 11px; }
+.tick text, .legend text { font-size: 11px; }
 .grid line { stroke: var(--border); stroke-opacity: 0.5; }
 .grid path { stroke: none; }
+
+/* ── FOCUS ─────────────────────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.state-path:focus-visible, .s-link:focus-visible { outline: 2px solid var(--accent); }
 
 /* ── ANIMATIONS ────────────────────────────────────────────────────────── */
 @keyframes fadeUp {
