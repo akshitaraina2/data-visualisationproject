@@ -307,6 +307,32 @@ input[type=range]::-webkit-slider-thumb {
   white-space: nowrap;
 }
 
+/* ── CHART SUBTITLE ────────────────────────────────────────────────────── */
+/* Used for HTML subtitles; SVG subtitles use inline attributes in aq3.js  */
+.chart-subtitle {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-top: -8px;
+  margin-bottom: 12px;
+  text-align: center;
+  font-family: var(--font-mono);
+  color: var(--muted);
+}
+
+/* ── CHART CALLOUT NOTE ─────────────────────────────────────────────────── */
+/* Elevated footnote with left border for choropleth rate clarification     */
+.chart-callout-note {
+  border-left: 3px solid var(--accent, #f5a623);
+  padding-left: 10px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: #9ba3be;
+  margin-top: 8px;
+  opacity: 0.85;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+
 /* ── DATA NOTE ─────────────────────────────────────────────────────────── */
 .data-note {
   margin-top: 1rem;

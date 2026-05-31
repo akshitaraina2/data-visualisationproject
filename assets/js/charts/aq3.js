@@ -6,6 +6,14 @@
 // Depends on: constants.js
 
 function drawChoropleth(stateData, population, geojson, sel) {
+  // USABILITY FIX — footnote elevated and expanded after usability testing.
+  // Remove stale callout note before re-rendering (persists across resize).
+  d3.select(sel).select('.chart-callout-note').remove();
+
+  // NOTE (Blocker 2): abs_population_by_state.csv not yet available.
+  // Rate values, legend tick labels, tooltip text, and choropleth shading all
+  // depend on this file. Re-test all four usability fix touchpoints once resolved.
+
   // Build population lookup: state → year → population
   const popLookup = {};
   population.forEach(d => {
@@ -36,24 +44,62 @@ function drawChoropleth(stateData, population, geojson, sel) {
   const colorScale = d3.scaleSequential(d3.interpolateOranges)
     .domain([0, d3.max(rateValues)]);
 
-  const id = sel.replace('#', '');
-  // RESPONSIVE FIX — was hardcoded, now container-relative
-  const container = document.querySelector(sel);
-  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
-  const H  = 440;
+  // USABILITY FIX — tooltip now spells out unit to prevent rate vs count misreading.
+  // Defined inside function per spec — not in constants.js.
+  const stateNames = {
+    NSW: 'New South Wales',
+    VIC: 'Victoria',
+    QLD: 'Queensland',
+    SA:  'South Australia',
+    WA:  'Western Australia',
+    TAS: 'Tasmania',
+    NT:  'Northern Territory',
+    ACT: 'Australian Capital Territory',
+  };
 
+  const id         = sel.replace('#', '');
   // RESPONSIVE FIX — was hardcoded, now container-relative
-  const svg = d3.select(sel).append('svg').attr('width', totalWidth).attr('height', H)
+  const container  = document.querySelector(sel);
+  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
+  // H increased from 440 → 500 to accommodate title + subtitle above map
+  const H          = 500;
+
+  // USABILITY FIX — accessibility: aria-label updated to match new title
+  const svg = d3.select(sel).append('svg')
+    .attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
-    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
+    .attr('role', 'graphics-document')
+    .attr('aria-label', 'Choropleth map of road crash hospitalisation rates per 100,000 people by Australian state, 2011 to 2021');
   svg.append('title').attr('id', `${id}-title`)
-    .text('Choropleth map: average annual road crash hospitalisation rate per 100,000 population by state, Australia 2011–2021');
+    .text('Choropleth map of road crash hospitalisation rates per 100,000 people by Australian state, 2011 to 2021');
   svg.append('desc')
     .text('Each state and territory is shaded by its average annual hospitalisation rate per 100,000 population. Darker orange indicates a higher rate. The Northern Territory records the highest rate across the period.');
 
-  // RESPONSIVE FIX — was hardcoded, now container-relative
-  const projection = d3.geoMercator().fitSize([totalWidth - 20, H * 0.88], geojson);
+  // USABILITY FIX — unit added to title after usability testing
+  svg.append('text')
+    .attr('x', totalWidth / 2).attr('y', 22)
+    .attr('text-anchor', 'middle')
+    .attr('fill', 'var(--text)')
+    .attr('font-family', "'DM Mono', monospace").attr('font-size', '13px')
+    .text('Road Crash Hospitalisations per 100,000 People by State');
+
+  // USABILITY FIX — subtitle added to prevent rate vs count misreading
+  svg.append('text')
+    .attr('x', totalWidth / 2).attr('y', 39)
+    .attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)')
+    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('opacity', 0.75)
+    .text('Colour shows rate per 100,000 population — not total crashes');
+
+  // RESPONSIVE FIX — was hardcoded, now container-relative.
+  // fitExtent used instead of fitSize to reserve top space for title/subtitle
+  // (y0=55) and bottom space for the legend (yMax=H-65=435).
+  const projection = d3.geoMercator().fitExtent(
+    [[10, 55], [totalWidth - 10, H - 65]],
+    geojson
+  );
   const pathGen = d3.geoPath().projection(projection);
 
   svg.selectAll('.state-path')
@@ -73,20 +119,27 @@ function drawChoropleth(stateData, population, geojson, sel) {
         return abbr && rateByState[abbr] != null ? colorScale(rateByState[abbr]) : '#2a2f3f';
       })
       .attr('stroke', 'var(--bg)').attr('stroke-width', 1.5)
+      // USABILITY FIX — tooltip now spells out unit to prevent rate vs count misreading
       .on('mousemove', (evt, d) => {
         const abbr = STATE_ABBR[d.properties.STATE_NAME];
         const rate = rateByState[abbr];
+        const name = stateNames[abbr] || d.properties.STATE_NAME;
         showTooltip('tooltip-choropleth',
-          `<strong>${d.properties.STATE_NAME}</strong> (${abbr || '?'})<br/>` +
-          (rate != null ? `${fmtRate(rate)} hospitalisations per 100,000 / year` : 'No data'), evt);
+          `<strong>${name}</strong><br/>` +
+          (rate != null
+            ? `${fmtRate(rate)} hospitalisations per 100,000 people (2011–2021 average)`
+            : 'No data available'), evt);
       })
       .on('mouseleave', () => hideTooltip('tooltip-choropleth'))
       .on('focusin', (evt, d) => {
         const abbr = STATE_ABBR[d.properties.STATE_NAME];
         const rate = rateByState[abbr];
+        const name = stateNames[abbr] || d.properties.STATE_NAME;
         showTooltip('tooltip-choropleth',
-          `<strong>${d.properties.STATE_NAME}</strong> (${abbr || '?'})<br/>` +
-          (rate != null ? `${fmtRate(rate)} hospitalisations per 100,000 / year` : 'No data'), evt);
+          `<strong>${name}</strong><br/>` +
+          (rate != null
+            ? `${fmtRate(rate)} hospitalisations per 100,000 people (2011–2021 average)`
+            : 'No data available'), evt);
       })
       .on('focusout', () => hideTooltip('tooltip-choropleth'))
       .on('keydown', (evt, d) => {
@@ -94,9 +147,12 @@ function drawChoropleth(stateData, population, geojson, sel) {
           evt.preventDefault();
           const abbr = STATE_ABBR[d.properties.STATE_NAME];
           const rate = rateByState[abbr];
+          const name = stateNames[abbr] || d.properties.STATE_NAME;
           showTooltip('tooltip-choropleth',
-            `<strong>${d.properties.STATE_NAME}</strong> (${abbr || '?'})<br/>` +
-            (rate != null ? `${fmtRate(rate)} hospitalisations per 100,000 / year` : 'No data'), evt);
+            `<strong>${name}</strong><br/>` +
+            (rate != null
+              ? `${fmtRate(rate)} hospitalisations per 100,000 people (2011–2021 average)`
+              : 'No data available'), evt);
         } else if (evt.key === 'Escape') {
           hideTooltip('tooltip-choropleth');
         }
@@ -112,23 +168,69 @@ function drawChoropleth(stateData, population, geojson, sel) {
       .attr('font-size', '10px').attr('pointer-events', 'none')
       .text(d => STATE_ABBR[d.properties.STATE_NAME] || '');
 
-  // Colour legend
-  const legW = 200, legH = 10;
+  // USABILITY FIX — legend label and tick units added after usability testing.
+  // Gradient bar centred in SVG; D3 axis replaces manual text labels;
+  // units on first and last tick only to avoid clutter.
+  // NOTE — tick label overlap risk: at container widths below ~360px the first
+  // and middle tick labels ("X.X per 100k" and the mid number) may collide.
+  // Fallback: reduce to 2 ticks (min/max only) by checking totalWidth:
+  //   tickValues(totalWidth < 400 ? [0, maxRate] : [0, midRate, maxRate])
+  const legW    = 200;
+  const legBarH = 10;
+  const maxRate = d3.max(rateValues) || 1;
+  const midRate = maxRate / 2;
+  const legX    = (totalWidth - legW) / 2;
+
   const defs = svg.append('defs');
-  const grad = defs.append('linearGradient').attr('id', 'choro-grad').attr('x1', '0%').attr('x2', '100%');
+  const grad = defs.append('linearGradient')
+    .attr('id', `${id}-choro-grad`).attr('x1', '0%').attr('x2', '100%');
   [0, 0.25, 0.5, 0.75, 1].forEach(t =>
-    grad.append('stop').attr('offset', `${t * 100}%`).attr('stop-color', colorScale(t * d3.max(rateValues)))
+    grad.append('stop').attr('offset', `${t * 100}%`)
+      .attr('stop-color', colorScale(t * maxRate))
   );
-  const legG = svg.append('g').attr('transform', `translate(16, ${H - 38})`);
-  legG.append('rect').attr('width', legW).attr('height', legH).attr('fill', 'url(#choro-grad)').attr('rx', 2);
-  legG.append('text').attr('x', 0).attr('y', -4)
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px').text('0');
-  legG.append('text').attr('x', legW).attr('y', -4).attr('text-anchor', 'end')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
-    .text(fmtRate(d3.max(rateValues)) + ' /100k');
-  legG.append('text').attr('x', 0).attr('y', legH + 14)
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
-    .text('Average annual hospitalisations per 100,000 population');
+
+  // legG positioned so the label above the bar clears the map's bottom extent (H-65)
+  const legG = svg.append('g').attr('transform', `translate(${legX}, ${H - 51})`);
+
+  // Label above gradient bar
+  legG.append('text')
+    .attr('x', legW / 2).attr('y', -14)
+    .attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .text('Rate per 100,000 population');
+
+  // Gradient bar — aria-hidden since axis ticks carry the screen-readable values
+  legG.append('rect')
+    .attr('width', legW).attr('height', legBarH)
+    .attr('fill', `url(#${id}-choro-grad)`)
+    .attr('rx', 2)
+    .attr('aria-hidden', 'true');
+
+  // D3 axis: 3 ticks (min/mid/max); unit suffix on first and last only
+  const legScale   = d3.scaleLinear().domain([0, maxRate]).range([0, legW]);
+  const legendAxis = d3.axisBottom(legScale)
+    .tickValues([0, midRate, maxRate])
+    .tickSize(4)
+    .tickFormat((d, i, nodes) => {
+      if (i === 0) return `${fmtRate(d)} per 100k`;
+      if (i === nodes.length - 1) return `${fmtRate(d)} per 100k`;
+      return fmtRate(d);
+    });
+
+  const axisG = legG.append('g')
+    .attr('transform', `translate(0, ${legBarH})`)
+    .call(legendAxis);
+  axisG.select('.domain').attr('stroke', 'var(--muted)');
+  axisG.selectAll('.tick line').attr('stroke', 'var(--muted)');
+  axisG.selectAll('.tick text')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px');
+
+  // USABILITY FIX — footnote elevated and expanded after usability testing.
+  // Injected into container after SVG so it renders directly below the legend bar.
+  // Previous <p class="data-note"> in index.html removed; content lives here now.
+  d3.select(sel).append('p')
+    .attr('class', 'chart-callout-note')
+    .text('Rates are calculated as hospitalisations per 100,000 residents. Direct comparison of raw counts across states would be misleading due to large differences in state population size.');
 }
 
 function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
