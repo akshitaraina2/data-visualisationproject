@@ -48,14 +48,29 @@
         <p class="chapter-desc">National road crash hospitalisations climbed through the 2010s, with a COVID-related dip in 2020. Car occupants dominate in absolute volume; motorcyclists carry a disproportionate share relative to their road presence.</p>
       </div>
       <div class="filter-row" id="aq1-filters"></div>
+      <!-- USABILITY FIX — hint text added after usability testing; tester 1 used
+           filters but not tooltips, tester 2 used tooltips but not filters.
+           Hint ensures both interactions are discoverable without needing
+           to find them by accident. -->
+      <p class="chart-subtitle">
+        Use the buttons above to filter by road user group. Hover over any line for exact values.
+      </p>
       <div class="chart-container" id="chart-trend" style="margin-bottom:1.5rem;">
         <div class="chart-tooltip" id="tooltip-trend"></div>
       </div>
       <p class="data-note">⚠ Dashed lines mark series breaks: Victoria 2012 (est. −5.6%) and NSW 2017. These reflect reporting changes, not true road safety shifts.</p>
-      <div class="chart-container" id="chart-stacked" style="margin-top:2rem;">
+      <!-- USABILITY FIX — hint text added above stacked area chart after
+           usability testing. Previously "Hover areas to see values" appeared
+           only below the chart as a data-note, after users had already
+           finished looking at it. Moving the interaction hint above the chart
+           ensures users know about hover before they start reading. -->
+      <p class="chart-subtitle" style="margin-top:2rem;">
+        Hover over any area to see the road user group and hospitalisation count.
+      </p>
+      <div class="chart-container" id="chart-stacked" style="margin-top:0.5rem;">
         <div class="chart-tooltip" id="tooltip-stacked"></div>
       </div>
-      <p class="data-note">Road user composition. Hover areas to see values.</p>
+      <p class="data-note">Road user composition across the full decade.</p>
     </section>
 
     <!-- CHAPTER 2: AQ2 — Who Is Affected -->
