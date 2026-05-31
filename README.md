@@ -119,11 +119,11 @@ Source: https://www.bitre.gov.au/publications/ongoing/hospitalised-injury
 | Task | Owner |
 |------|-------|
 | Website structure & layout | Akshita Raina |
-| D3 visualisations & interactivity | Akshita Raina |
+| D3 visualisations & interactivity | Vinh Nghiem |
 | Mercury deployment | Akshita Raina |
-| Data cleaning & KNIME workflow | [Partner Name] |
-| Narrative text & data story | [Partner Name] |
-| Usability testing | [Partner Name] |
+| Data cleaning & KNIME workflow | Vinh Nghiem |
+| Narrative text & data story | Vinh Nghiem |
+| Usability testing | Akshita Raina |
 | Design Book (joint) | Both |
 | Visualisation design decisions (joint) | Both |
 
