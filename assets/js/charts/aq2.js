@@ -20,47 +20,103 @@ function drawHeatmap(raw, sel) {
 
   const id = sel.replace('#', '');
   // RESPONSIVE FIX — was hardcoded, now container-relative
-  const container = document.querySelector(sel);
+  const container  = document.querySelector(sel);
   const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
-  const rightPad = 20;
-  const bottomPad = 160;
+  const rightPad   = 20;
+  const bottomPad  = 185;
   // RESPONSIVE FIX — was hardcoded, now container-relative
   const w  = totalWidth - M.left - rightPad;
   const H  = 280 + bottomPad;
   const h  = H - M.top - bottomPad;
+
+  // USABILITY FIX — colour scale updated after usability testing
+  // Viridis chosen for perceptual uniformity and colourblind safety.
+  // Safe under Protanopia, Deuteranopia, and Tritanopia.
+  // Replaces previous scale which failed usability testing (unclear
+  // magnitude encoding).
+  const maxVal     = d3.max(ages.flatMap(a => users.map(u => matrix.get(a)?.get(u) || 0))) || 1;
+  const colorScale = d3.scaleSequential()
+    .domain([0, maxVal])
+    .interpolator(d3.interpolateViridis);
 
   const svgEl = d3.select(sel)
     // RESPONSIVE FIX — was hardcoded, now container-relative
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
-    .attr('role', 'graphics-document').attr('aria-labelledby', `${id}-title`);
+    // USABILITY FIX — accessibility: role="img" and aria-label per spec
+    .attr('role', 'img')
+    .attr('aria-label', 'Heatmap of road crash hospitalisations by age group and road user type, Australia 2011 to 2021');
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Heatmap: hospitalisations by age group and road user type, Australia 2011–2021');
   svgEl.append('desc')
     .text('Colour intensity encodes the total hospitalisation count for each combination of age group (rows) and road user type (columns) across the full decade.');
+
+  // USABILITY FIX — SVG defs: Viridis gradient + hatch pattern for suppressed/zero cells
+  // NOTE (Blocker 1): national_crossed_aq2.csv not yet available. Once resolved,
+  // verify: (a) maxVal is realistic and legend ticks format correctly with live data,
+  // (b) zero cells are genuinely suppressed/absent vs truly zero counts.
+  const defs = svgEl.append('defs');
+
+  // Viridis gradient — sampled at 11 evenly-spaced stops
+  const linearGradient = defs.append('linearGradient')
+    .attr('id', `${id}-viridis-gradient`)
+    .attr('x1', '0%').attr('x2', '100%')
+    .attr('y1', '0%').attr('y2', '0%');
+  linearGradient.selectAll('stop')
+    .data(d3.range(11).map(i => i / 10))
+    .join('stop')
+    .attr('offset', d => `${d * 100}%`)
+    .attr('stop-color', d => d3.interpolateViridis(d));
+
+  // USABILITY FIX — diagonal hatch for zero/suppressed cells (consistent with n.p.
+  // suppression handling elsewhere in this project per CLAUDE.md)
+  const hatchPattern = defs.append('pattern')
+    .attr('id', `${id}-hatch`)
+    .attr('patternUnits', 'userSpaceOnUse')
+    .attr('width', 6).attr('height', 6);
+  hatchPattern.append('path')
+    .attr('d', 'M-1,1 l2,-2 M0,6 l6,-6 M5,7 l2,-2')
+    .attr('stroke', '#555')
+    .attr('stroke-width', 1.5);
+
   const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const xScale = d3.scaleBand().domain(users).range([0, w]).padding(0.04);
   const yScale = d3.scaleBand().domain(ages).range([0, h]).padding(0.04);
-  const maxVal   = d3.max(ages.flatMap(a => users.map(u => matrix.get(a)?.get(u) || 0)));
-  const allVals  = ages.flatMap(a => users.map(u => matrix.get(a)?.get(u) || 0));
-  const nzSorted = allVals.filter(v => v > 0).sort(d3.ascending);
-  const qBreaks  = [0.25, 0.5, 0.75, 0.9].map(p => d3.quantile(nzSorted, p));
-  const blues5   = ['#deebf7', '#9ecae1', '#6baed6', '#2171b5', '#084594'];
-  const colorScale = d3.scaleThreshold().domain(qBreaks).range(blues5);
-  const legBreaks  = [0, ...qBreaks, maxVal];
 
+  // USABILITY FIX — cells: hatch for zero/suppressed; Viridis for non-zero values.
+  // Edge case: if all cells in a row (age group) or column (road user) are zero,
+  // the entire row/column shows only hatch. This could mean a genuinely absent
+  // combination or full suppression — flag for QA once Blocker 1 resolves.
   ages.forEach(age => {
     users.forEach(user => {
-      const val = matrix.get(age)?.get(user) || 0;
+      const val    = matrix.get(age)?.get(user) || 0;
+      const isZero = val === 0;
+
       svg.append('rect')
         .attr('x', xScale(user)).attr('y', yScale(age))
         .attr('width', xScale.bandwidth()).attr('height', yScale.bandwidth())
-        .attr('fill', colorScale(val)).attr('rx', 2)
+        .attr('fill', isZero ? `url(#${id}-hatch)` : colorScale(val))
+        .attr('rx', 2)
+        .attr('stroke', 'none')
+        .attr('stroke-width', 2)
+        // USABILITY FIX — accessibility: aria-label per spec
+        .attr('aria-label', isZero
+          ? `${age}, ${user}: data suppressed`
+          : `${age}, ${user}: ${fmt(val)} hospitalisations`)
+        // USABILITY FIX — tooltip: percentage format for single category; hatch label for zero
         .on('mousemove', evt => showTooltip('tooltip-heatmap',
-          `<strong>${age} × ${user}</strong><br/>${fmt(val)} hospitalisations`, evt))
-        .on('mouseleave', () => hideTooltip('tooltip-heatmap'));
+          isZero
+            ? `<strong>${age} × ${user}</strong><br/>data suppressed or not available`
+            : `<strong>${age} × ${user}</strong><br/>${fmt(val)} hospitalisations`,
+          evt))
+        // USABILITY FIX — hover border: white stroke added on enter, removed on leave
+        .on('mouseenter', function() { d3.select(this).attr('stroke', 'white'); })
+        .on('mouseleave', function() {
+          d3.select(this).attr('stroke', 'none');
+          hideTooltip('tooltip-heatmap');
+        });
     });
   });
 
@@ -78,27 +134,54 @@ function drawHeatmap(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Age group × road user (total 2011–2021 hospitalisations)');
 
-  // Stepped quantile legend — 5 discrete colour blocks, 6 boundary labels
-  const swW = 28, swH = 10;
-  const legTot = blues5.length * swW;
-  const legG = svg.append('g').attr('transform', `translate(${w - legTot}, -30)`);
-  legG.append('text').attr('x', legTot / 2).attr('y', -5)
-    .attr('text-anchor', 'middle').attr('fill', 'var(--muted)')
-    .attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
-    .text('Hospitalisations');
-  blues5.forEach((col, i) => {
-    legG.append('rect')
-      .attr('x', i * swW).attr('y', 0)
-      .attr('width', swW).attr('height', swH)
-      .attr('fill', col);
-  });
-  legBreaks.forEach((v, i) => {
+  // USABILITY FIX — continuous gradient legend replaces previous discrete 5-step swatches.
+  // Horizontal bar, 200px wide, centre-aligned to chart, positioned below rotated x-axis labels.
+  const legBarW = 200;
+  const legBarH = 12;
+  const midVal  = Math.round(maxVal / 2);
+  const legX    = (w - legBarW) / 2;
+  const legY    = h + 95;
+
+  const legG = svg.append('g').attr('transform', `translate(${legX}, ${legY})`);
+
+  legG.append('text')
+    .attr('x', legBarW / 2).attr('y', -6)
+    .attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
+    .text('Hospitalisations (total 2011–2021)');
+
+  // Gradient bar — aria-hidden since axis ticks carry the screen-readable values
+  legG.append('rect')
+    .attr('width', legBarW).attr('height', legBarH)
+    .attr('fill', `url(#${id}-viridis-gradient)`)
+    .attr('rx', 1)
+    .attr('aria-hidden', 'true');
+
+  // USABILITY FIX — axis ticks at min, midpoint, and max
+  [[0, 0, 'start'], [midVal, legBarW / 2, 'middle'], [maxVal, legBarW, 'end']].forEach(([v, x, anchor]) => {
+    legG.append('line')
+      .attr('x1', x).attr('x2', x)
+      .attr('y1', legBarH).attr('y2', legBarH + 4)
+      .attr('stroke', 'var(--muted)').attr('stroke-width', 1);
     legG.append('text')
-      .attr('x', i * swW).attr('y', swH + 10)
-      .attr('text-anchor', 'middle')
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '7.5px')
-      .text(d3.format('.2s')(Math.round(v)));
+      .attr('x', x).attr('y', legBarH + 14)
+      .attr('text-anchor', anchor)
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
+      .text(fmt(v));
   });
+
+  // USABILITY FIX — hatch swatch + label for suppressed/zero cells
+  const hatchSwatchX = legBarW + 24;
+  legG.append('rect')
+    .attr('x', hatchSwatchX).attr('y', 0)
+    .attr('width', legBarH).attr('height', legBarH)
+    .attr('fill', `url(#${id}-hatch)`)
+    .attr('stroke', '#555').attr('stroke-width', 0.5).attr('rx', 1);
+  legG.append('text')
+    .attr('x', hatchSwatchX + legBarH + 5).attr('y', legBarH / 2 + 1)
+    .attr('dominant-baseline', 'middle')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
+    .text('Suppressed or zero');
 }
 
 function drawSexRoadUser(raw, sel) {
