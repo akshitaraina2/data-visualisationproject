@@ -30,12 +30,10 @@ function drawSankey(raw, sel) {
   d3.select(sel).select('.sankey-count-summary').remove();
   d3.select(sel).select('.sankey-all-note').remove();
 
-  // USABILITY FIX — derive road users dynamically; default = highest-volume category
+  // USABILITY FIX — derive road users dynamically; default = show all data first
   const roadUsers  = [...new Set(raw.map(d => d.road_user))].sort();
   const totalsByRU = d3.rollup(raw, v => d3.sum(v, d => num(d[HOSPS])), d => d.road_user);
-  let activeFilter = totalsByRU.size > 0
-    ? [...totalsByRU.entries()].reduce((a, b) => b[1] > a[1] ? b : a)[0]
-    : '__ALL__';
+  let activeFilter = '__ALL__';
 
   // USABILITY FIX — filter button group (DOM order: before SVG → appears above chart)
   const filterGroup = d3.select(sel).append('div')
@@ -224,10 +222,10 @@ function drawSankey(raw, sel) {
     g.transition('enter').delay(220).duration(300).attr('opacity', 1);
   }
 
-  // USABILITY FIX — "All" button first, marked as complex view
+  // USABILITY FIX — "All" button first, marked active by default
   filterGroup.append('button')
-    .attr('class', 'filter-btn')
-    .attr('aria-pressed', 'false')
+    .attr('class', 'filter-btn active')
+    .attr('aria-pressed', 'true')
     .text('All (complex view)')
     .on('click', function() {
       activeFilter = '__ALL__';
@@ -253,7 +251,7 @@ function drawSankey(raw, sel) {
       });
   });
 
-  // Initial render: default to highest-volume road user (not "All")
+  // Initial render: default to the "All" complex view
   renderFilter(activeFilter);
 }
 
