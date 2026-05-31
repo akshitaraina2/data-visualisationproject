@@ -54,17 +54,38 @@ Source: https://www.bitre.gov.au/publications/ongoing/hospitalised-injury
 ├── assets/
 │   ├── css/
 │   │   └── style.css
-│   ├── js/
-│   │   └── main.js
-│   └── data/
-│       ├── national_trend.csv
-│       ├── road_user_trend.csv
-│       ├── age_trend.csv
-│       ├── sex_trend.csv
-│       ├── state_trend.csv
-│       └── first_nations_trend.csv
-└── knime/
-└──  KNIME workflow files]
+│   └── js/
+│       ├── main.js
+│       ├── constants.js
+│       └── charts/
+│           ├── aq1.js
+│           ├── aq2.js
+│           ├── aq3.js
+│           └── aq4.js
+└── data/
+    ├── australia.geojson
+    ├── abs_population_by_state.csv
+    ├── state-track/
+    │   ├── state_x_road_user.csv
+    │   ├── state_annual_totals.csv
+    │   ├── state_x_counterparty.csv
+    │   ├── state_x_age.csv
+    │   └── state_x_sex.csv
+    ├── fn-track/
+    │   ├── fn_by_age.csv
+    │   ├── fn_by_road_user.csv
+    │   ├── fn_by_remoteness.csv
+    │   └── fn_by_counterparty.csv
+    └── national-track/
+        ├── national_crossed_aq2.csv
+        ├── national_crossed_aq4.csv
+        ├── annual_trend.csv
+        ├── by_age_group.csv
+        ├── by_road_user.csv
+        ├── by_sex.csv
+        ├── by_remoteness.csv
+        ├── kpi_total.csv
+        └── kpi_bed_days.csv
 ```
 ---
 
