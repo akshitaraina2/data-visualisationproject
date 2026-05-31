@@ -20,102 +20,174 @@
       <div class="hero-stat-row">
         <div class="hero-stat"><span class="stat-num" id="hero-total">—</span><span class="stat-label">total hospitalisations</span></div>
         <div class="hero-stat"><span class="stat-num">10</span><span class="stat-label">years of data</span></div>
-        <div class="hero-stat"><span class="stat-num">8</span><span class="stat-label">states & territories</span></div>
+        <div class="hero-stat"><span class="stat-num">8</span><span class="stat-label">states &amp; territories</span></div>
       </div>
+      <p class="data-note" style="margin-top:1rem;color:rgba(232,234,240,0.55);font-size:0.65rem;">
+        ⚠ State-attributable total only. True national figure is 410,884.
+      </p>
       <a href="#chapter1" class="scroll-cue">↓ explore the data</a>
     </div>
   </header>
 
   <!-- NAV -->
   <nav class="sticky-nav" id="stickyNav">
-    <a href="#chapter1" class="nav-link active">01 National Trend</a>
+    <a href="#chapter1" class="nav-link active">01 The Big Picture</a>
     <a href="#chapter2" class="nav-link">02 Who Gets Hurt</a>
-    <a href="#chapter3" class="nav-link">03 Age Profile</a>
-    <a href="#chapter4" class="nav-link">04 States</a>
-    <a href="#chapter5" class="nav-link">05 First Nations</a>
+    <a href="#chapter3" class="nav-link">03 Where It Happens</a>
+    <a href="#chapter4" class="nav-link">04 How It Happens</a>
+    <a href="#chapter5" class="nav-link">05 Conclusion</a>
   </nav>
 
   <main>
 
-    <!-- CHAPTER 1: National Trend -->
+    <!-- CHAPTER 1: AQ1 — The Big Picture -->
     <section class="chapter" id="chapter1">
       <div class="chapter-header">
         <span class="chapter-num">01</span>
-        <h2>A Decade of Rising Numbers</h2>
-        <p class="chapter-desc">National traffic hospitalisations climbed steadily from 2011 to 2019, before a brief COVID-related dip in 2020. By 2021, numbers had nearly recovered — suggesting structural factors beyond pandemic effects.</p>
+        <h2>A Decade in Numbers</h2>
+        <p class="chapter-desc">National road crash hospitalisations climbed through the 2010s, with a COVID-related dip in 2020. Car occupants dominate in absolute volume; motorcyclists carry a disproportionate share relative to their road presence.</p>
       </div>
-      <div class="chart-container" id="chart-trend">
+      <div class="filter-row" id="aq1-filters"></div>
+      <!-- USABILITY FIX — hint text added after usability testing; tester 1 used
+           filters but not tooltips, tester 2 used tooltips but not filters.
+           Hint ensures both interactions are discoverable without needing
+           to find them by accident. -->
+      <p class="chart-subtitle">
+        Use the buttons above to filter by road user group. Hover over any line for exact values.
+      </p>
+      <div class="chart-container" id="chart-trend" style="margin-bottom:1.5rem;">
         <div class="chart-tooltip" id="tooltip-trend"></div>
       </div>
-      <p class="data-note">⚠ Data note: These are absolute counts. Population growth over this period means per-capita rates may tell a different story.</p>
+      <p class="data-note">⚠ Dashed lines mark series breaks: Victoria 2012 (est. −5.6%) and NSW 2017. These reflect reporting changes, not true road safety shifts.</p>
+      <!-- USABILITY FIX — hint text added above stacked area chart after
+           usability testing. Previously "Hover areas to see values" appeared
+           only below the chart as a data-note, after users had already
+           finished looking at it. Moving the interaction hint above the chart
+           ensures users know about hover before they start reading. -->
+      <p class="chart-subtitle" style="margin-top:2rem;">
+        Hover over any area to see the road user group and hospitalisation count.
+      </p>
+      <div class="chart-container" id="chart-stacked" style="margin-top:0.5rem;">
+        <div class="chart-tooltip" id="tooltip-stacked"></div>
+      </div>
+      <p class="data-note">Road user composition across the full decade.</p>
     </section>
 
-    <!-- CHAPTER 2: Road User -->
+    <!-- CHAPTER 2: AQ2 — Who Is Affected -->
     <section class="chapter" id="chapter2">
       <div class="chapter-header">
         <span class="chapter-num">02</span>
-        <h2>Who Gets Hurt Most?</h2>
-        <p class="chapter-desc">Car drivers account for the largest share of hospitalisations — but motorcyclists and pedal cyclists carry a disproportionate burden relative to their share of road users. Select a road user type to highlight their trend.</p>
+        <h2>Who Gets Hurt?</h2>
+        <p class="chapter-desc">Working-age adults (26–64) account for the majority of hospitalisations. Males outnumber females in nearly every road user category. The heatmap reveals which age–road user combinations drive the most harm.</p>
       </div>
-      <div class="filter-row" id="road-user-filters"></div>
-      <div class="chart-container" id="chart-roaduser">
-        <div class="chart-tooltip" id="tooltip-roaduser"></div>
+      <div class="chart-container" id="chart-heatmap" style="margin-bottom:1.5rem;">
+        <div class="chart-tooltip" id="tooltip-heatmap"></div>
+      </div>
+      <div class="chart-container" id="chart-sex-road-user" style="margin-bottom:1.5rem;">
+        <div class="chart-tooltip" id="tooltip-sex"></div>
+      </div>
+      <div class="chart-container" id="chart-pyramid">
+        <div class="chart-tooltip" id="tooltip-pyramid"></div>
       </div>
     </section>
 
-    <!-- CHAPTER 3: Age -->
+    <!-- CHAPTER 3: AQ3 — Where It Happens -->
     <section class="chapter" id="chapter3">
       <div class="chapter-header">
         <span class="chapter-num">03</span>
-        <h2>Age &amp; the Road</h2>
-        <p class="chapter-desc">The 40–64 age group consistently records the highest hospitalisations — challenging the assumption that road injuries are predominantly a young person's problem. Hover over bars to explore each age group across years.</p>
+        <h2>Where It Happens</h2>
+        <p class="chapter-desc">The Northern Territory records the highest hospitalisation rate per capita — over four times the national average. First Nations Australians experienced a near-doubling of hospitalisations while non-Indigenous figures grew ~15%. Remote communities bear a disproportionate burden.</p>
       </div>
-      <div class="year-slider-row">
-        <label for="yearSlider">Year: <strong id="yearLabel">2021</strong></label>
-        <input type="range" id="yearSlider" min="2011" max="2021" value="2021" step="1"/>
+      <div class="chart-container" id="chart-choropleth" style="margin-bottom:1.5rem;">
+        <div class="chart-tooltip" id="tooltip-choropleth"></div>
       </div>
-      <div class="chart-container" id="chart-age">
-        <div class="chart-tooltip" id="tooltip-age"></div>
+      <div class="chart-container" id="chart-fn-slope" style="margin-bottom:1.5rem;margin-top:2rem;">
+        <div class="chart-tooltip" id="tooltip-fn-slope"></div>
       </div>
+      <div class="fn-callout">
+        <div class="fn-stat"><span>~2×</span><p>growth in First Nations hospitalisations 2011→2021</p></div>
+        <div class="fn-stat"><span>~15%</span><p>growth in Non-Indigenous hospitalisations over the same period</p></div>
+      </div>
+      <div class="chart-container" id="chart-remoteness" style="margin-top:2rem;">
+        <div class="chart-tooltip" id="tooltip-remoteness"></div>
+      </div>
+      <p class="data-note">⚠ Remoteness reflects usual residence, not crash location. Each panel uses independent y-axes: left scale = Non-Indigenous, right scale = First Nations — counts are ~15× smaller and are not comparable across panels.</p>
     </section>
 
-    <!-- CHAPTER 4: States -->
+    <!-- CHAPTER 4: AQ4 — How It Happens -->
     <section class="chapter" id="chapter4">
       <div class="chapter-header">
         <span class="chapter-num">04</span>
-        <h2>State by State</h2>
-        <p class="chapter-desc">NSW and Victoria dominate in raw counts — reflecting their larger populations. The Northern Territory's smaller numbers mask a significantly higher per-capita risk given its population of under 300,000.</p>
+        <h2>How It Happens</h2>
+        <p class="chapter-desc">Collisions with other vehicles dominate for most road users. Fixed objects are the leading counterparty for motorcyclists. The Sankey diagram traces the road user → counterparty flow; bar chart shows how counterparty patterns shifted over time.</p>
       </div>
-      <div class="chart-container" id="chart-state">
-        <div class="chart-tooltip" id="tooltip-state"></div>
+      <div class="chart-container" id="chart-sankey" style="margin-bottom:1.5rem;">
+        <div class="chart-tooltip" id="tooltip-sankey"></div>
       </div>
-      <p class="data-note">⚠ Data note: Direct state comparisons using raw counts are misleading. NSW has ~8× the population of the NT. Per-capita rates would significantly alter this picture.</p>
+      <div class="chart-container" id="chart-counterparty" style="margin-top:2rem;">
+        <div class="chart-tooltip" id="tooltip-counterparty"></div>
+      </div>
+      <p class="data-note">⚠ "Other/unspecified" counterparty category may be large in some states — interpret with caution.</p>
     </section>
 
-    <!-- CHAPTER 5: First Nations -->
+    <!-- CHAPTER 5: Conclusion -->
     <section class="chapter chapter-highlight" id="chapter5">
       <div class="chapter-header">
         <span class="chapter-num">05</span>
-        <h2>A Growing Disparity</h2>
-        <p class="chapter-desc">First Nations hospitalisations nearly <strong>doubled</strong> between 2011 and 2021 — growing at a rate far exceeding the non-Indigenous population. Given that First Nations peoples make up approximately 3.2% of the Australian population, this disparity is stark.</p>
+        <h2>Key Findings</h2>
       </div>
-      <div class="chart-container" id="chart-fn">
-        <div class="chart-tooltip" id="tooltip-fn"></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;max-width:860px;">
+        <div>
+          <h3 style="font-family:var(--font-display);font-size:1.6rem;color:var(--accent);margin-bottom:0.5rem;">Volume trending up</h3>
+          <p style="color:var(--muted);font-size:0.95rem;line-height:1.7;">National hospitalisations rose through 2019, dipped during COVID-19 mobility restrictions in 2020, then recovered. Structural factors — not just pandemic effects — drive long-term risk.</p>
+        </div>
+        <div>
+          <h3 style="font-family:var(--font-display);font-size:1.6rem;color:var(--accent);margin-bottom:0.5rem;">Disparity widening</h3>
+          <p style="color:var(--muted);font-size:0.95rem;line-height:1.7;">First Nations hospitalisations nearly doubled over the decade while Non-Indigenous figures grew ~15%. Remote and regional communities are disproportionately affected.</p>
+        </div>
+        <div>
+          <h3 style="font-family:var(--font-display);font-size:1.6rem;color:var(--accent);margin-bottom:0.5rem;">NT rate stands out</h3>
+          <p style="color:var(--muted);font-size:0.95rem;line-height:1.7;">The Northern Territory's per-capita hospitalisation rate far exceeds every other state — a product of higher road speeds, remoteness from hospitals, and demographic factors.</p>
+        </div>
+        <div>
+          <h3 style="font-family:var(--font-display);font-size:1.6rem;color:var(--accent);margin-bottom:0.5rem;">Motorcyclists over-represented</h3>
+          <p style="color:var(--muted);font-size:0.95rem;line-height:1.7;">Despite a small share of vehicle kilometres travelled, motorcyclists account for a consistently high share of serious hospitalisations — primarily from fixed-object collisions.</p>
+        </div>
       </div>
-      <div class="fn-callout">
-        <div class="fn-stat"><span>+90%</span><p>growth in First Nations hospitalisations 2011→2021</p></div>
-        <div class="fn-stat"><span>+15%</span><p>growth in Non-Indigenous hospitalisations over the same period</p></div>
+      <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);">
+        <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);line-height:1.9;">
+          Data: AIHW / BITRE Hospitalised Injury Data 2023. Population denominators: ABS Estimated Resident Population.<br/>
+          Series breaks: Victoria 2012 (est. −5.6%); NSW 2017 — reflect coding changes, not safety changes.<br/>
+          Hero statistic (403,293) is state-attributable only; true national figure is 410,884.<br/>
+          First Nations n.p. (suppressed) cells treated as zero — may understate true counts in small cells.<br/>
+          Visualisation: D3.js v7. Group 9 — COS30045.
+        </p>
       </div>
     </section>
 
   </main>
 
   <footer class="site-footer">
-    <p>Data source: Bureau of Infrastructure and Transport Research Economics (BITRE), Hospitalised Injury Data 2023. Visualisation built with D3.js.</p>
-    <p>Note: All figures represent absolute hospitalisation counts and should not be used to make per-capita comparisons without population adjustment.</p>
+    <p>Data source: Australian Institute of Health and Welfare · Bureau of Infrastructure and Transport Research Economics · Australian Bureau of Statistics</p>
+    <p>Visualisation built with D3.js v7 · Group 9, COS30045</p>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <!-- D3 core -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"
+          integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ=="
+          crossorigin="anonymous"></script>
+  <!-- d3-sankey plugin (required for AQ4 Sankey diagram) -->
+  <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"
+          integrity="sha384-SM54CE5h+qdDI046d2Y5ym7wq1kq4uxcQ1cqGq5/+5jrE5tPLeDJSq711Q8sIska"
+          crossorigin="anonymous"></script>
+  <!-- Shared constants — must load first -->
+  <script src="assets/js/constants.js"></script>
+  <!-- Chart modules -->
+  <script src="assets/js/charts/aq1.js"></script>
+  <script src="assets/js/charts/aq2.js"></script>
+  <script src="assets/js/charts/aq3.js"></script>
+  <script src="assets/js/charts/aq4.js"></script>
+  <!-- Entry point -->
   <script src="assets/js/main.js"></script>
 </body>
 </html>

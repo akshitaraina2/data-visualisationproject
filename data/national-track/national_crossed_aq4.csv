@@ -1,0 +1,997 @@
+"year","road_user","counterparty","Sum(hospitalisations)"
+2011,"Bus occupant","Car, pick-up truck or van",28
+2011,"Bus occupant","Fixed or stationary object",11
+2011,"Bus occupant","Heavy transport vehicle or bus",12
+2011,"Bus occupant","Non-collision transport accident",139
+2011,"Bus occupant","Other and unspecified transport accidents",20
+2011,"Bus occupant","Pedestrian or animal",4
+2011,"Car driver","2- or 3- wheeled motor vehicle",20
+2011,"Car driver","Car, pick-up truck or van",5768
+2011,"Car driver","Fixed or stationary object",2774
+2011,"Car driver","Heavy transport vehicle or bus",523
+2011,"Car driver","Non-collision transport accident",1619
+2011,"Car driver","Other and unspecified transport accidents",132
+2011,"Car driver","Other non-motor vehicle",13
+2011,"Car driver","Pedal cycle",3
+2011,"Car driver","Pedestrian or animal",85
+2011,"Car driver","Train",11
+2011,"Car passenger","2- or 3- wheeled motor vehicle",10
+2011,"Car passenger","Car, pick-up truck or van",2480
+2011,"Car passenger","Fixed or stationary object",1058
+2011,"Car passenger","Heavy transport vehicle or bus",175
+2011,"Car passenger","Non-collision transport accident",974
+2011,"Car passenger","Other and unspecified transport accidents",95
+2011,"Car passenger","Other non-motor vehicle",8
+2011,"Car passenger","Pedestrian or animal",41
+2011,"Car passenger","Train",12
+2011,"Car unknown position","Car, pick-up truck or van",126
+2011,"Car unknown position","Fixed or stationary object",42
+2011,"Car unknown position","Heavy transport vehicle or bus",10
+2011,"Car unknown position","Non-collision transport accident",95
+2011,"Car unknown position","Other and unspecified transport accidents",607
+2011,"Car unknown position","Other non-motor vehicle",1
+2011,"Car unknown position","Pedestrian or animal",8
+2011,"Heavy transport driver","Car, pick-up truck or van",43
+2011,"Heavy transport driver","Fixed or stationary object",61
+2011,"Heavy transport driver","Heavy transport vehicle or bus",63
+2011,"Heavy transport driver","Non-collision transport accident",273
+2011,"Heavy transport driver","Other and unspecified transport accidents",7
+2011,"Heavy transport driver","Pedestrian or animal",3
+2011,"Heavy transport driver","Train",5
+2011,"Heavy transport passenger","Car, pick-up truck or van",5
+2011,"Heavy transport passenger","Fixed or stationary object",5
+2011,"Heavy transport passenger","Heavy transport vehicle or bus",7
+2011,"Heavy transport passenger","Non-collision transport accident",32
+2011,"Heavy transport passenger","Other and unspecified transport accidents",1
+2011,"Heavy transport passenger","Pedestrian or animal",1
+2011,"Heavy transport passenger","Train",1
+2011,"Heavy transport unknown position","Car, pick-up truck or van",2
+2011,"Heavy transport unknown position","Heavy transport vehicle or bus",2
+2011,"Heavy transport unknown position","Non-collision transport accident",18
+2011,"Heavy transport unknown position","Other and unspecified transport accidents",30
+2011,"Heavy transport unknown position","Pedestrian or animal",3
+2011,"Motorcyclist","2- or 3- wheeled motor vehicle",135
+2011,"Motorcyclist","Car, pick-up truck or van",1810
+2011,"Motorcyclist","Fixed or stationary object",653
+2011,"Motorcyclist","Heavy transport vehicle or bus",88
+2011,"Motorcyclist","Non-collision transport accident",3044
+2011,"Motorcyclist","Other and unspecified transport accidents",1677
+2011,"Motorcyclist","Other non-motor vehicle",9
+2011,"Motorcyclist","Pedal cycle",8
+2011,"Motorcyclist","Pedestrian or animal",140
+2011,"Motorcyclist","Train",1
+2011,"Other or unknown","2- or 3- wheeled motor vehicle",1
+2011,"Other or unknown","Car, pick-up truck or van",9
+2011,"Other or unknown","Fixed or stationary object",1
+2011,"Other or unknown","Non-collision transport accident",9
+2011,"Other or unknown","Other and unspecified transport accidents",588
+2011,"Other or unknown","Other non-motor vehicle",1
+2011,"Other or unknown","Pedestrian or animal",1
+2011,"Pedal cyclist","2- or 3- wheeled motor vehicle",16
+2011,"Pedal cyclist","Car, pick-up truck or van",1239
+2011,"Pedal cyclist","Fixed or stationary object",274
+2011,"Pedal cyclist","Heavy transport vehicle or bus",53
+2011,"Pedal cyclist","Non-collision transport accident",2353
+2011,"Pedal cyclist","Other and unspecified transport accidents",1175
+2011,"Pedal cyclist","Other non-motor vehicle",3
+2011,"Pedal cyclist","Pedal cycle",235
+2011,"Pedal cyclist","Pedestrian or animal",41
+2011,"Pedal cyclist","Train",2
+2011,"Pedestrian","2- or 3- wheeled motor vehicle",64
+2011,"Pedestrian","Car, pick-up truck or van",2437
+2011,"Pedestrian","Heavy transport vehicle or bus",112
+2011,"Pedestrian","Other and unspecified transport accidents",71
+2011,"Pedestrian","Other non-motor vehicle",11
+2011,"Pedestrian","Pedal cycle",34
+2011,"Pedestrian","Pedestrian or animal",13
+2011,"Pedestrian","Train",12
+2011,"Pick-up truck or van occupant","Car, pick-up truck or van",67
+2011,"Pick-up truck or van occupant","Fixed or stationary object",54
+2011,"Pick-up truck or van occupant","Heavy transport vehicle or bus",24
+2011,"Pick-up truck or van occupant","Non-collision transport accident",87
+2011,"Pick-up truck or van occupant","Other and unspecified transport accidents",13
+2011,"Pick-up truck or van occupant","Pedestrian or animal",2
+2012,"Bus occupant","Car, pick-up truck or van",31
+2012,"Bus occupant","Fixed or stationary object",13
+2012,"Bus occupant","Heavy transport vehicle or bus",16
+2012,"Bus occupant","Non-collision transport accident",124
+2012,"Bus occupant","Other and unspecified transport accidents",28
+2012,"Bus occupant","Pedestrian or animal",5
+2012,"Car driver","2- or 3- wheeled motor vehicle",21
+2012,"Car driver","Car, pick-up truck or van",5607
+2012,"Car driver","Fixed or stationary object",2754
+2012,"Car driver","Heavy transport vehicle or bus",461
+2012,"Car driver","Non-collision transport accident",1709
+2012,"Car driver","Other and unspecified transport accidents",140
+2012,"Car driver","Other non-motor vehicle",13
+2012,"Car driver","Pedal cycle",9
+2012,"Car driver","Pedestrian or animal",79
+2012,"Car driver","Train",13
+2012,"Car passenger","2- or 3- wheeled motor vehicle",4
+2012,"Car passenger","Car, pick-up truck or van",2341
+2012,"Car passenger","Fixed or stationary object",1017
+2012,"Car passenger","Heavy transport vehicle or bus",163
+2012,"Car passenger","Non-collision transport accident",1072
+2012,"Car passenger","Other and unspecified transport accidents",76
+2012,"Car passenger","Other non-motor vehicle",4
+2012,"Car passenger","Pedal cycle",3
+2012,"Car passenger","Pedestrian or animal",58
+2012,"Car unknown position","Car, pick-up truck or van",143
+2012,"Car unknown position","Fixed or stationary object",40
+2012,"Car unknown position","Heavy transport vehicle or bus",8
+2012,"Car unknown position","Non-collision transport accident",101
+2012,"Car unknown position","Other and unspecified transport accidents",599
+2012,"Car unknown position","Other non-motor vehicle",1
+2012,"Car unknown position","Pedestrian or animal",3
+2012,"Heavy transport driver","2- or 3- wheeled motor vehicle",2
+2012,"Heavy transport driver","Car, pick-up truck or van",59
+2012,"Heavy transport driver","Fixed or stationary object",53
+2012,"Heavy transport driver","Heavy transport vehicle or bus",65
+2012,"Heavy transport driver","Non-collision transport accident",231
+2012,"Heavy transport driver","Other and unspecified transport accidents",4
+2012,"Heavy transport driver","Pedestrian or animal",2
+2012,"Heavy transport passenger","Car, pick-up truck or van",5
+2012,"Heavy transport passenger","Fixed or stationary object",7
+2012,"Heavy transport passenger","Heavy transport vehicle or bus",7
+2012,"Heavy transport passenger","Non-collision transport accident",27
+2012,"Heavy transport passenger","Other and unspecified transport accidents",1
+2012,"Heavy transport unknown position","Fixed or stationary object",2
+2012,"Heavy transport unknown position","Heavy transport vehicle or bus",1
+2012,"Heavy transport unknown position","Non-collision transport accident",16
+2012,"Heavy transport unknown position","Other and unspecified transport accidents",26
+2012,"Heavy transport unknown position","Pedestrian or animal",3
+2012,"Motorcyclist","2- or 3- wheeled motor vehicle",136
+2012,"Motorcyclist","Car, pick-up truck or van",1889
+2012,"Motorcyclist","Fixed or stationary object",656
+2012,"Motorcyclist","Heavy transport vehicle or bus",79
+2012,"Motorcyclist","Non-collision transport accident",3026
+2012,"Motorcyclist","Other and unspecified transport accidents",1762
+2012,"Motorcyclist","Other non-motor vehicle",6
+2012,"Motorcyclist","Pedal cycle",3
+2012,"Motorcyclist","Pedestrian or animal",170
+2012,"Motorcyclist","Train",1
+2012,"Other or unknown","2- or 3- wheeled motor vehicle",1
+2012,"Other or unknown","Car, pick-up truck or van",11
+2012,"Other or unknown","Fixed or stationary object",0
+2012,"Other or unknown","Non-collision transport accident",3
+2012,"Other or unknown","Other and unspecified transport accidents",543
+2012,"Other or unknown","Other non-motor vehicle",2
+2012,"Other or unknown","Pedestrian or animal",3
+2012,"Pedal cyclist","2- or 3- wheeled motor vehicle",8
+2012,"Pedal cyclist","Car, pick-up truck or van",1292
+2012,"Pedal cyclist","Fixed or stationary object",292
+2012,"Pedal cyclist","Heavy transport vehicle or bus",70
+2012,"Pedal cyclist","Non-collision transport accident",2419
+2012,"Pedal cyclist","Other and unspecified transport accidents",1237
+2012,"Pedal cyclist","Other non-motor vehicle",4
+2012,"Pedal cyclist","Pedal cycle",258
+2012,"Pedal cyclist","Pedestrian or animal",41
+2012,"Pedestrian","2- or 3- wheeled motor vehicle",45
+2012,"Pedestrian","Car, pick-up truck or van",2341
+2012,"Pedestrian","Heavy transport vehicle or bus",121
+2012,"Pedestrian","Other and unspecified transport accidents",79
+2012,"Pedestrian","Other non-motor vehicle",12
+2012,"Pedestrian","Pedal cycle",48
+2012,"Pedestrian","Pedestrian or animal",13
+2012,"Pedestrian","Train",13
+2012,"Pick-up truck or van occupant","Car, pick-up truck or van",67
+2012,"Pick-up truck or van occupant","Fixed or stationary object",65
+2012,"Pick-up truck or van occupant","Heavy transport vehicle or bus",30
+2012,"Pick-up truck or van occupant","Non-collision transport accident",87
+2012,"Pick-up truck or van occupant","Other and unspecified transport accidents",20
+2012,"Pick-up truck or van occupant","Other non-motor vehicle",1
+2012,"Pick-up truck or van occupant","Pedestrian or animal",3
+2012,"Pick-up truck or van occupant","Train",0
+2013,"Bus occupant","Car, pick-up truck or van",35
+2013,"Bus occupant","Fixed or stationary object",14
+2013,"Bus occupant","Heavy transport vehicle or bus",7
+2013,"Bus occupant","Non-collision transport accident",139
+2013,"Bus occupant","Other and unspecified transport accidents",25
+2013,"Bus occupant","Pedestrian or animal",6
+2013,"Car driver","2- or 3- wheeled motor vehicle",25
+2013,"Car driver","Car, pick-up truck or van",5580
+2013,"Car driver","Fixed or stationary object",2762
+2013,"Car driver","Heavy transport vehicle or bus",548
+2013,"Car driver","Non-collision transport accident",1746
+2013,"Car driver","Other and unspecified transport accidents",151
+2013,"Car driver","Other non-motor vehicle",16
+2013,"Car driver","Pedal cycle",7
+2013,"Car driver","Pedestrian or animal",99
+2013,"Car driver","Train",8
+2013,"Car passenger","2- or 3- wheeled motor vehicle",7
+2013,"Car passenger","Car, pick-up truck or van",2436
+2013,"Car passenger","Fixed or stationary object",1016
+2013,"Car passenger","Heavy transport vehicle or bus",167
+2013,"Car passenger","Non-collision transport accident",1046
+2013,"Car passenger","Other and unspecified transport accidents",91
+2013,"Car passenger","Other non-motor vehicle",2
+2013,"Car passenger","Pedal cycle",2
+2013,"Car passenger","Pedestrian or animal",58
+2013,"Car passenger","Train",3
+2013,"Car unknown position","2- or 3- wheeled motor vehicle",1
+2013,"Car unknown position","Car, pick-up truck or van",109
+2013,"Car unknown position","Fixed or stationary object",27
+2013,"Car unknown position","Heavy transport vehicle or bus",5
+2013,"Car unknown position","Non-collision transport accident",78
+2013,"Car unknown position","Other and unspecified transport accidents",589
+2013,"Car unknown position","Other non-motor vehicle",1
+2013,"Car unknown position","Pedal cycle",2
+2013,"Car unknown position","Pedestrian or animal",5
+2013,"Car unknown position","Train",1
+2013,"Heavy transport driver","Car, pick-up truck or van",47
+2013,"Heavy transport driver","Fixed or stationary object",67
+2013,"Heavy transport driver","Heavy transport vehicle or bus",71
+2013,"Heavy transport driver","Non-collision transport accident",223
+2013,"Heavy transport driver","Other and unspecified transport accidents",3
+2013,"Heavy transport driver","Pedestrian or animal",4
+2013,"Heavy transport passenger","Car, pick-up truck or van",8
+2013,"Heavy transport passenger","Fixed or stationary object",6
+2013,"Heavy transport passenger","Heavy transport vehicle or bus",7
+2013,"Heavy transport passenger","Non-collision transport accident",18
+2013,"Heavy transport passenger","Other and unspecified transport accidents",1
+2013,"Heavy transport unknown position","Heavy transport vehicle or bus",1
+2013,"Heavy transport unknown position","Non-collision transport accident",15
+2013,"Heavy transport unknown position","Other and unspecified transport accidents",13
+2013,"Motorcyclist","2- or 3- wheeled motor vehicle",134
+2013,"Motorcyclist","Car, pick-up truck or van",1997
+2013,"Motorcyclist","Fixed or stationary object",749
+2013,"Motorcyclist","Heavy transport vehicle or bus",84
+2013,"Motorcyclist","Non-collision transport accident",3279
+2013,"Motorcyclist","Other and unspecified transport accidents",1579
+2013,"Motorcyclist","Other non-motor vehicle",12
+2013,"Motorcyclist","Pedal cycle",6
+2013,"Motorcyclist","Pedestrian or animal",178
+2013,"Other or unknown","Car, pick-up truck or van",9
+2013,"Other or unknown","Non-collision transport accident",9
+2013,"Other or unknown","Other and unspecified transport accidents",514
+2013,"Other or unknown","Other non-motor vehicle",4
+2013,"Pedal cyclist","2- or 3- wheeled motor vehicle",14
+2013,"Pedal cyclist","Car, pick-up truck or van",1387
+2013,"Pedal cyclist","Fixed or stationary object",294
+2013,"Pedal cyclist","Heavy transport vehicle or bus",64
+2013,"Pedal cyclist","Non-collision transport accident",2786
+2013,"Pedal cyclist","Other and unspecified transport accidents",1288
+2013,"Pedal cyclist","Other non-motor vehicle",6
+2013,"Pedal cyclist","Pedal cycle",357
+2013,"Pedal cyclist","Pedestrian or animal",64
+2013,"Pedal cyclist","Train",2
+2013,"Pedestrian","2- or 3- wheeled motor vehicle",52
+2013,"Pedestrian","Car, pick-up truck or van",2318
+2013,"Pedestrian","Heavy transport vehicle or bus",132
+2013,"Pedestrian","Other and unspecified transport accidents",64
+2013,"Pedestrian","Other non-motor vehicle",8
+2013,"Pedestrian","Pedal cycle",57
+2013,"Pedestrian","Pedestrian or animal",16
+2013,"Pedestrian","Train",10
+2013,"Pick-up truck or van occupant","Car, pick-up truck or van",73
+2013,"Pick-up truck or van occupant","Fixed or stationary object",43
+2013,"Pick-up truck or van occupant","Heavy transport vehicle or bus",18
+2013,"Pick-up truck or van occupant","Non-collision transport accident",78
+2013,"Pick-up truck or van occupant","Other and unspecified transport accidents",12
+2013,"Pick-up truck or van occupant","Other non-motor vehicle",1
+2013,"Pick-up truck or van occupant","Pedestrian or animal",4
+2013,"Pick-up truck or van occupant","Train",1
+2014,"Bus occupant","Car, pick-up truck or van",54
+2014,"Bus occupant","Fixed or stationary object",20
+2014,"Bus occupant","Heavy transport vehicle or bus",18
+2014,"Bus occupant","Non-collision transport accident",167
+2014,"Bus occupant","Other and unspecified transport accidents",30
+2014,"Car driver","2- or 3- wheeled motor vehicle",28
+2014,"Car driver","Car, pick-up truck or van",5880
+2014,"Car driver","Fixed or stationary object",2832
+2014,"Car driver","Heavy transport vehicle or bus",513
+2014,"Car driver","Non-collision transport accident",1605
+2014,"Car driver","Other and unspecified transport accidents",143
+2014,"Car driver","Other non-motor vehicle",21
+2014,"Car driver","Pedal cycle",6
+2014,"Car driver","Pedestrian or animal",83
+2014,"Car driver","Train",11
+2014,"Car passenger","2- or 3- wheeled motor vehicle",6
+2014,"Car passenger","Car, pick-up truck or van",2352
+2014,"Car passenger","Fixed or stationary object",954
+2014,"Car passenger","Heavy transport vehicle or bus",181
+2014,"Car passenger","Non-collision transport accident",991
+2014,"Car passenger","Other and unspecified transport accidents",94
+2014,"Car passenger","Other non-motor vehicle",3
+2014,"Car passenger","Pedal cycle",4
+2014,"Car passenger","Pedestrian or animal",38
+2014,"Car passenger","Train",2
+2014,"Car unknown position","Car, pick-up truck or van",127
+2014,"Car unknown position","Fixed or stationary object",33
+2014,"Car unknown position","Heavy transport vehicle or bus",6
+2014,"Car unknown position","Non-collision transport accident",61
+2014,"Car unknown position","Other and unspecified transport accidents",501
+2014,"Heavy transport driver","2- or 3- wheeled motor vehicle",1
+2014,"Heavy transport driver","Car, pick-up truck or van",59
+2014,"Heavy transport driver","Fixed or stationary object",52
+2014,"Heavy transport driver","Heavy transport vehicle or bus",50
+2014,"Heavy transport driver","Non-collision transport accident",206
+2014,"Heavy transport driver","Other and unspecified transport accidents",4
+2014,"Heavy transport driver","Other non-motor vehicle",2
+2014,"Heavy transport driver","Pedal cycle",1
+2014,"Heavy transport driver","Pedestrian or animal",1
+2014,"Heavy transport driver","Train",1
+2014,"Heavy transport passenger","2- or 3- wheeled motor vehicle",1
+2014,"Heavy transport passenger","Car, pick-up truck or van",7
+2014,"Heavy transport passenger","Fixed or stationary object",9
+2014,"Heavy transport passenger","Heavy transport vehicle or bus",9
+2014,"Heavy transport passenger","Non-collision transport accident",29
+2014,"Heavy transport unknown position","Car, pick-up truck or van",3
+2014,"Heavy transport unknown position","Fixed or stationary object",3
+2014,"Heavy transport unknown position","Heavy transport vehicle or bus",4
+2014,"Heavy transport unknown position","Non-collision transport accident",19
+2014,"Heavy transport unknown position","Other and unspecified transport accidents",17
+2014,"Heavy transport unknown position","Pedal cycle",1
+2014,"Heavy transport unknown position","Pedestrian or animal",1
+2014,"Motorcyclist","2- or 3- wheeled motor vehicle",132
+2014,"Motorcyclist","Car, pick-up truck or van",2076
+2014,"Motorcyclist","Fixed or stationary object",755
+2014,"Motorcyclist","Heavy transport vehicle or bus",80
+2014,"Motorcyclist","Non-collision transport accident",3448
+2014,"Motorcyclist","Other and unspecified transport accidents",1606
+2014,"Motorcyclist","Other non-motor vehicle",12
+2014,"Motorcyclist","Pedal cycle",10
+2014,"Motorcyclist","Pedestrian or animal",215
+2014,"Other or unknown","2- or 3- wheeled motor vehicle",0
+2014,"Other or unknown","Car, pick-up truck or van",9
+2014,"Other or unknown","Fixed or stationary object",3
+2014,"Other or unknown","Heavy transport vehicle or bus",2
+2014,"Other or unknown","Non-collision transport accident",11
+2014,"Other or unknown","Other and unspecified transport accidents",481
+2014,"Other or unknown","Other non-motor vehicle",1
+2014,"Other or unknown","Pedestrian or animal",1
+2014,"Pedal cyclist","2- or 3- wheeled motor vehicle",14
+2014,"Pedal cyclist","Car, pick-up truck or van",1413
+2014,"Pedal cyclist","Fixed or stationary object",361
+2014,"Pedal cyclist","Heavy transport vehicle or bus",65
+2014,"Pedal cyclist","Non-collision transport accident",3008
+2014,"Pedal cyclist","Other and unspecified transport accidents",1395
+2014,"Pedal cyclist","Other non-motor vehicle",12
+2014,"Pedal cyclist","Pedal cycle",294
+2014,"Pedal cyclist","Pedestrian or animal",74
+2014,"Pedestrian","2- or 3- wheeled motor vehicle",62
+2014,"Pedestrian","Car, pick-up truck or van",2205
+2014,"Pedestrian","Heavy transport vehicle or bus",132
+2014,"Pedestrian","Other and unspecified transport accidents",77
+2014,"Pedestrian","Other non-motor vehicle",9
+2014,"Pedestrian","Pedal cycle",50
+2014,"Pedestrian","Pedestrian or animal",9
+2014,"Pedestrian","Train",10
+2014,"Pick-up truck or van occupant","Car, pick-up truck or van",73
+2014,"Pick-up truck or van occupant","Fixed or stationary object",40
+2014,"Pick-up truck or van occupant","Heavy transport vehicle or bus",17
+2014,"Pick-up truck or van occupant","Non-collision transport accident",94
+2014,"Pick-up truck or van occupant","Other and unspecified transport accidents",13
+2014,"Pick-up truck or van occupant","Pedestrian or animal",2
+2015,"Bus occupant","Car, pick-up truck or van",34
+2015,"Bus occupant","Fixed or stationary object",16
+2015,"Bus occupant","Heavy transport vehicle or bus",11
+2015,"Bus occupant","Non-collision transport accident",151
+2015,"Bus occupant","Other and unspecified transport accidents",23
+2015,"Bus occupant","Pedestrian or animal",1
+2015,"Bus occupant","Train",10
+2015,"Car driver","2- or 3- wheeled motor vehicle",21
+2015,"Car driver","Car, pick-up truck or van",6530
+2015,"Car driver","Fixed or stationary object",2996
+2015,"Car driver","Heavy transport vehicle or bus",547
+2015,"Car driver","Non-collision transport accident",1822
+2015,"Car driver","Other and unspecified transport accidents",140
+2015,"Car driver","Other non-motor vehicle",10
+2015,"Car driver","Pedal cycle",4
+2015,"Car driver","Pedestrian or animal",86
+2015,"Car driver","Train",7
+2015,"Car passenger","2- or 3- wheeled motor vehicle",6
+2015,"Car passenger","Car, pick-up truck or van",2560
+2015,"Car passenger","Fixed or stationary object",1034
+2015,"Car passenger","Heavy transport vehicle or bus",197
+2015,"Car passenger","Non-collision transport accident",1030
+2015,"Car passenger","Other and unspecified transport accidents",80
+2015,"Car passenger","Other non-motor vehicle",3
+2015,"Car passenger","Pedestrian or animal",42
+2015,"Car passenger","Train",6
+2015,"Car unknown position","Car, pick-up truck or van",115
+2015,"Car unknown position","Fixed or stationary object",49
+2015,"Car unknown position","Heavy transport vehicle or bus",8
+2015,"Car unknown position","Non-collision transport accident",60
+2015,"Car unknown position","Other and unspecified transport accidents",570
+2015,"Car unknown position","Pedal cycle",1
+2015,"Car unknown position","Pedestrian or animal",9
+2015,"Car unknown position","Train",0
+2015,"Heavy transport driver","2- or 3- wheeled motor vehicle",1
+2015,"Heavy transport driver","Car, pick-up truck or van",67
+2015,"Heavy transport driver","Fixed or stationary object",62
+2015,"Heavy transport driver","Heavy transport vehicle or bus",57
+2015,"Heavy transport driver","Non-collision transport accident",253
+2015,"Heavy transport driver","Other and unspecified transport accidents",0
+2015,"Heavy transport driver","Other non-motor vehicle",1
+2015,"Heavy transport driver","Pedestrian or animal",2
+2015,"Heavy transport driver","Train",1
+2015,"Heavy transport passenger","Car, pick-up truck or van",11
+2015,"Heavy transport passenger","Fixed or stationary object",4
+2015,"Heavy transport passenger","Heavy transport vehicle or bus",6
+2015,"Heavy transport passenger","Non-collision transport accident",22
+2015,"Heavy transport unknown position","Car, pick-up truck or van",0
+2015,"Heavy transport unknown position","Fixed or stationary object",0
+2015,"Heavy transport unknown position","Heavy transport vehicle or bus",1
+2015,"Heavy transport unknown position","Non-collision transport accident",10
+2015,"Heavy transport unknown position","Other and unspecified transport accidents",12
+2015,"Motorcyclist","2- or 3- wheeled motor vehicle",175
+2015,"Motorcyclist","Car, pick-up truck or van",2131
+2015,"Motorcyclist","Fixed or stationary object",751
+2015,"Motorcyclist","Heavy transport vehicle or bus",88
+2015,"Motorcyclist","Non-collision transport accident",3412
+2015,"Motorcyclist","Other and unspecified transport accidents",1535
+2015,"Motorcyclist","Other non-motor vehicle",10
+2015,"Motorcyclist","Pedal cycle",7
+2015,"Motorcyclist","Pedestrian or animal",188
+2015,"Motorcyclist","Train",1
+2015,"Other or unknown","Car, pick-up truck or van",7
+2015,"Other or unknown","Non-collision transport accident",6
+2015,"Other or unknown","Other and unspecified transport accidents",486
+2015,"Other or unknown","Other non-motor vehicle",3
+2015,"Other or unknown","Train",1
+2015,"Pedal cyclist","2- or 3- wheeled motor vehicle",15
+2015,"Pedal cyclist","Car, pick-up truck or van",1455
+2015,"Pedal cyclist","Fixed or stationary object",350
+2015,"Pedal cyclist","Heavy transport vehicle or bus",47
+2015,"Pedal cyclist","Non-collision transport accident",3004
+2015,"Pedal cyclist","Other and unspecified transport accidents",1415
+2015,"Pedal cyclist","Other non-motor vehicle",6
+2015,"Pedal cyclist","Pedal cycle",354
+2015,"Pedal cyclist","Pedestrian or animal",70
+2015,"Pedestrian","2- or 3- wheeled motor vehicle",49
+2015,"Pedestrian","Car, pick-up truck or van",2330
+2015,"Pedestrian","Heavy transport vehicle or bus",94
+2015,"Pedestrian","Other and unspecified transport accidents",77
+2015,"Pedestrian","Other non-motor vehicle",12
+2015,"Pedestrian","Pedal cycle",52
+2015,"Pedestrian","Pedestrian or animal",7
+2015,"Pedestrian","Train",6
+2015,"Pick-up truck or van occupant","Car, pick-up truck or van",78
+2015,"Pick-up truck or van occupant","Fixed or stationary object",42
+2015,"Pick-up truck or van occupant","Heavy transport vehicle or bus",18
+2015,"Pick-up truck or van occupant","Non-collision transport accident",100
+2015,"Pick-up truck or van occupant","Other and unspecified transport accidents",9
+2015,"Pick-up truck or van occupant","Other non-motor vehicle",1
+2015,"Pick-up truck or van occupant","Pedestrian or animal",1
+2016,"Bus occupant","2- or 3- wheeled motor vehicle",1
+2016,"Bus occupant","Car, pick-up truck or van",37
+2016,"Bus occupant","Fixed or stationary object",23
+2016,"Bus occupant","Heavy transport vehicle or bus",12
+2016,"Bus occupant","Non-collision transport accident",189
+2016,"Bus occupant","Other and unspecified transport accidents",20
+2016,"Bus occupant","Pedestrian or animal",1
+2016,"Car driver","2- or 3- wheeled motor vehicle",32
+2016,"Car driver","Car, pick-up truck or van",7366
+2016,"Car driver","Fixed or stationary object",3227
+2016,"Car driver","Heavy transport vehicle or bus",541
+2016,"Car driver","Non-collision transport accident",1750
+2016,"Car driver","Other and unspecified transport accidents",152
+2016,"Car driver","Other non-motor vehicle",19
+2016,"Car driver","Pedal cycle",4
+2016,"Car driver","Pedestrian or animal",91
+2016,"Car driver","Train",12
+2016,"Car passenger","2- or 3- wheeled motor vehicle",9
+2016,"Car passenger","Car, pick-up truck or van",2667
+2016,"Car passenger","Fixed or stationary object",1021
+2016,"Car passenger","Heavy transport vehicle or bus",215
+2016,"Car passenger","Non-collision transport accident",1039
+2016,"Car passenger","Other and unspecified transport accidents",86
+2016,"Car passenger","Other non-motor vehicle",7
+2016,"Car passenger","Pedestrian or animal",55
+2016,"Car passenger","Train",4
+2016,"Car unknown position","2- or 3- wheeled motor vehicle",1
+2016,"Car unknown position","Car, pick-up truck or van",117
+2016,"Car unknown position","Fixed or stationary object",35
+2016,"Car unknown position","Heavy transport vehicle or bus",7
+2016,"Car unknown position","Non-collision transport accident",59
+2016,"Car unknown position","Other and unspecified transport accidents",587
+2016,"Car unknown position","Pedestrian or animal",2
+2016,"Heavy transport driver","Car, pick-up truck or van",64
+2016,"Heavy transport driver","Fixed or stationary object",49
+2016,"Heavy transport driver","Heavy transport vehicle or bus",53
+2016,"Heavy transport driver","Non-collision transport accident",231
+2016,"Heavy transport driver","Other and unspecified transport accidents",2
+2016,"Heavy transport driver","Pedestrian or animal",3
+2016,"Heavy transport driver","Train",1
+2016,"Heavy transport passenger","Car, pick-up truck or van",10
+2016,"Heavy transport passenger","Heavy transport vehicle or bus",7
+2016,"Heavy transport passenger","Non-collision transport accident",24
+2016,"Heavy transport passenger","Other and unspecified transport accidents",1
+2016,"Heavy transport unknown position","Car, pick-up truck or van",0
+2016,"Heavy transport unknown position","Heavy transport vehicle or bus",4
+2016,"Heavy transport unknown position","Non-collision transport accident",20
+2016,"Heavy transport unknown position","Other and unspecified transport accidents",15
+2016,"Motorcyclist","2- or 3- wheeled motor vehicle",170
+2016,"Motorcyclist","Car, pick-up truck or van",2302
+2016,"Motorcyclist","Fixed or stationary object",785
+2016,"Motorcyclist","Heavy transport vehicle or bus",81
+2016,"Motorcyclist","Non-collision transport accident",3442
+2016,"Motorcyclist","Other and unspecified transport accidents",1557
+2016,"Motorcyclist","Other non-motor vehicle",7
+2016,"Motorcyclist","Pedal cycle",9
+2016,"Motorcyclist","Pedestrian or animal",169
+2016,"Motorcyclist","Train",4
+2016,"Other or unknown","Car, pick-up truck or van",6
+2016,"Other or unknown","Fixed or stationary object",1
+2016,"Other or unknown","Non-collision transport accident",5
+2016,"Other or unknown","Other and unspecified transport accidents",603
+2016,"Other or unknown","Other non-motor vehicle",3
+2016,"Other or unknown","Pedestrian or animal",2
+2016,"Pedal cyclist","2- or 3- wheeled motor vehicle",13
+2016,"Pedal cyclist","Car, pick-up truck or van",1482
+2016,"Pedal cyclist","Fixed or stationary object",415
+2016,"Pedal cyclist","Heavy transport vehicle or bus",76
+2016,"Pedal cyclist","Non-collision transport accident",3053
+2016,"Pedal cyclist","Other and unspecified transport accidents",1432
+2016,"Pedal cyclist","Other non-motor vehicle",13
+2016,"Pedal cyclist","Pedal cycle",335
+2016,"Pedal cyclist","Pedestrian or animal",83
+2016,"Pedal cyclist","Train",2
+2016,"Pedestrian","2- or 3- wheeled motor vehicle",61
+2016,"Pedestrian","Car, pick-up truck or van",2407
+2016,"Pedestrian","Heavy transport vehicle or bus",119
+2016,"Pedestrian","Other and unspecified transport accidents",70
+2016,"Pedestrian","Other non-motor vehicle",7
+2016,"Pedestrian","Pedal cycle",53
+2016,"Pedestrian","Pedestrian or animal",12
+2016,"Pedestrian","Train",14
+2016,"Pick-up truck or van occupant","2- or 3- wheeled motor vehicle",1
+2016,"Pick-up truck or van occupant","Car, pick-up truck or van",93
+2016,"Pick-up truck or van occupant","Fixed or stationary object",51
+2016,"Pick-up truck or van occupant","Heavy transport vehicle or bus",23
+2016,"Pick-up truck or van occupant","Non-collision transport accident",99
+2016,"Pick-up truck or van occupant","Other and unspecified transport accidents",28
+2016,"Pick-up truck or van occupant","Pedestrian or animal",2
+2016,"Pick-up truck or van occupant","Train",1
+2017,"Bus occupant","Car, pick-up truck or van",49
+2017,"Bus occupant","Fixed or stationary object",8
+2017,"Bus occupant","Heavy transport vehicle or bus",12
+2017,"Bus occupant","Non-collision transport accident",182
+2017,"Bus occupant","Other and unspecified transport accidents",14
+2017,"Car driver","2- or 3- wheeled motor vehicle",21
+2017,"Car driver","Car, pick-up truck or van",7473
+2017,"Car driver","Fixed or stationary object",3061
+2017,"Car driver","Heavy transport vehicle or bus",595
+2017,"Car driver","Non-collision transport accident",1826
+2017,"Car driver","Other and unspecified transport accidents",157
+2017,"Car driver","Other non-motor vehicle",25
+2017,"Car driver","Pedal cycle",5
+2017,"Car driver","Pedestrian or animal",96
+2017,"Car driver","Train",8
+2017,"Car passenger","2- or 3- wheeled motor vehicle",5
+2017,"Car passenger","Car, pick-up truck or van",2766
+2017,"Car passenger","Fixed or stationary object",1005
+2017,"Car passenger","Heavy transport vehicle or bus",191
+2017,"Car passenger","Non-collision transport accident",998
+2017,"Car passenger","Other and unspecified transport accidents",76
+2017,"Car passenger","Other non-motor vehicle",13
+2017,"Car passenger","Pedal cycle",1
+2017,"Car passenger","Pedestrian or animal",47
+2017,"Car unknown position","Car, pick-up truck or van",125
+2017,"Car unknown position","Fixed or stationary object",29
+2017,"Car unknown position","Heavy transport vehicle or bus",4
+2017,"Car unknown position","Non-collision transport accident",53
+2017,"Car unknown position","Other and unspecified transport accidents",562
+2017,"Car unknown position","Pedestrian or animal",3
+2017,"Car unknown position","Train",1
+2017,"Heavy transport driver","Car, pick-up truck or van",75
+2017,"Heavy transport driver","Fixed or stationary object",72
+2017,"Heavy transport driver","Heavy transport vehicle or bus",76
+2017,"Heavy transport driver","Non-collision transport accident",218
+2017,"Heavy transport driver","Other and unspecified transport accidents",1
+2017,"Heavy transport driver","Other non-motor vehicle",1
+2017,"Heavy transport driver","Pedestrian or animal",4
+2017,"Heavy transport passenger","Car, pick-up truck or van",7
+2017,"Heavy transport passenger","Fixed or stationary object",2
+2017,"Heavy transport passenger","Heavy transport vehicle or bus",8
+2017,"Heavy transport passenger","Non-collision transport accident",31
+2017,"Heavy transport passenger","Other non-motor vehicle",1
+2017,"Heavy transport unknown position","Non-collision transport accident",13
+2017,"Heavy transport unknown position","Other and unspecified transport accidents",19
+2017,"Motorcyclist","2- or 3- wheeled motor vehicle",169
+2017,"Motorcyclist","Car, pick-up truck or van",2371
+2017,"Motorcyclist","Fixed or stationary object",814
+2017,"Motorcyclist","Heavy transport vehicle or bus",109
+2017,"Motorcyclist","Non-collision transport accident",3579
+2017,"Motorcyclist","Other and unspecified transport accidents",1454
+2017,"Motorcyclist","Other non-motor vehicle",10
+2017,"Motorcyclist","Pedal cycle",19
+2017,"Motorcyclist","Pedestrian or animal",214
+2017,"Motorcyclist","Train",0
+2017,"Other or unknown","2- or 3- wheeled motor vehicle",1
+2017,"Other or unknown","Car, pick-up truck or van",7
+2017,"Other or unknown","Non-collision transport accident",8
+2017,"Other or unknown","Other and unspecified transport accidents",580
+2017,"Other or unknown","Other non-motor vehicle",4
+2017,"Pedal cyclist","2- or 3- wheeled motor vehicle",14
+2017,"Pedal cyclist","Car, pick-up truck or van",1603
+2017,"Pedal cyclist","Fixed or stationary object",419
+2017,"Pedal cyclist","Heavy transport vehicle or bus",62
+2017,"Pedal cyclist","Non-collision transport accident",3094
+2017,"Pedal cyclist","Other and unspecified transport accidents",1437
+2017,"Pedal cyclist","Other non-motor vehicle",8
+2017,"Pedal cyclist","Pedal cycle",354
+2017,"Pedal cyclist","Pedestrian or animal",84
+2017,"Pedal cyclist","Train",1
+2017,"Pedestrian","2- or 3- wheeled motor vehicle",45
+2017,"Pedestrian","Car, pick-up truck or van",2391
+2017,"Pedestrian","Heavy transport vehicle or bus",105
+2017,"Pedestrian","Other and unspecified transport accidents",83
+2017,"Pedestrian","Other non-motor vehicle",11
+2017,"Pedestrian","Pedal cycle",53
+2017,"Pedestrian","Pedestrian or animal",14
+2017,"Pedestrian","Train",12
+2017,"Pick-up truck or van occupant","Car, pick-up truck or van",99
+2017,"Pick-up truck or van occupant","Fixed or stationary object",41
+2017,"Pick-up truck or van occupant","Heavy transport vehicle or bus",21
+2017,"Pick-up truck or van occupant","Non-collision transport accident",87
+2017,"Pick-up truck or van occupant","Other and unspecified transport accidents",12
+2017,"Pick-up truck or van occupant","Other non-motor vehicle",2
+2017,"Pick-up truck or van occupant","Pedestrian or animal",7
+2017,"Pick-up truck or van occupant","Train",2
+2018,"Bus occupant","Car, pick-up truck or van",44
+2018,"Bus occupant","Fixed or stationary object",12
+2018,"Bus occupant","Heavy transport vehicle or bus",13
+2018,"Bus occupant","Non-collision transport accident",151
+2018,"Bus occupant","Other and unspecified transport accidents",25
+2018,"Bus occupant","Pedestrian or animal",1
+2018,"Bus occupant","Train",1
+2018,"Car driver","2- or 3- wheeled motor vehicle",19
+2018,"Car driver","Car, pick-up truck or van",7572
+2018,"Car driver","Fixed or stationary object",3134
+2018,"Car driver","Heavy transport vehicle or bus",572
+2018,"Car driver","Non-collision transport accident",1960
+2018,"Car driver","Other and unspecified transport accidents",162
+2018,"Car driver","Other non-motor vehicle",33
+2018,"Car driver","Pedal cycle",6
+2018,"Car driver","Pedestrian or animal",124
+2018,"Car driver","Train",13
+2018,"Car passenger","2- or 3- wheeled motor vehicle",4
+2018,"Car passenger","Car, pick-up truck or van",2733
+2018,"Car passenger","Fixed or stationary object",1032
+2018,"Car passenger","Heavy transport vehicle or bus",178
+2018,"Car passenger","Non-collision transport accident",1125
+2018,"Car passenger","Other and unspecified transport accidents",59
+2018,"Car passenger","Other non-motor vehicle",15
+2018,"Car passenger","Pedal cycle",1
+2018,"Car passenger","Pedestrian or animal",49
+2018,"Car passenger","Train",10
+2018,"Car unknown position","2- or 3- wheeled motor vehicle",0
+2018,"Car unknown position","Car, pick-up truck or van",114
+2018,"Car unknown position","Fixed or stationary object",27
+2018,"Car unknown position","Heavy transport vehicle or bus",14
+2018,"Car unknown position","Non-collision transport accident",67
+2018,"Car unknown position","Other and unspecified transport accidents",639
+2018,"Car unknown position","Other non-motor vehicle",1
+2018,"Car unknown position","Pedestrian or animal",2
+2018,"Car unknown position","Train",0
+2018,"Heavy transport driver","Car, pick-up truck or van",66
+2018,"Heavy transport driver","Fixed or stationary object",63
+2018,"Heavy transport driver","Heavy transport vehicle or bus",60
+2018,"Heavy transport driver","Non-collision transport accident",242
+2018,"Heavy transport driver","Other and unspecified transport accidents",2
+2018,"Heavy transport driver","Other non-motor vehicle",2
+2018,"Heavy transport driver","Pedestrian or animal",2
+2018,"Heavy transport passenger","Car, pick-up truck or van",13
+2018,"Heavy transport passenger","Fixed or stationary object",11
+2018,"Heavy transport passenger","Heavy transport vehicle or bus",11
+2018,"Heavy transport passenger","Non-collision transport accident",33
+2018,"Heavy transport passenger","Pedestrian or animal",1
+2018,"Heavy transport unknown position","Car, pick-up truck or van",1
+2018,"Heavy transport unknown position","Heavy transport vehicle or bus",1
+2018,"Heavy transport unknown position","Non-collision transport accident",21
+2018,"Heavy transport unknown position","Other and unspecified transport accidents",23
+2018,"Heavy transport unknown position","Other non-motor vehicle",1
+2018,"Motorcyclist","2- or 3- wheeled motor vehicle",142
+2018,"Motorcyclist","Car, pick-up truck or van",2322
+2018,"Motorcyclist","Fixed or stationary object",821
+2018,"Motorcyclist","Heavy transport vehicle or bus",89
+2018,"Motorcyclist","Non-collision transport accident",3586
+2018,"Motorcyclist","Other and unspecified transport accidents",1411
+2018,"Motorcyclist","Other non-motor vehicle",8
+2018,"Motorcyclist","Pedal cycle",11
+2018,"Motorcyclist","Pedestrian or animal",231
+2018,"Motorcyclist","Train",2
+2018,"Other or unknown","2- or 3- wheeled motor vehicle",1
+2018,"Other or unknown","Car, pick-up truck or van",1
+2018,"Other or unknown","Fixed or stationary object",4
+2018,"Other or unknown","Non-collision transport accident",13
+2018,"Other or unknown","Other and unspecified transport accidents",576
+2018,"Other or unknown","Other non-motor vehicle",8
+2018,"Pedal cyclist","2- or 3- wheeled motor vehicle",13
+2018,"Pedal cyclist","Car, pick-up truck or van",1494
+2018,"Pedal cyclist","Fixed or stationary object",402
+2018,"Pedal cyclist","Heavy transport vehicle or bus",58
+2018,"Pedal cyclist","Non-collision transport accident",3076
+2018,"Pedal cyclist","Other and unspecified transport accidents",1470
+2018,"Pedal cyclist","Other non-motor vehicle",23
+2018,"Pedal cyclist","Pedal cycle",343
+2018,"Pedal cyclist","Pedestrian or animal",75
+2018,"Pedal cyclist","Train",5
+2018,"Pedestrian","2- or 3- wheeled motor vehicle",56
+2018,"Pedestrian","Car, pick-up truck or van",2347
+2018,"Pedestrian","Heavy transport vehicle or bus",97
+2018,"Pedestrian","Other and unspecified transport accidents",73
+2018,"Pedestrian","Other non-motor vehicle",11
+2018,"Pedestrian","Pedal cycle",55
+2018,"Pedestrian","Pedestrian or animal",13
+2018,"Pedestrian","Train",9
+2018,"Pick-up truck or van occupant","2- or 3- wheeled motor vehicle",1
+2018,"Pick-up truck or van occupant","Car, pick-up truck or van",98
+2018,"Pick-up truck or van occupant","Fixed or stationary object",52
+2018,"Pick-up truck or van occupant","Heavy transport vehicle or bus",19
+2018,"Pick-up truck or van occupant","Non-collision transport accident",94
+2018,"Pick-up truck or van occupant","Other and unspecified transport accidents",12
+2018,"Pick-up truck or van occupant","Other non-motor vehicle",0
+2018,"Pick-up truck or van occupant","Pedestrian or animal",3
+2019,"Bus occupant","Car, pick-up truck or van",42
+2019,"Bus occupant","Fixed or stationary object",17
+2019,"Bus occupant","Heavy transport vehicle or bus",14
+2019,"Bus occupant","Non-collision transport accident",168
+2019,"Bus occupant","Other and unspecified transport accidents",12
+2019,"Bus occupant","Pedestrian or animal",2
+2019,"Car driver","2- or 3- wheeled motor vehicle",21
+2019,"Car driver","Car, pick-up truck or van",7697
+2019,"Car driver","Fixed or stationary object",3052
+2019,"Car driver","Heavy transport vehicle or bus",527
+2019,"Car driver","Non-collision transport accident",1868
+2019,"Car driver","Other and unspecified transport accidents",169
+2019,"Car driver","Other non-motor vehicle",26
+2019,"Car driver","Pedal cycle",5
+2019,"Car driver","Pedestrian or animal",110
+2019,"Car driver","Train",7
+2019,"Car passenger","2- or 3- wheeled motor vehicle",4
+2019,"Car passenger","Car, pick-up truck or van",2678
+2019,"Car passenger","Fixed or stationary object",1054
+2019,"Car passenger","Heavy transport vehicle or bus",195
+2019,"Car passenger","Non-collision transport accident",946
+2019,"Car passenger","Other and unspecified transport accidents",67
+2019,"Car passenger","Other non-motor vehicle",7
+2019,"Car passenger","Pedestrian or animal",38
+2019,"Car passenger","Train",0
+2019,"Car unknown position","Car, pick-up truck or van",123
+2019,"Car unknown position","Fixed or stationary object",31
+2019,"Car unknown position","Heavy transport vehicle or bus",14
+2019,"Car unknown position","Non-collision transport accident",52
+2019,"Car unknown position","Other and unspecified transport accidents",573
+2019,"Car unknown position","Pedestrian or animal",2
+2019,"Car unknown position","Train",2
+2019,"Heavy transport driver","2- or 3- wheeled motor vehicle",0
+2019,"Heavy transport driver","Car, pick-up truck or van",69
+2019,"Heavy transport driver","Fixed or stationary object",72
+2019,"Heavy transport driver","Heavy transport vehicle or bus",52
+2019,"Heavy transport driver","Non-collision transport accident",218
+2019,"Heavy transport driver","Other and unspecified transport accidents",6
+2019,"Heavy transport driver","Other non-motor vehicle",2
+2019,"Heavy transport driver","Pedestrian or animal",4
+2019,"Heavy transport driver","Train",2
+2019,"Heavy transport passenger","Car, pick-up truck or van",4
+2019,"Heavy transport passenger","Fixed or stationary object",7
+2019,"Heavy transport passenger","Heavy transport vehicle or bus",5
+2019,"Heavy transport passenger","Non-collision transport accident",35
+2019,"Heavy transport passenger","Pedestrian or animal",1
+2019,"Heavy transport unknown position","Heavy transport vehicle or bus",2
+2019,"Heavy transport unknown position","Non-collision transport accident",21
+2019,"Heavy transport unknown position","Other and unspecified transport accidents",24
+2019,"Motorcyclist","2- or 3- wheeled motor vehicle",185
+2019,"Motorcyclist","Car, pick-up truck or van",2462
+2019,"Motorcyclist","Fixed or stationary object",817
+2019,"Motorcyclist","Heavy transport vehicle or bus",82
+2019,"Motorcyclist","Non-collision transport accident",3577
+2019,"Motorcyclist","Other and unspecified transport accidents",1534
+2019,"Motorcyclist","Other non-motor vehicle",17
+2019,"Motorcyclist","Pedal cycle",18
+2019,"Motorcyclist","Pedestrian or animal",232
+2019,"Other or unknown","2- or 3- wheeled motor vehicle",3
+2019,"Other or unknown","Car, pick-up truck or van",4
+2019,"Other or unknown","Fixed or stationary object",2
+2019,"Other or unknown","Non-collision transport accident",5
+2019,"Other or unknown","Other and unspecified transport accidents",603
+2019,"Other or unknown","Other non-motor vehicle",3
+2019,"Pedal cyclist","2- or 3- wheeled motor vehicle",23
+2019,"Pedal cyclist","Car, pick-up truck or van",1585
+2019,"Pedal cyclist","Fixed or stationary object",434
+2019,"Pedal cyclist","Heavy transport vehicle or bus",40
+2019,"Pedal cyclist","Non-collision transport accident",3070
+2019,"Pedal cyclist","Other and unspecified transport accidents",1672
+2019,"Pedal cyclist","Other non-motor vehicle",8
+2019,"Pedal cyclist","Pedal cycle",384
+2019,"Pedal cyclist","Pedestrian or animal",84
+2019,"Pedal cyclist","Train",2
+2019,"Pedestrian","2- or 3- wheeled motor vehicle",62
+2019,"Pedestrian","Car, pick-up truck or van",2365
+2019,"Pedestrian","Heavy transport vehicle or bus",112
+2019,"Pedestrian","Other and unspecified transport accidents",77
+2019,"Pedestrian","Other non-motor vehicle",16
+2019,"Pedestrian","Pedal cycle",56
+2019,"Pedestrian","Pedestrian or animal",13
+2019,"Pedestrian","Train",12
+2019,"Pick-up truck or van occupant","2- or 3- wheeled motor vehicle",1
+2019,"Pick-up truck or van occupant","Car, pick-up truck or van",80
+2019,"Pick-up truck or van occupant","Fixed or stationary object",53
+2019,"Pick-up truck or van occupant","Heavy transport vehicle or bus",29
+2019,"Pick-up truck or van occupant","Non-collision transport accident",80
+2019,"Pick-up truck or van occupant","Other and unspecified transport accidents",13
+2019,"Pick-up truck or van occupant","Pedal cycle",1
+2019,"Pick-up truck or van occupant","Pedestrian or animal",2
+2019,"Pick-up truck or van occupant","Train",1
+2020,"Bus occupant","Car, pick-up truck or van",20
+2020,"Bus occupant","Fixed or stationary object",8
+2020,"Bus occupant","Heavy transport vehicle or bus",9
+2020,"Bus occupant","Non-collision transport accident",123
+2020,"Bus occupant","Other and unspecified transport accidents",9
+2020,"Bus occupant","Pedestrian or animal",1
+2020,"Bus occupant","Train",3
+2020,"Car driver","2- or 3- wheeled motor vehicle",23
+2020,"Car driver","Car, pick-up truck or van",6635
+2020,"Car driver","Fixed or stationary object",3076
+2020,"Car driver","Heavy transport vehicle or bus",471
+2020,"Car driver","Non-collision transport accident",1768
+2020,"Car driver","Other and unspecified transport accidents",123
+2020,"Car driver","Other non-motor vehicle",18
+2020,"Car driver","Pedal cycle",4
+2020,"Car driver","Pedestrian or animal",91
+2020,"Car driver","Train",8
+2020,"Car passenger","2- or 3- wheeled motor vehicle",5
+2020,"Car passenger","Car, pick-up truck or van",2222
+2020,"Car passenger","Fixed or stationary object",987
+2020,"Car passenger","Heavy transport vehicle or bus",133
+2020,"Car passenger","Non-collision transport accident",912
+2020,"Car passenger","Other and unspecified transport accidents",54
+2020,"Car passenger","Other non-motor vehicle",3
+2020,"Car passenger","Pedestrian or animal",27
+2020,"Car passenger","Train",1
+2020,"Car unknown position","2- or 3- wheeled motor vehicle",1
+2020,"Car unknown position","Car, pick-up truck or van",129
+2020,"Car unknown position","Fixed or stationary object",14
+2020,"Car unknown position","Heavy transport vehicle or bus",6
+2020,"Car unknown position","Non-collision transport accident",60
+2020,"Car unknown position","Other and unspecified transport accidents",521
+2020,"Heavy transport driver","Car, pick-up truck or van",64
+2020,"Heavy transport driver","Fixed or stationary object",55
+2020,"Heavy transport driver","Heavy transport vehicle or bus",60
+2020,"Heavy transport driver","Non-collision transport accident",230
+2020,"Heavy transport driver","Other and unspecified transport accidents",1
+2020,"Heavy transport driver","Pedestrian or animal",1
+2020,"Heavy transport driver","Train",1
+2020,"Heavy transport passenger","2- or 3- wheeled motor vehicle",0
+2020,"Heavy transport passenger","Car, pick-up truck or van",4
+2020,"Heavy transport passenger","Fixed or stationary object",6
+2020,"Heavy transport passenger","Heavy transport vehicle or bus",1
+2020,"Heavy transport passenger","Non-collision transport accident",36
+2020,"Heavy transport passenger","Other and unspecified transport accidents",1
+2020,"Heavy transport unknown position","Car, pick-up truck or van",2
+2020,"Heavy transport unknown position","Fixed or stationary object",1
+2020,"Heavy transport unknown position","Heavy transport vehicle or bus",2
+2020,"Heavy transport unknown position","Non-collision transport accident",15
+2020,"Heavy transport unknown position","Other and unspecified transport accidents",20
+2020,"Motorcyclist","2- or 3- wheeled motor vehicle",209
+2020,"Motorcyclist","Car, pick-up truck or van",2047
+2020,"Motorcyclist","Fixed or stationary object",955
+2020,"Motorcyclist","Heavy transport vehicle or bus",73
+2020,"Motorcyclist","Non-collision transport accident",3782
+2020,"Motorcyclist","Other and unspecified transport accidents",1408
+2020,"Motorcyclist","Other non-motor vehicle",14
+2020,"Motorcyclist","Pedal cycle",16
+2020,"Motorcyclist","Pedestrian or animal",180
+2020,"Other or unknown","Car, pick-up truck or van",5
+2020,"Other or unknown","Fixed or stationary object",1
+2020,"Other or unknown","Non-collision transport accident",4
+2020,"Other or unknown","Other and unspecified transport accidents",566
+2020,"Other or unknown","Other non-motor vehicle",4
+2020,"Other or unknown","Pedal cycle",1
+2020,"Other or unknown","Pedestrian or animal",1
+2020,"Pedal cyclist","2- or 3- wheeled motor vehicle",15
+2020,"Pedal cyclist","Car, pick-up truck or van",1599
+2020,"Pedal cyclist","Fixed or stationary object",500
+2020,"Pedal cyclist","Heavy transport vehicle or bus",42
+2020,"Pedal cyclist","Non-collision transport accident",3853
+2020,"Pedal cyclist","Other and unspecified transport accidents",1895
+2020,"Pedal cyclist","Other non-motor vehicle",5
+2020,"Pedal cyclist","Pedal cycle",335
+2020,"Pedal cyclist","Pedestrian or animal",86
+2020,"Pedal cyclist","Train",2
+2020,"Pedestrian","2- or 3- wheeled motor vehicle",45
+2020,"Pedestrian","Car, pick-up truck or van",1852
+2020,"Pedestrian","Heavy transport vehicle or bus",78
+2020,"Pedestrian","Other and unspecified transport accidents",68
+2020,"Pedestrian","Other non-motor vehicle",11
+2020,"Pedestrian","Pedal cycle",35
+2020,"Pedestrian","Pedestrian or animal",6
+2020,"Pedestrian","Train",8
+2020,"Pick-up truck or van occupant","Car, pick-up truck or van",89
+2020,"Pick-up truck or van occupant","Fixed or stationary object",53
+2020,"Pick-up truck or van occupant","Heavy transport vehicle or bus",18
+2020,"Pick-up truck or van occupant","Non-collision transport accident",122
+2020,"Pick-up truck or van occupant","Other and unspecified transport accidents",16
+2020,"Pick-up truck or van occupant","Pedestrian or animal",2
+2021,"Bus occupant","Car, pick-up truck or van",42
+2021,"Bus occupant","Fixed or stationary object",8
+2021,"Bus occupant","Heavy transport vehicle or bus",7
+2021,"Bus occupant","Non-collision transport accident",97
+2021,"Bus occupant","Other and unspecified transport accidents",13
+2021,"Bus occupant","Pedestrian or animal",1
+2021,"Bus occupant","Train",1
+2021,"Car driver","2- or 3- wheeled motor vehicle",31
+2021,"Car driver","Car, pick-up truck or van",7589
+2021,"Car driver","Fixed or stationary object",3064
+2021,"Car driver","Heavy transport vehicle or bus",544
+2021,"Car driver","Non-collision transport accident",1821
+2021,"Car driver","Other and unspecified transport accidents",143
+2021,"Car driver","Other non-motor vehicle",22
+2021,"Car driver","Pedal cycle",4
+2021,"Car driver","Pedestrian or animal",99
+2021,"Car driver","Train",10
+2021,"Car passenger","2- or 3- wheeled motor vehicle",11
+2021,"Car passenger","Car, pick-up truck or van",2303
+2021,"Car passenger","Fixed or stationary object",970
+2021,"Car passenger","Heavy transport vehicle or bus",161
+2021,"Car passenger","Non-collision transport accident",941
+2021,"Car passenger","Other and unspecified transport accidents",58
+2021,"Car passenger","Other non-motor vehicle",8
+2021,"Car passenger","Pedal cycle",1
+2021,"Car passenger","Pedestrian or animal",35
+2021,"Car passenger","Train",7
+2021,"Car unknown position","Car, pick-up truck or van",117
+2021,"Car unknown position","Fixed or stationary object",25
+2021,"Car unknown position","Heavy transport vehicle or bus",6
+2021,"Car unknown position","Non-collision transport accident",48
+2021,"Car unknown position","Other and unspecified transport accidents",515
+2021,"Car unknown position","Other non-motor vehicle",2
+2021,"Car unknown position","Pedestrian or animal",4
+2021,"Heavy transport driver","2- or 3- wheeled motor vehicle",1
+2021,"Heavy transport driver","Car, pick-up truck or van",64
+2021,"Heavy transport driver","Fixed or stationary object",62
+2021,"Heavy transport driver","Heavy transport vehicle or bus",63
+2021,"Heavy transport driver","Non-collision transport accident",182
+2021,"Heavy transport driver","Other and unspecified transport accidents",6
+2021,"Heavy transport driver","Pedestrian or animal",2
+2021,"Heavy transport driver","Train",3
+2021,"Heavy transport passenger","Car, pick-up truck or van",5
+2021,"Heavy transport passenger","Fixed or stationary object",8
+2021,"Heavy transport passenger","Heavy transport vehicle or bus",11
+2021,"Heavy transport passenger","Non-collision transport accident",32
+2021,"Heavy transport unknown position","Car, pick-up truck or van",2
+2021,"Heavy transport unknown position","Fixed or stationary object",1
+2021,"Heavy transport unknown position","Non-collision transport accident",16
+2021,"Heavy transport unknown position","Other and unspecified transport accidents",16
+2021,"Heavy transport unknown position","Pedestrian or animal",1
+2021,"Motorcyclist","2- or 3- wheeled motor vehicle",203
+2021,"Motorcyclist","Car, pick-up truck or van",2317
+2021,"Motorcyclist","Fixed or stationary object",920
+2021,"Motorcyclist","Heavy transport vehicle or bus",66
+2021,"Motorcyclist","Non-collision transport accident",3759
+2021,"Motorcyclist","Other and unspecified transport accidents",1387
+2021,"Motorcyclist","Other non-motor vehicle",8
+2021,"Motorcyclist","Pedal cycle",13
+2021,"Motorcyclist","Pedestrian or animal",210
+2021,"Other or unknown","Car, pick-up truck or van",8
+2021,"Other or unknown","Fixed or stationary object",6
+2021,"Other or unknown","Heavy transport vehicle or bus",1
+2021,"Other or unknown","Non-collision transport accident",5
+2021,"Other or unknown","Other and unspecified transport accidents",574
+2021,"Other or unknown","Other non-motor vehicle",7
+2021,"Pedal cyclist","2- or 3- wheeled motor vehicle",17
+2021,"Pedal cyclist","Car, pick-up truck or van",1575
+2021,"Pedal cyclist","Fixed or stationary object",466
+2021,"Pedal cyclist","Heavy transport vehicle or bus",49
+2021,"Pedal cyclist","Non-collision transport accident",3705
+2021,"Pedal cyclist","Other and unspecified transport accidents",1854
+2021,"Pedal cyclist","Other non-motor vehicle",9
+2021,"Pedal cyclist","Pedal cycle",390
+2021,"Pedal cyclist","Pedestrian or animal",98
+2021,"Pedestrian","2- or 3- wheeled motor vehicle",37
+2021,"Pedestrian","Car, pick-up truck or van",2063
+2021,"Pedestrian","Heavy transport vehicle or bus",83
+2021,"Pedestrian","Other and unspecified transport accidents",66
+2021,"Pedestrian","Other non-motor vehicle",8
+2021,"Pedestrian","Pedal cycle",43
+2021,"Pedestrian","Pedestrian or animal",26
+2021,"Pedestrian","Train",8
+2021,"Pick-up truck or van occupant","Car, pick-up truck or van",107
+2021,"Pick-up truck or van occupant","Fixed or stationary object",66
+2021,"Pick-up truck or van occupant","Heavy transport vehicle or bus",29
+2021,"Pick-up truck or van occupant","Non-collision transport accident",122
+2021,"Pick-up truck or van occupant","Other and unspecified transport accidents",12
+2021,"Pick-up truck or van occupant","Pedestrian or animal",5
