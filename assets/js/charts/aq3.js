@@ -1,27 +1,13 @@
-// ── AQ3: WHERE IT HAPPENS ────────────────────────────────────────────────────
-// drawChoropleth       → choropleth map; colour = avg annual rate per 100,000
-// drawFirstNationsSlope → dual-axis line; FN vs Non-Indigenous total trend
-// drawRemoteness       → small multiples line by remoteness area
-//
-// Depends on: constants.js
-
 function drawChoropleth(stateData, population, geojson, sel) {
-  // USABILITY FIX — footnote elevated and expanded after usability testing.
-  // Remove stale callout note before re-rendering (persists across resize).
+  // .chart-callout-note persists across resize redraws — remove before rebuilding
   d3.select(sel).select('.chart-callout-note').remove();
 
-  // NOTE (Blocker 2): abs_population_by_state.csv not yet available.
-  // Rate values, legend tick labels, tooltip text, and choropleth shading all
-  // depend on this file. Re-test all four usability fix touchpoints once resolved.
-
-  // Build population lookup: state → year → population
   const popLookup = {};
   population.forEach(d => {
     if (!popLookup[d.state]) popLookup[d.state] = {};
     popLookup[d.state][+d.year] = +d.population;
   });
 
-  // Per-state annual hospitalisations
   const byStateYear = d3.rollup(
     stateData,
     v => d3.sum(v, d => num(d[HOSPS])),
@@ -29,7 +15,6 @@ function drawChoropleth(stateData, population, geojson, sel) {
     d => +d.year
   );
 
-  // Average annual rate per 100k for each state
   const rateByState = {};
   byStateYear.forEach((yearMap, st) => {
     const rates = [];
@@ -44,8 +29,6 @@ function drawChoropleth(stateData, population, geojson, sel) {
   const colorScale = d3.scaleSequential(d3.interpolateOranges)
     .domain([0, d3.max(rateValues)]);
 
-  // USABILITY FIX — tooltip now spells out unit to prevent rate vs count misreading.
-  // Defined inside function per spec — not in constants.js.
   const stateNames = {
     NSW: 'New South Wales',
     VIC: 'Victoria',
@@ -58,13 +41,11 @@ function drawChoropleth(stateData, population, geojson, sel) {
   };
 
   const id         = sel.replace('#', '');
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const container  = document.querySelector(sel);
   const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
-  // H increased from 440 → 500 to accommodate title + subtitle above map
+  // H=500 reserves space for title/subtitle above map and legend below
   const H          = 500;
 
-  // USABILITY FIX — accessibility: aria-label updated to match new title
   const svg = d3.select(sel).append('svg')
     .attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
@@ -76,7 +57,6 @@ function drawChoropleth(stateData, population, geojson, sel) {
   svg.append('desc')
     .text('Each state and territory is shaded by its average annual hospitalisation rate per 100,000 population. Darker orange indicates a higher rate. The Northern Territory records the highest rate across the period.');
 
-  // USABILITY FIX — unit added to title after usability testing
   svg.append('text')
     .attr('x', totalWidth / 2).attr('y', 22)
     .attr('text-anchor', 'middle')
@@ -84,7 +64,6 @@ function drawChoropleth(stateData, population, geojson, sel) {
     .attr('font-family', "'DM Mono', monospace").attr('font-size', '13px')
     .text('Road Crash Hospitalisations per 100,000 People by State');
 
-  // USABILITY FIX — subtitle added to prevent rate vs count misreading
   svg.append('text')
     .attr('x', totalWidth / 2).attr('y', 39)
     .attr('text-anchor', 'middle')
@@ -93,9 +72,7 @@ function drawChoropleth(stateData, population, geojson, sel) {
     .attr('opacity', 0.75)
     .text('Colour shows rate per 100,000 population — not total crashes');
 
-  // RESPONSIVE FIX — was hardcoded, now container-relative.
-  // fitExtent used instead of fitSize to reserve top space for title/subtitle
-  // (y0=55) and bottom space for the legend (yMax=H-65=435).
+  // fitExtent (not fitSize) reserves y0=55 for title/subtitle and yMax=H-65 for legend
   const projection = d3.geoMercator().fitExtent(
     [[10, 55], [totalWidth - 10, H - 65]],
     geojson
@@ -119,7 +96,6 @@ function drawChoropleth(stateData, population, geojson, sel) {
         return abbr && rateByState[abbr] != null ? colorScale(rateByState[abbr]) : '#2a2f3f';
       })
       .attr('stroke', 'var(--bg)').attr('stroke-width', 1.5)
-      // USABILITY FIX — tooltip now spells out unit to prevent rate vs count misreading
       .on('mousemove', (evt, d) => {
         const abbr = STATE_ABBR[d.properties.STATE_NAME];
         const rate = rateByState[abbr];
@@ -158,7 +134,6 @@ function drawChoropleth(stateData, population, geojson, sel) {
         }
       });
 
-  // State abbreviation labels at centroids
   svg.selectAll('.state-label')
     .data(geojson.features)
     .enter().append('text')
@@ -168,13 +143,6 @@ function drawChoropleth(stateData, population, geojson, sel) {
       .attr('font-size', '10px').attr('pointer-events', 'none')
       .text(d => STATE_ABBR[d.properties.STATE_NAME] || '');
 
-  // USABILITY FIX — legend label and tick units added after usability testing.
-  // Gradient bar centred in SVG; D3 axis replaces manual text labels;
-  // units on first and last tick only to avoid clutter.
-  // NOTE — tick label overlap risk: at container widths below ~360px the first
-  // and middle tick labels ("X.X per 100k" and the mid number) may collide.
-  // Fallback: reduce to 2 ticks (min/max only) by checking totalWidth:
-  //   tickValues(totalWidth < 400 ? [0, maxRate] : [0, midRate, maxRate])
   const legW    = 200;
   const legBarH = 10;
   const maxRate = d3.max(rateValues) || 1;
@@ -189,24 +157,22 @@ function drawChoropleth(stateData, population, geojson, sel) {
       .attr('stop-color', colorScale(t * maxRate))
   );
 
-  // legG positioned so the label above the bar clears the map's bottom extent (H-65)
+  // legG positioned so legend clears the map's bottom extent (H-65)
   const legG = svg.append('g').attr('transform', `translate(${legX}, ${H - 51})`);
 
-  // Label above gradient bar
   legG.append('text')
     .attr('x', legW / 2).attr('y', -14)
     .attr('text-anchor', 'middle')
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Rate per 100,000 population');
 
-  // Gradient bar — aria-hidden since axis ticks carry the screen-readable values
+  // aria-hidden: axis ticks carry the screen-readable values
   legG.append('rect')
     .attr('width', legW).attr('height', legBarH)
     .attr('fill', `url(#${id}-choro-grad)`)
     .attr('rx', 2)
     .attr('aria-hidden', 'true');
 
-  // D3 axis: 3 ticks (min/mid/max); unit suffix on first and last only
   const legScale   = d3.scaleLinear().domain([0, maxRate]).range([0, legW]);
   const legendAxis = d3.axisBottom(legScale)
     .tickValues([0, midRate, maxRate])
@@ -225,16 +191,12 @@ function drawChoropleth(stateData, population, geojson, sel) {
   axisG.selectAll('.tick text')
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px');
 
-  // USABILITY FIX — footnote elevated and expanded after usability testing.
-  // Injected into container after SVG so it renders directly below the legend bar.
-  // Previous <p class="data-note"> in index.html removed; content lives here now.
   d3.select(sel).append('p')
     .attr('class', 'chart-callout-note')
     .text('Rates are calculated as hospitalisations per 100,000 residents. Direct comparison of raw counts across states would be misleading due to large differences in state population size.');
 }
 
 function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
-  // Total FN / Non-Indigenous hospitalisations per year (aggregated over all road users)
   const totByStatusYear = d3.rollup(
     fnByRoadUser,
     v => d3.sum(v, d => num(d[HOSPS])),
@@ -247,17 +209,14 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
   const years = [...new Set(fnByRoadUser.map(d => +d.year))].sort((a, b) => a - b);
 
   const id = sel.replace('#', '');
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const container = document.querySelector(sel);
   const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const H  = 380;
   const rpad = 80; // extra right margin so the First Nations axis label fits inside the SVG
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const w  = totalWidth - M.left - M.right - rpad;
   const h  = H - M.top - M.bottom;
 
   const svgEl = d3.select(sel)
-    // RESPONSIVE FIX — was hardcoded, now container-relative
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -269,7 +228,7 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
   const svg = svgEl.append('g').attr('transform', `translate(${M.left},${M.top})`);
 
   const x  = d3.scaleLinear().domain([2011, 2021]).range([0, w]);
-  // Dual y-axes: Non-Indigenous left, First Nations right
+  // dual y-axes: Non-Indigenous left, First Nations right
   const yL = d3.scaleLinear()
     .domain([0, d3.max(Array.from(ni?.values() || [0])) * 1.2]).range([h, 0]);
   const yR = d3.scaleLinear()
@@ -321,7 +280,7 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
     .attr('font-family', "'DM Mono', monospace").attr('font-size', '10px')
     .text('First Nations hospitalisations');
 
-  // Scale-mismatch warning — prevents misreading line crossings as absolute comparisons
+  // warning prevents misreading line crossings as absolute comparisons (axes differ in scale)
   svg.append('text').attr('x', w / 2).attr('y', -12).attr('text-anchor', 'middle')
     .attr('fill', 'var(--accent2)').attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
     .text('⚠ Left and right y-axes use different scales — lines cannot be compared directly');
@@ -362,7 +321,6 @@ function drawRemoteness(raw, sel) {
   const cm     = { top: 28, right: 55, bottom: 36, left: 70 };
 
   const remId = sel.replace('#', '');
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const svg = d3.select(sel)
     .append('svg').attr('width', totalW).attr('height', cellH + 55)
     .attr('viewBox', `0 0 ${totalW} ${cellH + 55}`)
@@ -382,7 +340,7 @@ function drawRemoteness(raw, sel) {
 
     const x = d3.scaleLinear().domain([2011, 2021]).range([0, cw]);
 
-    // Independent scales per panel so the FN line is not flattened by the NI magnitude
+    // independent scales per panel so the FN line is not flattened by the NI magnitude
     const maxNI = d3.max(years.map(yr => rolled.get(rem)?.get('Non-Indigenous')?.get(yr) || 0));
     const maxFN = d3.max(years.map(yr => rolled.get(rem)?.get('First Nations people')?.get(yr) || 0));
     const yNI = d3.scaleLinear().domain([0, (maxNI || 1) * 1.2]).range([ch, 0]);
@@ -409,7 +367,6 @@ function drawRemoteness(raw, sel) {
       });
     });
 
-    // Panel title
     g.append('text').attr('x', cm.left + cw / 2).attr('y', 16).attr('text-anchor', 'middle')
       .attr('fill', 'var(--text)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
       .text(rem);
@@ -417,22 +374,20 @@ function drawRemoteness(raw, sel) {
     inner.append('g').attr('class', 'axis').attr('transform', `translate(0,${ch})`)
       .call(d3.axisBottom(x).ticks(3).tickFormat(d3.format('d')));
 
-    // Left y-axis: Non-Indigenous scale (all panels)
     inner.append('g').attr('class', 'axis')
       .call(d3.axisLeft(yNI).ticks(4).tickFormat(d => fmt(d)));
 
-    // Right y-axis: First Nations scale (all panels)
     inner.append('g').attr('class', 'axis').attr('transform', `translate(${cw},0)`)
       .call(d3.axisRight(yFN).ticks(3).tickFormat(d => fmt(d)));
 
-    // Left axis label — first panel only; y=-62 clears tick number text
+    // left axis label — first panel only; y=-62 clears tick number text
     if (idx === 0) {
       inner.append('text').attr('transform', 'rotate(-90)').attr('x', -(ch / 2)).attr('y', -62)
         .attr('text-anchor', 'middle').attr('fill', 'var(--nonindig)')
         .attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
         .text('Non-Indigenous');
     }
-    // Right axis label — last panel only; (x_rot,y_rot)→(y_rot,−x_rot): places text right of chart
+    // right axis label — last panel only; rotate(-90): (x_rot,y_rot)→(y_rot,−x_rot) places text right of chart
     if (idx === areas.length - 1) {
       inner.append('text').attr('transform', 'rotate(-90)').attr('x', -(ch / 2)).attr('y', cw + 48)
         .attr('text-anchor', 'middle').attr('fill', 'var(--fn-color)')
@@ -441,7 +396,6 @@ function drawRemoteness(raw, sel) {
     }
   });
 
-  // Shared legend + dual-axis note below panels
   const legG = svg.append('g').attr('transform', `translate(15, ${cellH + 20})`);
   [['First Nations people (right axis)', 'var(--fn-color)'], ['Non-Indigenous (left axis)', 'var(--nonindig)']].forEach(([lbl, col], i) => {
     legG.append('line')

@@ -1,7 +1,6 @@
 const fmt     = d3.format(",");
 const fmtRate = d3.format(".1f");
 
-// Column name for hospitalisation count in all KNIME exports
 const HOSPS = 'Sum(hospitalisations)';
 
 const DATA = {
@@ -51,7 +50,6 @@ const roadUserShort = {
   'Other or unknown':                                      'Other / unknown',
 };
 
-// Demographic order for age groups (matches actual KNIME export values)
 const AGE_ORDER = ['0-7', '8-16', '17-25', '26-39', '40-64', '65+'];
 
 const REMOTENESS_ORDER = ['Major Cities', 'Regional', 'Remote'];
@@ -60,7 +58,6 @@ const ageColors = d3.scaleOrdinal()
   .domain(AGE_ORDER)
   .range(['#b3e5fc', '#4fc3f7', '#f5a623', '#e8453c', '#81c784', '#7986cb']);
 
-// Maps GeoJSON STATE_NAME → CSV state abbreviation
 const STATE_ABBR = {
   'New South Wales':              'NSW',
   'Victoria':                     'VIC',

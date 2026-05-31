@@ -1,21 +1,9 @@
-// ── AQ2: WHO IS AFFECTED ─────────────────────────────────────────────────────
-// drawHeatmap      → age_group × road_user heatmap; colour = total count
-// drawSexRoadUser  → grouped bar, Male vs Female per road user
-// drawPyramid      → population pyramid by age group
-//
-// All three charts use national_crossed_aq2.csv.
-// Depends on: constants.js
-
 function drawHeatmap(raw, sel) {
-  // DATA FIX — 65-74 and 75+ added; Missing excluded after data audit
-  // NOTE (Blocker 1): verify these age group strings match actual column values in
-  // national_crossed_aq2.csv once that file is available.
+  // finer age buckets than the global AGE_ORDER (65-74 and 75+ instead of 65+)
   const AGE_ORDER_LOCAL = [
     '0-7', '8-16', '17-25', '26-39', '40-64', '65-74', '75+'
   ];
 
-  // DATA FIX — data quality flags added after data audit
-  // NOTE (Blocker 1): verify these cell counts against live national_crossed_aq2.csv once resolved.
   const DATA_QUALITY_FLAGS = new Set([
     '0-7|Car driver',
     '0-7|Motorcyclist',
@@ -23,8 +11,6 @@ function drawHeatmap(raw, sel) {
   ]);
   const isFlagged = (age, user) => DATA_QUALITY_FLAGS.has(`${age}|${user}`);
 
-  // DESIGN FIX — labels abbreviated and rotation adjusted after usability testing
-  // Abbreviations are display-only; data joins and tooltips use full road_user names.
   const ROAD_USER_ABBREV = {
     'Bus occupant':                        'Bus occupant',
     'Car driver':                          'Car driver',
@@ -43,12 +29,8 @@ function drawHeatmap(raw, sel) {
   const ages  = AGE_ORDER_LOCAL.filter(a => raw.some(d => d.age_group === a));
   const users = [...new Set(raw.map(d => d.road_user))].sort();
 
-  // DATA FIX — zero and suppressed states separated after data audit
-  // d3.rollup only creates entries for combinations that appear in raw.
-  // undefined from .get() → no rows at all → suppressed
-  // 0 from .get()         → rows exist but all n.p. → true zero
-  // NOTE (Blocker 1): this distinction depends on whether national_crossed_aq2.csv
-  // has explicit rows for zero-count combos. Verify once Blocker 1 resolves.
+  // d3.rollup only creates entries for combinations that appear in raw
+  // undefined from .get() → no rows at all → suppressed; 0 → rows exist but all n.p. → true zero
   const matrix = d3.rollup(
     raw.filter(d => AGE_ORDER_LOCAL.includes(d.age_group)),
     v => d3.sum(v, d => num(d[HOSPS])),
@@ -70,7 +52,7 @@ function drawHeatmap(raw, sel) {
   const bottomPad  = 270;
   const w          = totalWidth - M.left - rightPad;
 
-  // Dynamic height: 40px per row so adding 65-74 and 75+ doesn't compress cells
+  // 40px per row keeps cells readable at any age bucket count
   const rowH = 40;
   const h    = rowH * ages.length;
   const H    = M.top + h + bottomPad;
@@ -80,7 +62,6 @@ function drawHeatmap(raw, sel) {
     .domain([0, maxVal])
     .interpolator(d3.interpolateViridis);
 
-  // ACCESSIBILITY FIX — aria-labelledby points to <title> per CLAUDE.md draw function contract
   const svgEl = d3.select(sel)
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
@@ -92,8 +73,6 @@ function drawHeatmap(raw, sel) {
   svgEl.append('desc')
     .text('Colour intensity encodes the total hospitalisation count for each combination of age group (rows) and road user type (columns) across the full decade.');
 
-  // SVG defs: Viridis gradient + hatch pattern for suppressed cells
-  // NOTE (Blocker 1): verify maxVal is realistic with live data once national_crossed_aq2.csv resolves.
   const defs = svgEl.append('defs');
 
   const linearGradient = defs.append('linearGradient')
@@ -120,8 +99,6 @@ function drawHeatmap(raw, sel) {
   const xScale = d3.scaleBand().domain(users).range([0, w]).padding(0.04);
   const yScale = d3.scaleBand().domain(ages).range([0, h]).padding(0.04);
 
-  // DESIGN FIX — border changed from black to white after usability testing
-  // (black borders invisible on dark Viridis fills)
   ages.forEach(age => {
     users.forEach(user => {
       const { state, val } = cellState(age, user);
@@ -130,7 +107,6 @@ function drawHeatmap(raw, sel) {
                  : state === 'zero'       ? 'rgba(255,255,255,0.1)'
                  :                          colorScale(val);
 
-      // DESIGN FIX — tooltip updated to reflect cell state after audit
       const tooltipHtml = state === 'suppressed'
         ? `<strong>${age} × ${user}</strong><br/>Data suppressed (small cell count)`
         : state === 'zero'
@@ -139,7 +115,6 @@ function drawHeatmap(raw, sel) {
         ? `<strong>${age} × ${user}</strong><br/>${fmt(val)} hospitalisations<br/>† Possible miscoding — interpret with caution`
         : `<strong>${age} × ${user}</strong><br/>${fmt(val)} hospitalisations (2011–2021 total)`;
 
-      // ACCESSIBILITY FIX — cell aria-label reflects state
       const ariaLabel = state === 'suppressed'
         ? `${age}, ${user}: Data suppressed (small cell count)`
         : state === 'zero'
@@ -172,7 +147,6 @@ function drawHeatmap(raw, sel) {
           hideTooltip('tooltip-heatmap');
         });
 
-      // DATA FIX — data quality flags: small "?" marker in top-right corner of flagged cells
       if (state === 'flagged') {
         const cx = xScale(user) + xScale.bandwidth() - 6;
         const cy = yScale(age) + 6;
@@ -188,9 +162,7 @@ function drawHeatmap(raw, sel) {
           .text('?');
       }
 
-      // DESIGN FIX — value annotations added on high-value cells after usability testing
-      // Only normal cells in top 20% of range; flagged cells show "?" marker instead.
-      // Cells where both conditions apply show marker only (no double-annotation).
+      // annotate top 20% cells only; flagged cells already have "?" marker
       if (state === 'normal' && val >= 0.8 * maxVal) {
         const textColor = val > 0.7 * maxVal ? '#000' : '#fff';
         svg.append('text')
@@ -204,7 +176,6 @@ function drawHeatmap(raw, sel) {
     });
   });
 
-  // DESIGN FIX — labels abbreviated and rotation adjusted after usability testing
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
     .call(d3.axisBottom(xScale).tickFormat(d => ROAD_USER_ABBREV[d] || d))
     .selectAll('text')
@@ -214,7 +185,6 @@ function drawHeatmap(raw, sel) {
 
   svg.append('g').attr('class', 'axis').call(d3.axisLeft(yScale));
 
-  // DESIGN FIX — axis titles added after usability testing
   svg.append('text')
     .attr('transform', 'rotate(-90)')
     .attr('x', -(h / 2)).attr('y', -(M.left * 0.6))
@@ -222,7 +192,7 @@ function drawHeatmap(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px')
     .text('Age Group');
 
-  // X-axis title — bottomPad is 20px larger than M.bottom to ensure clearance below -60° labels
+  // bottomPad is 20px larger than M.bottom to ensure clearance below -60° labels
   svg.append('text')
     .attr('x', w / 2).attr('y', h + 120)
     .attr('text-anchor', 'middle')
@@ -239,13 +209,11 @@ function drawHeatmap(raw, sel) {
   const legX    = (w - legBarW) / 2;
   const legY    = h + 145;
 
-  // ACCESSIBILITY FIX — legend group with role and aria-label
   const legG = svg.append('g')
     .attr('transform', `translate(${legX}, ${legY})`)
     .attr('role', 'group')
     .attr('aria-label', 'Chart legend');
 
-  // 1. Gradient bar — "Hospitalisations (total 2011–2021)"
   legG.append('text')
     .attr('x', legBarW / 2).attr('y', -6)
     .attr('text-anchor', 'middle')
@@ -268,7 +236,6 @@ function drawHeatmap(raw, sel) {
       .text(fmt(v));
   });
 
-  // 2. Zero swatch — "Zero cases recorded"
   const swatchY1 = legBarH + 28;
   legG.append('rect')
     .attr('x', 0).attr('y', swatchY1)
@@ -281,7 +248,6 @@ function drawHeatmap(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
     .text('Zero cases recorded');
 
-  // 3. Hatch swatch — "Data suppressed"
   const swatchY2 = swatchY1 + 20;
   legG.append('rect')
     .attr('x', 0).attr('y', swatchY2)
@@ -294,7 +260,6 @@ function drawHeatmap(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
     .text('Data suppressed');
 
-  // DATA FIX — flagged cells legend item: circle "?" marker
   const swatchY3 = swatchY2 + 20;
   legG.append('circle')
     .attr('cx', legBarH / 2).attr('cy', swatchY3 + legBarH / 2)
@@ -311,14 +276,12 @@ function drawHeatmap(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
     .text('† Possible miscoding — see data notes');
 
-  // DATA FIX — data quality note below chart
-  // NOTE (Blocker 1): verify note text against actual anomalies in live national_crossed_aq2.csv
   d3.select(sel).append('p')
     .attr('role', 'note')
     .attr('aria-label', 'Data quality note')
     .attr('class', 'data-note')
     .style('margin-top', '0.75rem')
-    .text('† These combinations (e.g. 0–7 year old car drivers) appear in the source data but likely reflect coding anomalies. The ABS ‘Motorcyclist’ category covers both riders and passengers, so some 0–7 cases may represent pillion passengers.');
+    .text(`These combinations (e.g. 0–7 year old car drivers) appear in the source data but likely reflect coding anomalies. The ABS 'Motorcyclist' category covers both riders and passengers, so some 0–7 cases may represent pillion passengers.`);
 }
 
 function drawSexRoadUser(raw, sel) {
@@ -334,16 +297,13 @@ function drawSexRoadUser(raw, sel) {
   );
 
   const id = sel.replace('#', '');
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const container = document.querySelector(sel);
   const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const H  = 440;
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - 160;
 
   const svgEl = d3.select(sel)
-    // RESPONSIVE FIX — was hardcoded, now container-relative
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -410,17 +370,14 @@ function drawPyramid(raw, sel) {
   );
 
   const id = sel.replace('#', '');
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const container = document.querySelector(sel);
   const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const H  = 300;
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - M.bottom;
   const midX = w / 2;
 
   const svgEl = d3.select(sel)
-    // RESPONSIVE FIX — was hardcoded, now container-relative
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -436,7 +393,6 @@ function drawPyramid(raw, sel) {
   const xLeft  = d3.scaleLinear().domain([0, maxVal]).range([midX, 0]);
   const xRight = d3.scaleLinear().domain([0, maxVal]).range([midX, w]);
 
-  // Male bars (left)
   ages.forEach(a => {
     const val = rolled.get(a)?.get('Male') || 0;
     svg.append('rect')
@@ -448,7 +404,6 @@ function drawPyramid(raw, sel) {
       .on('mouseleave', () => hideTooltip('tooltip-pyramid'));
   });
 
-  // Female bars (right)
   ages.forEach(a => {
     const val = rolled.get(a)?.get('Female') || 0;
     svg.append('rect')
@@ -460,18 +415,15 @@ function drawPyramid(raw, sel) {
       .on('mouseleave', () => hideTooltip('tooltip-pyramid'));
   });
 
-  // Centre divider
   svg.append('line')
     .attr('x1', midX).attr('x2', midX).attr('y1', 0).attr('y2', h)
     .attr('stroke', 'var(--border)').attr('stroke-width', 1);
 
-  // Age labels at centre
   svg.append('g').attr('class', 'axis')
     .attr('transform', `translate(${midX},0)`)
     .call(d3.axisLeft(y).tickSize(0))
     .selectAll('.domain').remove();
 
-  // x axes
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
     .call(d3.axisBottom(xLeft.copy().range([midX, 0])).ticks(4).tickFormat(d => fmt(d)));
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)

@@ -1,11 +1,3 @@
-// ── AQ1: THE BIG PICTURE ─────────────────────────────────────────────────────
-// drawTrend      → multi-series line (road user + national total bold)
-// drawStackedArea → stacked area by road user
-//
-// Both charts share #aq1-filters buttons, added once by drawTrend.
-// Vertical lines at 2012 (VIC break) and 2017 (NSW break), COVID label at 2020.
-// Depends on: constants.js
-
 function _addPolicyLines(svg, x, h, tooltipId) {
   const breaks = [
     { yr: 2012, tip: 'Victoria 2012: revised hospitalisation coding — est. −5.6% step-change.' },
@@ -26,14 +18,12 @@ function _addPolicyLines(svg, x, h, tooltipId) {
 }
 
 function drawTrend(raw, sel) {
-  // National totals per road user per year (sum all states)
   const natRU = d3.rollup(
     raw,
     v => d3.sum(v, d => num(d[HOSPS])),
     d => d.road_user,
     d => +d.year
   );
-  // National total per year across all road users
   const natTotal = d3.rollup(
     raw,
     v => d3.sum(v, d => num(d[HOSPS])),
@@ -43,7 +33,6 @@ function drawTrend(raw, sel) {
   const users = Array.from(natRU.keys()).sort();
   const years = Array.from(natTotal.keys()).sort((a, b) => a - b);
 
-  // Build filter buttons once (shared with drawStackedArea)
   const filterRow = document.getElementById('aq1-filters');
   if (filterRow && !filterRow.hasChildNodes()) {
     const allBtn = document.createElement('button');
@@ -61,17 +50,14 @@ function drawTrend(raw, sel) {
   }
 
   const id = sel.replace('#', '');
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const container = document.querySelector(sel);
   const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const legendRows = Math.ceil(users.length / 2);
   const H  = 420 + legendRows * 16 + 12;
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const w  = totalWidth - M.left - M.right - 100; // extra right margin for "National total" label
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
   const svgEl = d3.select(sel)
-    // RESPONSIVE FIX — was hardcoded, now container-relative
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -94,7 +80,6 @@ function drawTrend(raw, sel) {
 
   const lineGen = d3.line().x(d => x(d.yr)).y(d => y(d.v)).curve(d3.curveCatmullRom);
 
-  // Per-road-user lines
   svg.selectAll('.ru-line')
     .data(users)
     .enter().append('path')
@@ -105,7 +90,6 @@ function drawTrend(raw, sel) {
       .attr('opacity', 0.75)
       .attr('d', u => lineGen(years.map(yr => ({ yr, v: natRU.get(u)?.get(yr) || 0 }))));
 
-  // National total (bold white line)
   svg.append('path')
     .attr('class', 'national-total-line')
     .datum(years.map(yr => ({ yr, v: natTotal.get(yr) || 0 })))
@@ -114,7 +98,6 @@ function drawTrend(raw, sel) {
     .attr('stroke-width', 3)
     .attr('d', lineGen);
 
-  // National total end-label
   const lastTotal = natTotal.get(2021) || 0;
   svg.append('text')
     .attr('x', x(2021) + 6).attr('y', y(lastTotal))
@@ -123,10 +106,9 @@ function drawTrend(raw, sel) {
     .attr('font-family', "'DM Mono', monospace").attr('font-size', '9px')
     .text('National total');
 
-  // Policy break lines
   _addPolicyLines(svg, x, h, 'tooltip-trend');
 
-  // COVID-19 dip label — fixed near top so it clears all data lines
+  // COVID-19 dip label — y=16 keeps it above all data lines
   svg.append('line')
     .attr('x1', x(2020)).attr('x2', x(2020))
     .attr('y1', 16).attr('y2', h)
@@ -137,7 +119,6 @@ function drawTrend(raw, sel) {
     .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
     .text('COVID-19 mobility restrictions');
 
-  // Hover overlay — filter-aware
   svg.append('rect')
     .attr('width', w).attr('height', h)
     .attr('fill', 'none').attr('pointer-events', 'all')
@@ -154,7 +135,6 @@ function drawTrend(raw, sel) {
     })
     .on('mouseleave', () => hideTooltip('tooltip-trend'));
 
-  // Axes
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
     .call(d3.axisBottom(x).ticks(11).tickFormat(d3.format('d')));
   svg.append('g').attr('class', 'axis')
@@ -164,7 +144,6 @@ function drawTrend(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Hospitalisations');
 
-  // Road user legend (2-column, below x-axis)
   const leg = svg.append('g').attr('transform', `translate(0, ${h + 30})`);
   users.forEach((u, i) => {
     const col = i % 2;
@@ -178,7 +157,7 @@ function drawTrend(raw, sel) {
       .text(roadUserShort[u] || u);
   });
 
-  // Filter interaction (SVG-local — drawStackedArea adds its own listener)
+  // each chart registers its own listener; drawStackedArea adds a separate one
   if (filterRow) {
     filterRow.addEventListener('click', e => {
       const btn = e.target.closest('.filter-btn');
@@ -217,17 +196,14 @@ function drawStackedArea(raw, sel) {
   const series = d3.stack().keys(users)(stackData);
 
   const id = sel.replace('#', '');
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const container = document.querySelector(sel);
   const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const legendRows = Math.ceil(users.length / 2);
   const H  = 380 + legendRows * 16 + 12;
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
   const svgEl = d3.select(sel)
-    // RESPONSIVE FIX — was hardcoded, now container-relative
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -237,7 +213,7 @@ function drawStackedArea(raw, sel) {
   svgEl.append('desc')
     .text('Stacked coloured areas show how each road user type contributes to the national hospitalisation total each year. Use the filter buttons above to isolate a road user type.');
 
-  // Hatch pattern defs — redundant encoding alongside colour for colorblind accessibility
+  // redundant hatch encoding alongside colour for colorblind accessibility
   const HATCH_CFGS = [
     null,                                                    // solid
     { d: 'M0,4 L8,4',            size: 8, sw: 1.2 },        // horizontal lines
@@ -294,10 +270,8 @@ function drawStackedArea(raw, sel) {
       .attr('stroke-width', 0.5)
       .attr('d', area);
 
-  // Policy break lines
   _addPolicyLines(svg, x, h, 'tooltip-stacked');
 
-  // Hover overlay — filter-aware, sits on top of areas
   svg.append('rect')
     .attr('width', w).attr('height', h)
     .attr('fill', 'none').attr('pointer-events', 'all')
@@ -315,7 +289,7 @@ function drawStackedArea(raw, sel) {
     })
     .on('mouseleave', () => hideTooltip('tooltip-stacked'));
 
-  // COVID label + dashed connector
+  // COVID-19 dip label — y=16 keeps it above all data lines
   svg.append('line')
     .attr('x1', x(2020)).attr('x2', x(2020))
     .attr('y1', 16).attr('y2', h)
@@ -326,7 +300,6 @@ function drawStackedArea(raw, sel) {
     .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '8px')
     .text('COVID-19 mobility restrictions');
 
-  // Axes
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
     .call(d3.axisBottom(x).ticks(11).tickFormat(d3.format('d')));
   svg.append('g').attr('class', 'axis')
@@ -336,9 +309,8 @@ function drawStackedArea(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Hospitalisations');
 
-  // Legend (2-column, below x-axis) — swatches mirror the hatch fill of each band
+  // legend swatches mirror chart area hatch patterns
   const legG = svg.append('g').attr('transform', `translate(0, ${h + 30})`);
-  // Inline pattern defs for legend swatches (10×10 px, same hatch configs)
   const legDefs = svgEl.append('defs');
   users.forEach((u, i) => {
     const color = roadUserColors[u] || '#888';
@@ -369,7 +341,6 @@ function drawStackedArea(raw, sel) {
       .text(roadUserShort[u] || u);
   });
 
-  // Filter: hide/show layers when AQ1 filter buttons are clicked
   const filterRow = document.getElementById('aq1-filters');
   if (filterRow) {
     filterRow.addEventListener('click', e => {

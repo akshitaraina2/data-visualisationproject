@@ -1,9 +1,3 @@
-// ── AQ4: HOW IT HAPPENS ──────────────────────────────────────────────────────
-// drawSankey         → road user → counterparty Sankey; link width = count
-// drawCounterpartyBar → stacked bar by year; colour = counterparty type
-//
-// Depends on: constants.js, d3-sankey (CDN, loaded before this file)
-
 function drawSankey(raw, sel) {
   if (typeof d3.sankey === 'undefined') {
     d3.select(sel).append('p')
@@ -13,41 +7,32 @@ function drawSankey(raw, sel) {
     return;
   }
 
-  // USABILITY FIX — category filter added after usability testing
-  // NOTE (Blocker 1): national_crossed_aq4.csv not yet available. Once resolved,
-  // re-test: (a) road_user label strings match roadUserColors keys,
-  // (b) default selection derives correct highest-volume category from live data,
-  // (c) percentage tooltip math is correct against real totals.
-
   const id         = sel.replace('#', '');
   const container  = document.querySelector(sel);
   const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const H          = 500;
 
-  // USABILITY FIX — clear stale filter UI that persists after window-resize redraw
-  // (resize handler removes SVGs but not divs/paragraphs we appended)
+  // filter UI persists through resize redraws — remove before rebuilding
   d3.select(sel).select('.sankey-filter-group').remove();
   d3.select(sel).select('.sankey-count-summary').remove();
   d3.select(sel).select('.sankey-all-note').remove();
 
-  // USABILITY FIX — derive road users dynamically; default = show all data first
   const roadUsers  = [...new Set(raw.map(d => d.road_user))].sort();
   const totalsByRU = d3.rollup(raw, v => d3.sum(v, d => num(d[HOSPS])), d => d.road_user);
   let activeFilter = '__ALL__';
 
-  // USABILITY FIX — filter button group (DOM order: before SVG → appears above chart)
+  // appended before SVG so it renders above chart
   const filterGroup = d3.select(sel).append('div')
     .attr('class', 'sankey-filter-group filter-row')
     .attr('role', 'group')
     .attr('aria-label', 'Filter by road user type');
 
-  // USABILITY FIX — count summary paragraph; aria-live so screen readers announce updates
+  // aria-live announces filter changes to screen readers
   const countSummaryEl = d3.select(sel).append('p')
     .attr('class', 'sankey-count-summary data-note')
     .attr('aria-live', 'polite')
     .style('margin-bottom', '0.5rem');
 
-  // USABILITY FIX — "All" info note, visible only when All is active
   const allNoteEl = d3.select(sel).append('p')
     .attr('class', 'sankey-all-note data-note')
     .style('margin-bottom', '0.75rem')
@@ -66,7 +51,6 @@ function drawSankey(raw, sel) {
   svg.append('desc')
     .text('Link width encodes total hospitalisations per road-user to counterparty pair. Hover a link to see the count.');
 
-  // USABILITY FIX — compute Sankey layout for a given filter value ('__ALL__' = all data)
   function buildSankeyData(filterValue) {
     const filtered = filterValue === '__ALL__'
       ? raw
@@ -103,14 +87,11 @@ function drawSankey(raw, sel) {
     });
   }
 
-  // USABILITY FIX — render or re-render Sankey with transitions on filter change.
-  // SVG is NOT removed/re-appended; only the s-content group inside it is replaced.
-  // Transition: old group fades out (200ms), new group fades in (300ms, 220ms delay).
+  // exit transition 200ms, enter delayed 220ms so old and new content don't overlap
   function renderFilter(filterValue) {
     const isAll      = filterValue === '__ALL__';
     const filterTotal = isAll ? null : (totalsByRU.get(filterValue) || 1);
 
-    // USABILITY FIX — update count summary text
     if (isAll) {
       countSummaryEl.text('');
       allNoteEl.style('display', null);
@@ -118,22 +99,18 @@ function drawSankey(raw, sel) {
       const cpCount = [...new Set(
         raw.filter(d => d.road_user === filterValue).map(d => d.counterparty)
       )].length;
-      // Edge case: a road user with very few counterparty connections (cpCount <= 1)
-      // will produce a near-empty or degenerate Sankey — acceptable but worth noting in QA.
       countSummaryEl.text(
         `${filterValue} — ${fmt(filterTotal)} hospitalisations across ${cpCount} crash types`
       );
       allNoteEl.style('display', 'none');
     }
 
-    // USABILITY FIX — update SVG aria-label to reflect current view
     titleEl.text(isAll
       ? 'Sankey diagram: flow from road user type to collision counterparty, Australia 2011–2021'
       : `Sankey diagram showing crash counterparties for ${filterValue}, Australia 2011–2021`
     );
 
-    // USABILITY FIX — interrupt any in-progress exit transitions (rapid button clicks),
-    // then fade out existing content group and remove it
+    // interrupt in-progress exit transitions from rapid clicks
     svg.selectAll('g.s-exiting').interrupt().remove();
     const existing = svg.select('g.s-content');
     if (!existing.empty()) {
@@ -141,12 +118,10 @@ function drawSankey(raw, sel) {
       existing.transition('exit').duration(200).attr('opacity', 0).remove();
     }
 
-    // USABILITY FIX — new content group starts invisible; elements fade in after 220ms delay
     const g = svg.append('g').attr('class', 's-content').attr('opacity', 0);
 
     const { nodes: sNodes, links: sLinks } = buildSankeyData(filterValue);
 
-    // USABILITY FIX — tooltip content: percentage shown when single category selected
     function linkTip(d) {
       if (isAll) {
         return `<strong>${d.source.name}</strong> → <strong>${d.target.name}</strong><br/>${fmt(d.value)} hospitalisations`;
@@ -155,7 +130,6 @@ function drawSankey(raw, sel) {
       return `<strong>${d.source.name}</strong> → <strong>${d.target.name}</strong><br/>${fmt(d.value)} hospitalisations (${pct}% of this road user's total)`;
     }
 
-    // Links
     g.selectAll('.s-link')
       .data(sLinks)
       .enter().append('path')
@@ -195,7 +169,6 @@ function drawSankey(raw, sel) {
           }
         });
 
-    // Nodes
     g.selectAll('.s-node')
       .data(sNodes)
       .enter().append('rect')
@@ -205,7 +178,6 @@ function drawSankey(raw, sel) {
         .attr('fill', d => roadUserColors[d.name] || '#4db6ac')
         .attr('stroke', 'var(--bg)').attr('rx', 2);
 
-    // Node labels
     g.selectAll('.s-label')
       .data(sNodes)
       .enter().append('text')
@@ -218,11 +190,10 @@ function drawSankey(raw, sel) {
         .attr('pointer-events', 'none')
         .text(d => (roadUserShort[d.name] || d.name).substring(0, 22));
 
-    // USABILITY FIX — fade in new content group after old has had 220ms to fade out
+    // delay > exit duration so old and new content don't overlap
     g.transition('enter').delay(220).duration(300).attr('opacity', 1);
   }
 
-  // USABILITY FIX — "All" button first, marked active by default
   filterGroup.append('button')
     .attr('class', 'filter-btn active')
     .attr('aria-pressed', 'true')
@@ -235,7 +206,6 @@ function drawSankey(raw, sel) {
       renderFilter('__ALL__');
     });
 
-  // USABILITY FIX — one button per road user, derived dynamically from data
   roadUsers.forEach(ru => {
     filterGroup.append('button')
       .attr('class', 'filter-btn' + (ru === activeFilter ? ' active' : ''))
@@ -251,7 +221,6 @@ function drawSankey(raw, sel) {
       });
   });
 
-  // Initial render: default to the "All" complex view
   renderFilter(activeFilter);
 }
 
@@ -279,17 +248,14 @@ function drawCounterpartyBar(raw, sel) {
   const series = d3.stack().keys(cps)(stackData);
 
   const id = sel.replace('#', '');
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const container = document.querySelector(sel);
   const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
   const legendRows = Math.ceil(cps.length / 2);
   const H  = 380 + legendRows * 16 + 12;
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
   const svgEl = d3.select(sel)
-    // RESPONSIVE FIX — was hardcoded, now container-relative
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -337,7 +303,6 @@ function drawCounterpartyBar(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
     .text('Year');
 
-  // Legend (2-column, below x-axis)
   const leg = svg.append('g').attr('transform', `translate(0, ${h + 46})`);
   cps.forEach((cp, i) => {
     const col = i % 2;

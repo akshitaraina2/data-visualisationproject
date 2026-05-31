@@ -12,10 +12,8 @@ function initNav() {
   sections.forEach(s => obs.observe(s));
 }
 
-// RESPONSIVE FIX — was hardcoded, now container-relative
 let _chartData = null;
 
-// RESPONSIVE FIX — was hardcoded, now container-relative
 function drawAllCharts() {
   if (!_chartData) return;
   const {
@@ -64,12 +62,10 @@ function drawAllCharts() {
       d3.csv(DATA.population),
     ]);
 
-    // Hero stat: sum all states across all years (state-attributable total)
     const heroTotal = d3.sum(stateAnnualTotals, d => num(d[HOSPS]));
     const heroEl = document.getElementById('hero-total');
     if (heroEl) heroEl.textContent = fmt(heroTotal);
 
-    // RESPONSIVE FIX — was hardcoded, now container-relative
     _chartData = {
       stateRoadUser, stateAnnualTotals, stateCounterparty,
       fnByAge, fnByRoadUser, fnByRemoteness,
@@ -81,7 +77,6 @@ function drawAllCharts() {
   }
   initNav();
 
-  // RESPONSIVE FIX — was hardcoded, now container-relative
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
