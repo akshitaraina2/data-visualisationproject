@@ -65,8 +65,7 @@ function drawHeatmap(raw, sel) {
   };
 
   const id = sel.replace('#', '');
-  const container  = document.querySelector(sel);
-  const totalWidth = container ? container.getBoundingClientRect().width || 800 : 800;
+  const totalWidth = getContainerWidth(id);
   const rightPad   = 20;
   const bottomPad  = 270;
   const w          = totalWidth - M.left - rightPad;
@@ -81,13 +80,13 @@ function drawHeatmap(raw, sel) {
     .domain([0, maxVal])
     .interpolator(d3.interpolateViridis);
 
-  // ACCESSIBILITY FIX — aria-label updated to reflect corrected age range and missing exclusion
+  // ACCESSIBILITY FIX — aria-labelledby points to <title> per CLAUDE.md draw function contract
   const svgEl = d3.select(sel)
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('role', 'graphics-document')
-    .attr('aria-label', 'Heatmap of road crash hospitalisations by age group and road user type, Australia 2011 to 2021. Age groups 0 to 7 through 75 and over. Excludes one record with missing age.');
+    .attr('aria-labelledby', `${id}-title`);
   svgEl.append('title').attr('id', `${id}-title`)
     .text('Heatmap: hospitalisations by age group and road user type, Australia 2011–2021');
   svgEl.append('desc')
@@ -159,10 +158,17 @@ function drawHeatmap(raw, sel) {
         .attr('aria-label', ariaLabel)
         .on('mousemove', evt => showTooltip('tooltip-heatmap', tooltipHtml, evt))
         .on('mouseenter', function() {
-          d3.select(this).attr('stroke', 'rgba(255,255,255,0.9)').attr('stroke-width', 2);
+          svg.selectAll('rect').attr('opacity', 0.2);
+          d3.select(this)
+            .attr('opacity', 1)
+            .attr('stroke', 'rgba(255,255,255,0.9)')
+            .attr('stroke-width', 2);
         })
         .on('mouseleave', function() {
-          d3.select(this).attr('stroke', 'rgba(255,255,255,0.15)').attr('stroke-width', 0.5);
+          svg.selectAll('rect').attr('opacity', 1);
+          d3.select(this)
+            .attr('stroke', 'rgba(255,255,255,0.15)')
+            .attr('stroke-width', 0.5);
           hideTooltip('tooltip-heatmap');
         });
 
