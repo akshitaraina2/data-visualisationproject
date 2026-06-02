@@ -186,7 +186,7 @@ function drawSankey(raw, sel) {
         .attr('y', d => (d.y0 + d.y1) / 2)
         .attr('text-anchor', d => d.x0 < totalWidth / 2 ? 'end' : 'start')
         .attr('dominant-baseline', 'middle')
-        .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+        .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
         .attr('pointer-events', 'none')
         .text(d => (roadUserShort[d.name] || d.name).substring(0, 22));
 
@@ -297,10 +297,10 @@ function drawCounterpartyBar(raw, sel) {
     .call(d3.axisLeft(y).ticks(5).tickFormat(d => fmt(d)));
   svg.append('text').attr('transform', 'rotate(-90)')
     .attr('x', -h / 2).attr('y', -55).attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('Hospitalisations');
   svg.append('text').attr('x', w / 2).attr('y', h + 38).attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('Year');
 
   const leg = svg.append('g').attr('transform', `translate(0, ${h + 46})`);
@@ -311,7 +311,7 @@ function drawCounterpartyBar(raw, sel) {
     leg.append('rect').attr('x', xOff).attr('y', row * 16).attr('width', 12).attr('height', 12)
       .attr('fill', cpColors(cp)).attr('rx', 1);
     leg.append('text').attr('x', xOff + 18).attr('y', row * 16 + 9).attr('dominant-baseline', 'middle')
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
       .text(cp);
   });
 }

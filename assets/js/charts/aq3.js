@@ -68,7 +68,7 @@ function drawChoropleth(stateData, population, geojson, sel) {
     .attr('x', totalWidth / 2).attr('y', 39)
     .attr('text-anchor', 'middle')
     .attr('fill', 'var(--muted)')
-    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .attr('opacity', 0.75)
     .text('Colour shows rate per 100,000 population — not total crashes');
 
@@ -140,7 +140,7 @@ function drawChoropleth(stateData, population, geojson, sel) {
       .attr('transform', d => `translate(${pathGen.centroid(d)})`)
       .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
       .attr('fill', '#e8eaf0').attr('font-family', "'DM Mono', monospace")
-      .attr('font-size', '11px').attr('pointer-events', 'none')
+      .attr('font-size', '11px').attr('font-weight', '500').attr('pointer-events', 'none')
       .text(d => STATE_ABBR[d.properties.STATE_NAME] || '');
 
   const legW    = 200;
@@ -163,7 +163,7 @@ function drawChoropleth(stateData, population, geojson, sel) {
   legG.append('text')
     .attr('x', legW / 2).attr('y', -14)
     .attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('Rate per 100,000 population');
 
   // aria-hidden: axis ticks carry the screen-readable values
@@ -189,7 +189,7 @@ function drawChoropleth(stateData, population, geojson, sel) {
   axisG.select('.domain').attr('stroke', 'var(--muted)');
   axisG.selectAll('.tick line').attr('stroke', 'var(--muted)');
   axisG.selectAll('.tick text')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px');
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500');
 
   d3.select(sel).append('p')
     .attr('class', 'chart-callout-note')
@@ -272,17 +272,17 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
 
   svg.append('text').attr('transform', 'rotate(-90)').attr('x', -h / 2).attr('y', -55)
     .attr('text-anchor', 'middle').attr('fill', 'var(--nonindig)')
-    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('Non-Indigenous hospitalisations');
   // rotate(-90): (x_rot,y_rot)→(y_rot,−x_rot) in original space; places text at (w+60, h/2) reading bottom-to-top
   svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(h / 2)).attr('y', w + 60)
     .attr('text-anchor', 'middle').attr('fill', 'var(--fn-color)')
-    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('First Nations hospitalisations');
 
   // warning prevents misreading line crossings as absolute comparisons (axes differ in scale)
   svg.append('text').attr('x', w / 2).attr('y', -12).attr('text-anchor', 'middle')
-    .attr('fill', 'var(--accent2)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('fill', 'var(--accent2)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('⚠ Left and right y-axes use different scales — lines cannot be compared directly');
 
   const leg = svg.append('g').attr('transform', `translate(${w / 2 - 190}, ${h - 18})`);
@@ -290,7 +290,7 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
     leg.append('rect').attr('x', i * 210).attr('y', 0).attr('width', 12).attr('height', 3)
       .attr('fill', col).attr('rx', 1);
     leg.append('text').attr('x', i * 210 + 18).attr('y', 4).attr('dominant-baseline', 'middle')
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
       .text(lbl);
   });
 }
@@ -368,7 +368,7 @@ function drawRemoteness(raw, sel) {
     });
 
     g.append('text').attr('x', cm.left + cw / 2).attr('y', 16).attr('text-anchor', 'middle')
-      .attr('fill', 'var(--text)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+      .attr('fill', 'var(--text)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
       .text(rem);
 
     inner.append('g').attr('class', 'axis').attr('transform', `translate(0,${ch})`)
@@ -384,14 +384,14 @@ function drawRemoteness(raw, sel) {
     if (idx === 0) {
       inner.append('text').attr('transform', 'rotate(-90)').attr('x', -(ch / 2)).attr('y', -62)
         .attr('text-anchor', 'middle').attr('fill', 'var(--nonindig)')
-        .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+        .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
         .text('Non-Indigenous');
     }
     // right axis label — last panel only; rotate(-90): (x_rot,y_rot)→(y_rot,−x_rot) places text right of chart
     if (idx === areas.length - 1) {
       inner.append('text').attr('transform', 'rotate(-90)').attr('x', -(ch / 2)).attr('y', cw + 48)
         .attr('text-anchor', 'middle').attr('fill', 'var(--fn-color)')
-        .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+        .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
         .text('First Nations');
     }
   });
@@ -402,10 +402,10 @@ function drawRemoteness(raw, sel) {
       .attr('x1', i * 240).attr('x2', i * 240 + 20).attr('y1', 0).attr('y2', 0)
       .attr('stroke', col).attr('stroke-width', 2);
     legG.append('text').attr('x', i * 240 + 26).attr('y', 4).attr('dominant-baseline', 'middle')
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
       .text(lbl);
   });
   legG.append('text').attr('x', 0).attr('y', 22)
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('Each panel uses independent y-axis scales — left (Non-Indigenous) and right (First Nations) are not comparable across panels.');
 }

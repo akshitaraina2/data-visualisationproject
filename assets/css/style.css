@@ -5,7 +5,7 @@
   --surface2:  #1c2030;
   --border:    #2a2f3f;
   --text:      #e8eaf0;
-  --muted:     #7a8099;
+  --muted:     #8892aa;
   --accent:    #f5a623;
   --accent2:   #e8453c;
   --accent3:   #4fc3f7;
@@ -242,9 +242,10 @@ body {
 }
 
 .filter-btn {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.4rem 0.9rem;
   border: 1px solid var(--border);
@@ -379,8 +380,8 @@ input[type=range]::-webkit-slider-thumb {
 
 /* ── D3 ELEMENTS ───────────────────────────────────────────────────────── */
 .axis path, .axis line { stroke: var(--border); }
-.axis text { fill: var(--muted); font-family: var(--font-mono); font-size: 11px; }
-.tick text, .legend text { font-size: 11px; }
+.axis text { fill: var(--muted); font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
+.tick text, .legend text { font-size: 11px; font-weight: 500; }
 .grid line { stroke: var(--border); stroke-opacity: 0.5; }
 .grid path { stroke: none; }
 
