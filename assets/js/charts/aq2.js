@@ -161,7 +161,7 @@ function drawHeatmap(raw, sel) {
         svg.append('text')
           .attr('x', cx).attr('y', cy)
           .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-          .attr('font-size', '11px').attr('font-weight', '500').attr('fill', '#333')
+          .attr('font-size', '12px').attr('font-weight', '500').attr('fill', '#333')
           .attr('pointer-events', 'none')
           .text('?');
       }
@@ -173,7 +173,7 @@ function drawHeatmap(raw, sel) {
           .attr('x', xScale(user) + xScale.bandwidth() / 2)
           .attr('y', yScale(age) + yScale.bandwidth() / 2)
           .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-          .attr('font-size', '11px').attr('font-weight', 'bold')
+          .attr('font-size', '12px').attr('font-weight', 'bold')
           .attr('fill', textColor).attr('pointer-events', 'none')
           .text(fmt(val));
       }
@@ -204,7 +204,7 @@ function drawHeatmap(raw, sel) {
     .text('Road User Type');
 
   svg.append('text').attr('x', w / 2).attr('y', -10).attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Age group × road user (total 2011–2021 hospitalisations)');
 
   const legBarW = 200;
@@ -222,7 +222,7 @@ function drawHeatmap(raw, sel) {
   legG.append('text')
     .attr('x', legBarW / 2).attr('y', -6)
     .attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Hospitalisations (total 2011–2021)');
   // aria-hidden: gradient bar is decorative; the tick labels beside it carry the actual values
   legG.append('rect')
@@ -238,7 +238,7 @@ function drawHeatmap(raw, sel) {
     legG.append('text')
       .attr('x', x).attr('y', legBarH + 14)
       .attr('text-anchor', anchor)
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
       .text(fmt(v));
   });
 
@@ -251,7 +251,7 @@ function drawHeatmap(raw, sel) {
   legG.append('text')
     .attr('x', legBarH + 5).attr('y', swatchY1 + legBarH / 2 + 1)
     .attr('dominant-baseline', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Zero cases recorded');
 
   const swatchY2 = swatchY1 + 20;
@@ -263,7 +263,7 @@ function drawHeatmap(raw, sel) {
   legG.append('text')
     .attr('x', legBarH + 5).attr('y', swatchY2 + legBarH / 2 + 1)
     .attr('dominant-baseline', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Data suppressed');
 
   const swatchY3 = swatchY2 + 20;
@@ -274,12 +274,12 @@ function drawHeatmap(raw, sel) {
   legG.append('text')
     .attr('x', legBarH / 2).attr('y', swatchY3 + legBarH / 2)
     .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-    .attr('font-size', '11px').attr('font-weight', '500').attr('fill', '#333')
+    .attr('font-size', '12px').attr('font-weight', '500').attr('fill', '#333')
     .text('?');
   legG.append('text')
     .attr('x', legBarH + 5).attr('y', swatchY3 + legBarH / 2 + 1)
     .attr('dominant-baseline', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('† Possible miscoding — see data notes');
 
   // role="note" + aria-label: flags this paragraph as supplementary information;
@@ -354,7 +354,7 @@ function drawSexRoadUser(raw, sel) {
     .call(d3.axisLeft(y).ticks(5).tickFormat(d => fmt(d)));
   svg.append('text').attr('transform', 'rotate(-90)')
     .attr('x', -h / 2).attr('y', -55).attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Hospitalisations (total 2011–2021)');
 
   const leg = svg.append('g').attr('transform', `translate(${w - 130}, 0)`);
@@ -362,7 +362,7 @@ function drawSexRoadUser(raw, sel) {
     leg.append('rect').attr('x', 0).attr('y', i * 18).attr('width', 12).attr('height', 12)
       .attr('fill', sexColors[s]).attr('rx', 1);
     leg.append('text').attr('x', 18).attr('y', i * 18 + 9).attr('dominant-baseline', 'middle')
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
       .text(s);
   });
 }
@@ -443,12 +443,12 @@ function drawPyramid(raw, sel) {
     .call(d3.axisBottom(xRight.copy().range([midX, w])).ticks(4).tickFormat(d => fmt(d)));
 
   svg.append('text').attr('x', midX - 10).attr('y', -8).attr('text-anchor', 'end')
-    .attr('fill', '#1a5276').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', '#1a5276').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Male');
   svg.append('text').attr('x', midX + 10).attr('y', -8)
-    .attr('fill', '#E69F00').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', '#E69F00').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Female');
   svg.append('text').attr('x', w / 2).attr('y', h + 40).attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Hospitalisations (total 2011–2021)');
 }

@@ -10,7 +10,7 @@ function _addPolicyLines(svg, x, h, tooltipId) {
       .attr('stroke', 'var(--muted)').attr('stroke-width', 1).attr('stroke-dasharray', '4,3');
     g.append('text')
       .attr('x', x(yr) + 4).attr('y', 12)
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
       .text(yr === 2012 ? 'VIC break' : 'NSW break');
     g.on('mousemove', evt => showTooltip(tooltipId, tip, evt))
      .on('mouseleave', () => hideTooltip(tooltipId));
@@ -105,7 +105,7 @@ function drawTrend(raw, sel) {
     .attr('x', x(2021) + 6).attr('y', y(lastTotal))
     .attr('dominant-baseline', 'middle')
     .attr('fill', '#e8eaf0')
-    .attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('National total');
 
   _addPolicyLines(svg, x, h, 'tooltip-trend');
@@ -118,7 +118,7 @@ function drawTrend(raw, sel) {
   svg.append('text')
     .attr('x', x(2020)).attr('y', 12)
     .attr('text-anchor', 'middle')
-    .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('COVID-19 mobility restrictions');
 
   // transparent overlay rect: captures mousemove across the whole plot area including empty space between lines
@@ -144,7 +144,7 @@ function drawTrend(raw, sel) {
     .call(d3.axisLeft(y).ticks(5).tickFormat(d => fmt(d)));
   svg.append('text').attr('transform', 'rotate(-90)')
     .attr('x', -h / 2).attr('y', -55).attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Hospitalisations');
 
   const leg = svg.append('g').attr('transform', `translate(0, ${h + 30})`);
@@ -156,7 +156,7 @@ function drawTrend(raw, sel) {
       .attr('fill', roadUserColors[u] || '#888').attr('rx', 1);
     leg.append('text').attr('x', xOff + 15).attr('y', row * 16 + 3)
       .attr('dominant-baseline', 'middle')
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
       .text(roadUserShort[u] || u);
   });
 
@@ -303,7 +303,7 @@ function drawStackedArea(raw, sel) {
   svg.append('text')
     .attr('x', x(2020)).attr('y', 12)
     .attr('text-anchor', 'middle')
-    .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('COVID-19 mobility restrictions');
 
   svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`)
@@ -312,7 +312,7 @@ function drawStackedArea(raw, sel) {
     .call(d3.axisLeft(y).ticks(5).tickFormat(d => fmt(d)));
   svg.append('text').attr('transform', 'rotate(-90)')
     .attr('x', -h / 2).attr('y', -55).attr('text-anchor', 'middle')
-    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+    .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
     .text('Hospitalisations');
 
   // legend swatches mirror chart area hatch patterns
@@ -343,7 +343,7 @@ function drawStackedArea(raw, sel) {
       .attr('fill', `url(#${lpid})`).attr('rx', 1);
     legG.append('text').attr('x', xOff + 15).attr('y', row * 16 + 8)
       .attr('dominant-baseline', 'middle')
-      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
+      .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '12px').attr('font-weight', '500')
       .text(roadUserShort[u] || u);
   });
 

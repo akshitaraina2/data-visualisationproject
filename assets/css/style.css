@@ -127,7 +127,7 @@ body {
 
 .stat-label {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.1em;
   color: var(--muted);
   text-transform: uppercase;
@@ -163,7 +163,7 @@ body {
 
 .nav-link {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
@@ -200,7 +200,7 @@ body {
 
 .chapter-num {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.2em;
   color: var(--accent);
   text-transform: uppercase;
@@ -338,7 +338,7 @@ input[type=range]::-webkit-slider-thumb {
 .data-note {
   margin-top: 1rem;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: #9ba3be;
   letter-spacing: 0.03em;
 }
@@ -372,7 +372,7 @@ input[type=range]::-webkit-slider-thumb {
   padding: 3rem 2rem;
   text-align: center;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: #9ba3be;
   line-height: 1.8;
   border-top: 1px solid var(--border);
@@ -380,8 +380,8 @@ input[type=range]::-webkit-slider-thumb {
 
 /* ── D3 ELEMENTS ───────────────────────────────────────────────────────── */
 .axis path, .axis line { stroke: var(--border); }
-.axis text { fill: var(--muted); font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
-.tick text, .legend text { font-size: 11px; font-weight: 500; }
+.axis text { fill: var(--muted); font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+.tick text, .legend text { font-size: 12px; font-weight: 500; }
 .grid line { stroke: var(--border); stroke-opacity: 0.5; }
 .grid path { stroke: none; }
 
