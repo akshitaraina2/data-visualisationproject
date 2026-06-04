@@ -22,6 +22,7 @@ function drawSankey(raw, sel) {
   let activeFilter = '__ALL__';
 
   // appended before SVG so it renders above chart
+  // role="group" + aria-label: groups filter buttons so screen readers announce "Filter by road user type" before reading each button
   const filterGroup = d3.select(sel).append('div')
     .attr('class', 'sankey-filter-group filter-row')
     .attr('role', 'group')
@@ -40,6 +41,9 @@ function drawSankey(raw, sel) {
     .text('Showing all road user groups. Select a group above for a clearer view.');
 
   // SVG persists across filter changes — only the s-content group inside is replaced
+  // role="graphics-document" + aria-labelledby: screen readers announce the <title> as the chart name;
+  // titleEl is updated on each filter change so AT always reflects the current view
+  // <desc> provides a longer description for users who request full alternative text
   const svg = d3.select(sel).append('svg')
     .attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
@@ -130,6 +134,9 @@ function drawSankey(raw, sel) {
       return `<strong>${d.source.name}</strong> → <strong>${d.target.name}</strong><br/>${fmt(d.value)} hospitalisations (${pct}% of this road user's total)`;
     }
 
+    // tabindex="0" + role="img" + aria-label: makes each Sankey flow path keyboard-focusable
+    // role="img" (not "button") because activating the link doesn't navigate — it only reveals data
+    // focusin/focusout/keydown below mirror the mouse tooltip for full keyboard parity
     g.selectAll('.s-link')
       .data(sLinks)
       .enter().append('path')
@@ -194,6 +201,7 @@ function drawSankey(raw, sel) {
     g.transition('enter').delay(220).duration(300).attr('opacity', 1);
   }
 
+  // aria-pressed: toggles "true"/"false" on each button so screen readers announce the active filter state
   filterGroup.append('button')
     .attr('class', 'filter-btn active')
     .attr('aria-pressed', 'true')
@@ -255,6 +263,8 @@ function drawCounterpartyBar(raw, sel) {
   const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
+  // role="graphics-document" + aria-labelledby: screen readers announce the <title> as the chart name
+  // <desc> provides a longer description for users who request full alternative text
   const svgEl = d3.select(sel)
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)

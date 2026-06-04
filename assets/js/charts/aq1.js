@@ -57,6 +57,8 @@ function drawTrend(raw, sel) {
   const w  = totalWidth - M.left - M.right - 100; // extra right margin for "National total" label
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
+  // role="graphics-document" + aria-labelledby: screen readers announce the <title> as the chart name
+  // <desc> provides a longer description for users who request full alternative text
   const svgEl = d3.select(sel)
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
@@ -119,6 +121,7 @@ function drawTrend(raw, sel) {
     .attr('fill', '#e8453c').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('COVID-19 mobility restrictions');
 
+  // transparent overlay rect: captures mousemove across the whole plot area including empty space between lines
   svg.append('rect')
     .attr('width', w).attr('height', h)
     .attr('fill', 'none').attr('pointer-events', 'all')
@@ -203,6 +206,8 @@ function drawStackedArea(raw, sel) {
   const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - M.bottom - legendRows * 16 - 12;
 
+  // role="graphics-document" + aria-labelledby: screen readers announce the <title> as the chart name
+  // <desc> provides a longer description for users who request full alternative text
   const svgEl = d3.select(sel)
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
@@ -272,6 +277,7 @@ function drawStackedArea(raw, sel) {
 
   _addPolicyLines(svg, x, h, 'tooltip-stacked');
 
+  // transparent overlay rect: captures mousemove across the whole plot area including empty space between areas
   svg.append('rect')
     .attr('width', w).attr('height', h)
     .attr('fill', 'none').attr('pointer-events', 'all')

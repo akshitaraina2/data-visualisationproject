@@ -46,6 +46,9 @@ function drawChoropleth(stateData, population, geojson, sel) {
   // H=500 reserves space for title/subtitle above map and legend below
   const H          = 500;
 
+  // role="graphics-document" + aria-label: choropleth uses aria-label directly (not aria-labelledby)
+  // because the <title> text and the aria-label must be identical for AT consistency
+  // <desc> provides a longer description for users who request full alternative text
   const svg = d3.select(sel).append('svg')
     .attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
@@ -79,6 +82,9 @@ function drawChoropleth(stateData, population, geojson, sel) {
   );
   const pathGen = d3.geoPath().projection(projection);
 
+  // tabindex="0" + role="button" + aria-label: makes each state region keyboard-focusable
+  // without this, keyboard users cannot access the choropleth data at all (SVG paths are not focusable by default)
+  // focusin/focusout/keydown below mirror the mouse tooltip for full keyboard parity
   svg.selectAll('.state-path')
     .data(geojson.features)
     .enter().append('path')
@@ -166,7 +172,7 @@ function drawChoropleth(stateData, population, geojson, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('Rate per 100,000 population');
 
-  // aria-hidden: axis ticks carry the screen-readable values
+  // aria-hidden: gradient bar is decorative; the axis tick labels below it carry the actual rate values
   legG.append('rect')
     .attr('width', legW).attr('height', legBarH)
     .attr('fill', `url(#${id}-choro-grad)`)
@@ -216,6 +222,8 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
   const w  = totalWidth - M.left - M.right - rpad;
   const h  = H - M.top - M.bottom;
 
+  // role="graphics-document" + aria-labelledby: screen readers announce the <title> as the chart name
+  // <desc> provides a longer description for users who request full alternative text
   const svgEl = d3.select(sel)
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
@@ -321,6 +329,8 @@ function drawRemoteness(raw, sel) {
   const cm     = { top: 28, right: 55, bottom: 36, left: 70 };
 
   const remId = sel.replace('#', '');
+  // role="graphics-document" + aria-labelledby: screen readers announce the <title> as the chart name
+  // <desc> provides a longer description for users who request full alternative text
   const svg = d3.select(sel)
     .append('svg').attr('width', totalW).attr('height', cellH + 55)
     .attr('viewBox', `0 0 ${totalW} ${cellH + 55}`)

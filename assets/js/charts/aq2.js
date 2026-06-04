@@ -62,6 +62,8 @@ function drawHeatmap(raw, sel) {
     .domain([0, maxVal])
     .interpolator(d3.interpolateViridis);
 
+  // role="graphics-document" + aria-labelledby: screen readers announce the <title> as the chart name
+  // <desc> provides a longer description for users who request full alternative text
   const svgEl = d3.select(sel)
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
@@ -115,6 +117,8 @@ function drawHeatmap(raw, sel) {
         ? `<strong>${age} × ${user}</strong><br/>${fmt(val)} hospitalisations<br/>† Possible miscoding — interpret with caution`
         : `<strong>${age} × ${user}</strong><br/>${fmt(val)} hospitalisations (2011–2021 total)`;
 
+      // aria-label on each cell: makes individual cells readable by screen readers
+      // without it, the heatmap is opaque to assistive technology
       const ariaLabel = state === 'suppressed'
         ? `${age}, ${user}: Data suppressed (small cell count)`
         : state === 'zero'
@@ -209,6 +213,7 @@ function drawHeatmap(raw, sel) {
   const legX    = (w - legBarW) / 2;
   const legY    = h + 145;
 
+  // role="group" + aria-label: groups legend items so screen readers announce "Chart legend" before reading each swatch
   const legG = svg.append('g')
     .attr('transform', `translate(${legX}, ${legY})`)
     .attr('role', 'group')
@@ -219,6 +224,7 @@ function drawHeatmap(raw, sel) {
     .attr('text-anchor', 'middle')
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('Hospitalisations (total 2011–2021)');
+  // aria-hidden: gradient bar is decorative; the tick labels beside it carry the actual values
   legG.append('rect')
     .attr('width', legBarW).attr('height', legBarH)
     .attr('fill', `url(#${id}-viridis-gradient)`)
@@ -276,6 +282,8 @@ function drawHeatmap(raw, sel) {
     .attr('fill', 'var(--muted)').attr('font-family', "'DM Mono', monospace").attr('font-size', '11px').attr('font-weight', '500')
     .text('† Possible miscoding — see data notes');
 
+  // role="note" + aria-label: flags this paragraph as supplementary information;
+  // screen readers may announce it separately from the main chart content
   d3.select(sel).append('p')
     .attr('role', 'note')
     .attr('aria-label', 'Data quality note')
@@ -303,6 +311,7 @@ function drawSexRoadUser(raw, sel) {
   const w  = totalWidth - M.left - M.right;
   const h  = H - M.top - 160;
 
+  // role="graphics-document" + aria-labelledby/<title>/<desc>: same accessible SVG pattern as heatmap
   const svgEl = d3.select(sel)
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
@@ -377,6 +386,7 @@ function drawPyramid(raw, sel) {
   const h  = H - M.top - M.bottom;
   const midX = w / 2;
 
+  // role="graphics-document" + aria-labelledby/<title>/<desc>: same accessible SVG pattern as heatmap
   const svgEl = d3.select(sel)
     .append('svg').attr('width', totalWidth).attr('height', H)
     .attr('viewBox', `0 0 ${totalWidth} ${H}`)
