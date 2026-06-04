@@ -81,7 +81,7 @@ function drawAllCharts() {
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      d3.selectAll('svg').remove();
+      d3.selectAll('svg, .data-note').remove();
       drawAllCharts();
     }, 250);
   });
