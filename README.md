@@ -120,7 +120,7 @@ Source: https://www.bitre.gov.au/publications/ongoing/hospitalised-injury
 |------|-------|
 | Website structure & layout | Akshita Raina |
 | D3 visualisations & interactivity | Vinh Nghiem |
-| Mercury deployment | Akshita Raina |
+| Mercury deployment | Vinh Nghiem |
 | Data cleaning & KNIME workflow | Vinh Nghiem |
 | Narrative text & data story | Vinh Nghiem |
 | Usability testing | Akshita Raina |
