@@ -1,3 +1,12 @@
+// AI PROMPT SUMMARY (responsive layout fix)
+// Tool: Claude (Anthropic)
+// Prompt summary: "Replace hardcoded SVG pixel widths with container-relative
+// getBoundingClientRect() calculations and add viewBox/preserveAspectRatio to
+// all SVGs so charts scale proportionally on resize."
+
+// Choropleth map of average annual hospitalisations per 100,000 population by state
+// (2011–2021). Uses d3.geoMercator().fitSize(), Oranges sequential colour scale,
+// and ABS population denominators from abs_population_by_state.csv.
 function drawChoropleth(stateData, population, geojson, sel) {
   // .chart-callout-note persists across resize redraws — remove before rebuilding
   d3.select(sel).select('.chart-callout-note').remove();
@@ -202,6 +211,9 @@ function drawChoropleth(stateData, population, geojson, sel) {
     .text('Rates are calculated as hospitalisations per 100,000 residents. Direct comparison of raw counts across states would be misleading due to large differences in state population size.');
 }
 
+// Dual-axis line chart comparing First Nations vs non-Indigenous hospitalisation trends
+// over 2011–2021. Left y-axis = First Nations count, right y-axis = non-Indigenous count
+// (separate scales due to large magnitude difference). Grey hatch marks n.p. suppressed cells.
 function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
   const totByStatusYear = d3.rollup(
     fnByRoadUser,
@@ -303,6 +315,9 @@ function drawFirstNationsSlope(fnByAge, fnByRoadUser, sel) {
   });
 }
 
+// Small multiples line chart: one panel per remoteness area (Major Cities, Regional, Remote)
+// showing First Nations vs non-Indigenous hospitalisation trends 2011–2021.
+// Note: remoteness reflects the patient's residence, not the crash location.
 function drawRemoteness(raw, sel) {
   const statuses = ['First Nations people', 'Non-Indigenous'];
   const statusColors = {

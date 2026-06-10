@@ -1,3 +1,12 @@
+// AI PROMPT SUMMARY (responsive layout fix)
+// Tool: Claude (Anthropic)
+// Prompt summary: "In js/main.js, add a debounced window resize listener that calls
+// d3.selectAll('svg').remove() then redraws all charts, using a 250 ms timeout to
+// avoid thrashing on continuous resize events. Replace the generic drawAllCharts(data)
+// call with whatever the actual draw call pattern is in this file."
+
+// Activates sticky nav highlighting: observes each .chapter section and adds the
+// 'active' class to the matching .nav-link when that section enters the viewport.
 function initNav() {
   const sections = document.querySelectorAll('.chapter');
   const navLinks = document.querySelectorAll('.nav-link');
@@ -14,6 +23,8 @@ function initNav() {
 
 let _chartData = null;
 
+// Calls every chart draw function with the cached data object.
+// Clears the AQ1 filter button row first so drawTrend can rebuild it cleanly on resize.
 function drawAllCharts() {
   if (!_chartData) return;
   const {
@@ -36,6 +47,9 @@ function drawAllCharts() {
   drawSankey(nationalAq4, '#chart-sankey');
 }
 
+// Entry point: loads all CSV and GeoJSON data in parallel via Promise.all, computes
+// the hero statistic, caches data, draws all charts, then sets up the debounced
+// resize listener that clears SVGs and redraws on viewport width change.
 (async function init() {
   try {
     const [

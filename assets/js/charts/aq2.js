@@ -1,3 +1,18 @@
+// AI PROMPT SUMMARY (responsive layout fix + heatmap colour scale)
+// Tool: Claude (Anthropic)
+//
+// Prompt 1 — Responsive fix: "Replace hardcoded SVG widths with container-relative
+// getBoundingClientRect() calculations and add viewBox/preserveAspectRatio."
+//
+// Prompt 2 — Heatmap Viridis: "Replace the heatmap colour scale with d3.interpolateViridis
+// for perceptual uniformity and colourblind safety. Add a continuous gradient legend bar
+// (SVG linearGradient, 200 px wide, ticks at min/mid/max). Fill suppressed or zero cells
+// with diagonal grey hatch (consistent with n.p. suppression convention). Add hover border
+// highlight, updated tooltip format, and ARIA attributes on every cell and the SVG root."
+
+// Heatmap of age group × road user hospitalisations (national, 2011–2021).
+// Colour encodes total count using Viridis; suppressed/zero cells use diagonal grey hatch.
+// Includes continuous gradient legend and per-cell ARIA labels.
 function drawHeatmap(raw, sel) {
   // finer age buckets than the global AGE_ORDER (65-74 and 75+ instead of 65+)
   const AGE_ORDER_LOCAL = [
@@ -292,6 +307,8 @@ function drawHeatmap(raw, sel) {
     .text(`These combinations (e.g. 0–7 year old car drivers) appear in the source data but likely reflect coding anomalies. The ABS 'Motorcyclist' category covers both riders and passengers, so some 0–7 cases may represent pillion passengers.`);
 }
 
+// Grouped bar chart comparing total male vs female hospitalisations for each road user
+// category across 2011–2021. Blue = male, amber = female (Wong 2011 colourblind-safe).
 function drawSexRoadUser(raw, sel) {
   const SEXES = ['Male', 'Female'];
   const users = [...new Set(raw.map(d => d.road_user))].sort();
@@ -367,6 +384,8 @@ function drawSexRoadUser(raw, sel) {
   });
 }
 
+// Population pyramid showing age-sex distribution of hospitalisations.
+// Male bars extend left from centre axis; female bars extend right.
 function drawPyramid(raw, sel) {
   const SEXES = ['Male', 'Female'];
   const ages = AGE_ORDER.filter(a => raw.some(d => d.age_group === a));

@@ -1,3 +1,19 @@
+/*
+ * AI PROMPT SUMMARY
+ * Tool: Claude (Anthropic) — used to initialise this file's structure.
+ * Prompt summary: "Generate CSS for a dark-theme single-page scrollytelling site.
+ * Define CSS custom properties (colour tokens, font stacks) in :root, set up layout
+ * for the hero, sticky navigation bar, chapter sections, and chart wrapper containers.
+ * Include scroll-driven reveal animations (fade + upward translate on IntersectionObserver
+ * entry) and responsive breakpoints for narrower viewports."
+ * All subsequent edits were made by the development team (Group 9, COS30045).
+ *
+ * Additional AI prompt (responsive chart fix):
+ * "In style.css, change overflow: hidden on chart wrapper elements to overflow: visible
+ * so container-relative SVG widths are not clipped. Flag overflow: hidden on the sticky
+ * nav as intentional and leave it unchanged."
+ */
+
 /* ── VARIABLES ─────────────────────────────────────────────────────────── */
 :root {
   --bg:        #0d0f14;

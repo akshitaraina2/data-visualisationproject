@@ -1,8 +1,14 @@
+// ── FORMATTERS ───────────────────────────────────────────────────────────
+// fmt: comma-separated integer counts (e.g. 12,345) used on all count axes and tooltips.
+// fmtRate: one decimal place for per-100k rates used in choropleth tooltips.
 const fmt     = d3.format(",");
 const fmtRate = d3.format(".1f");
 
+// Exact column name in all KNIME exports — access via this constant, never hardcode.
 const HOSPS = 'Sum(hospitalisations)';
 
+// Centralised file paths for all data files — draw functions reference DATA.key,
+// never hardcode paths, so paths can be updated in one place.
 const DATA = {
   stateRoadUser:     'data/state-track/state_x_road_user.csv',
   stateAnnualTotals: 'data/state-track/state_annual_totals.csv',
@@ -39,6 +45,7 @@ const roadUserColors = {
   'Heavy transport unknown position': '#D55E00',
 };
 
+// Maps full ABS road user label to a shorter display label for axis ticks and legends.
 const roadUserShort = {
   'Car driver, passenger or unknown position':             'Car occupant',
   'Motorcyclist':                                          'Motorcyclist',
@@ -50,6 +57,7 @@ const roadUserShort = {
   'Other or unknown':                                      'Other / unknown',
 };
 
+// Canonical sort order for age groups — used to ensure consistent axis ordering.
 const AGE_ORDER = ['0-7', '8-16', '17-25', '26-39', '40-64', '65+'];
 
 const REMOTENESS_ORDER = ['Major Cities', 'Regional', 'Remote'];
@@ -58,6 +66,7 @@ const ageColors = d3.scaleOrdinal()
   .domain(AGE_ORDER)
   .range(['#b3e5fc', '#4fc3f7', '#f5a623', '#e8453c', '#81c784', '#7986cb']);
 
+// Maps GeoJSON STATE_NAME strings to the uppercase state abbreviations used in CSV files.
 const STATE_ABBR = {
   'New South Wales':              'NSW',
   'Victoria':                     'VIC',
@@ -69,8 +78,11 @@ const STATE_ABBR = {
   'Australian Capital Territory': 'ACT',
 };
 
+// Shared SVG margin object used by all draw functions for consistent chart padding.
 const M = { top: 30, right: 30, bottom: 45, left: 65 };
 
+// Parses a raw KNIME export cell value: treats n.p. (suppressed), blank, "Missing",
+// and non-finite numbers as 0 so they don't propagate NaN into aggregations.
 function num(v) {
   if (v === undefined || v === null) return 0;
   const s = String(v).trim();
@@ -79,11 +91,15 @@ function num(v) {
   return Number.isFinite(n) ? n : 0;
 }
 
+// Returns the pixel width of a container element by ID, falling back to 800 if the
+// element is missing or reports zero — used to size SVGs responsively.
 function getContainerWidth(id) {
   const el = document.getElementById(id);
   return el ? el.getBoundingClientRect().width || 800 : 800;
 }
 
+// Positions and shows the tooltip <div> for the given chart. Offsets from the
+// container's top-left corner so the tooltip stays inside the scroll parent.
 function showTooltip(tooltipId, html, event) {
   const tip = document.getElementById(tooltipId);
   if (!tip) return;
@@ -94,6 +110,7 @@ function showTooltip(tooltipId, html, event) {
   tip.style.top  = (event.clientY - container.top  - 10) + 'px';
 }
 
+// Hides the tooltip <div> by setting opacity to 0 (not display:none, to avoid layout shift).
 function hideTooltip(tooltipId) {
   const tip = document.getElementById(tooltipId);
   if (tip) tip.style.opacity = 0;

@@ -1,3 +1,11 @@
+// AI PROMPT SUMMARY (responsive layout fix)
+// Tool: Claude (Anthropic)
+// Prompt summary: "Find all hardcoded pixel widths in draw functions and replace them
+// with container-relative calculations using getBoundingClientRect(). Add viewBox and
+// preserveAspectRatio to every SVG. Add a debounced resize listener in main.js."
+
+// Appends dashed vertical policy-break lines at 2012 (Victoria) and 2017 (NSW) with
+// hover tooltips explaining the series-break reason. Shared by drawTrend and drawStackedArea.
 function _addPolicyLines(svg, x, h, tooltipId) {
   const breaks = [
     { yr: 2012, tip: 'Victoria 2012: revised hospitalisation coding — est. −5.6% step-change.' },
@@ -17,6 +25,9 @@ function _addPolicyLines(svg, x, h, tooltipId) {
   });
 }
 
+// Multi-series line chart: one line per road user type plus a bold national total line.
+// Builds road user filter buttons (shared with drawStackedArea) on first render only.
+// Includes dashed policy-break lines and a COVID-19 mobility dip label at 2020.
 function drawTrend(raw, sel) {
   const natRU = d3.rollup(
     raw,
@@ -179,6 +190,9 @@ function drawTrend(raw, sel) {
   }
 }
 
+// Stacked area chart showing road user composition of national hospitalisations over time.
+// Uses redundant hatch patterns alongside colour for colourblind accessibility.
+// Shares the filter buttons created by drawTrend; registers its own filter listener.
 function drawStackedArea(raw, sel) {
   const natRU = d3.rollup(
     raw,

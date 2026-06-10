@@ -1,3 +1,21 @@
+// AI PROMPT SUMMARY (responsive layout fix + Sankey category filter)
+// Tool: Claude (Anthropic)
+//
+// Prompt 1 — Responsive fix: "Replace hardcoded SVG widths with container-relative
+// getBoundingClientRect() calculations and add viewBox/preserveAspectRatio."
+//
+// Prompt 2 — Sankey filter: "Add a road user category filter above the Sankey diagram.
+// One button per unique road_user value derived from the data, plus an 'All' button.
+// Default to the road user with the highest total hospitalisations (derived via d3.rollup,
+// not hardcoded). Filter dataset and recompute Sankey layout on selection. Show count
+// summary (fmt count + crash type count). Smooth fade transitions (200 ms out, 300 ms in)
+// without removing/re-appending the SVG. Percentage tooltip when single category active.
+// Full ARIA: role='group', aria-label on button group, aria-pressed per button, aria-live
+// on count summary, SVG aria-label updates on filter change."
+
+// Sankey diagram: road user → counterparty hospitalisation flows (national, all years summed).
+// Requires d3-sankey CDN plugin; renders a fallback <p> if plugin is absent.
+// Includes road user category filter with smooth transitions and ARIA accessibility.
 function drawSankey(raw, sel) {
   if (typeof d3.sankey === 'undefined') {
     d3.select(sel).append('p')
@@ -232,6 +250,8 @@ function drawSankey(raw, sel) {
   renderFilter(activeFilter);
 }
 
+// Stacked bar chart showing counterparty type counts by year (2011–2021).
+// Each bar is one year; segments represent the share of each counterparty category.
 function drawCounterpartyBar(raw, sel) {
   const cps  = [...new Set(raw.map(d => d.counterparty))].sort();
   const cpColors = d3.scaleOrdinal()
